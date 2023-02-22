@@ -1353,21 +1353,22 @@ at> <EOT> # нажмите Ctrl + D для выхода
 
 ## Загрузка
 
+
 [[вернуться к началу](#удобные-однострочники-bash)]
 
 ### Скачайте содержимое этого README.md (того, который вы сейчас просматриваете)
 
 ```bash
-curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -f markdown -t man | man -l -...
+curl https://raw.githubusercontent.com/smartmanru/Bash-Oneliner-ru/master/README.md | pandoc -f markdown -t man | man -l -...
 
 # или w3m (текстовый веб-браузер и пейджер)
-curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc | w3m -T text/html
+curl https://raw.githubusercontent.com/smartmanru/Bash-Oneliner-ru/master/README.md | pandoc | w3m -T text/html
 
 # или с помощью emacs (в текстовом редакторе emac)
-emacs --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -t org)
+emacs --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/smartmanru/Bash-Oneliner-ru/master/README.md | pandoc -t org)
 
 # или с помощью emacs (в терминале, выход с помощью Ctrl + x, затем Ctrl + c)
-emacs -nw --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -t org)
+emacs -nw --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/smartmanru/Bash-Oneliner-ru/master/README.md | pandoc -t org)
 ```
 
 ### Загрузите все со страницы
