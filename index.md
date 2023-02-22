@@ -7,7 +7,7 @@
 Английский и bash не являются моим родным языком, пожалуйста, поправьте меня в любое время, спасибо.
 Если вы знаете другие классные команды, пожалуйста, научите меня!
 
-Вот более стильная версия [Bash-Oneliner-EU](https://onceupon.github.io/Bash-Oneliner/)~.
+Вот более стильная версия [Bash-Oneliner-RU](https://bash.shtxt.info).
 
 ## Удобные однострочники Bash
 
@@ -1358,16 +1358,16 @@ at> <EOT> # нажмите Ctrl + D для выхода
 ### Скачайте содержимое этого README.md (того, который вы сейчас просматриваете)
 
 ```bash
-curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -f markdown -t man | man -l -...
+curl https://raw.githubusercontent.com/smartmanru/Bash-Oneliner-ru/master/README.md | pandoc -f markdown -t man | man -l -...
 
 # или w3m (текстовый веб-браузер и пейджер)
-curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc | w3m -T text/html
+curl https://raw.githubusercontent.com/smartmanru/Bash-Oneliner-ru/master/README.md | pandoc | w3m -T text/html
 
 # или с помощью emacs (в текстовом редакторе emac)
-emacs --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -t org)
+emacs --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/smartmanru/Bash-Oneliner-ru/master/README.md | pandoc -t org)
 
 # или с помощью emacs (в терминале, выход с помощью Ctrl + x, затем Ctrl + c)
-emacs -nw --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -t org)
+emacs -nw --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/smartmanru/Bash-Oneliner-ru/master/README.md | pandoc -t org)
 ```
 
 ### Загрузите все со страницы
