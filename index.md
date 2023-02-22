@@ -1,1431 +1,3947 @@
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88670245-2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+# Баш-Онелинер (translate by deepl)
+
+Я рад, что вы здесь! Несколько лет назад я занимался биоинформатикой и был поражен этими однословными командами bash, которые намного быстрее, чем мои скучные скрипты, время, сэкономленное благодаря изучению сочетаний клавиш командной строки и сценариев. В последние годы я работаю над облачными вычислениями и продолжаю записывать эти полезные команды здесь. Не все они односложные, но я прилагаю усилия, чтобы сделать их краткими и быстрыми. В основном я использую Ubuntu, Amazon Linux, RedHat, Linux Mint, Mac и CentOS, извините, если команды не работают в вашей системе.
+
+Этот блог будет посвящен простым командам bash для анализа данных и обслуживания системы Linux, которые я приобрел во время работы и экзамена LPIC. Я извиняюсь, что нет подробных ссылок на все команды, но они, вероятно, взяты из уважаемых Google и Stack Overflow.
+
+Английский и bash не являются моим родным языком, пожалуйста, поправьте меня в любое время, спасибо.
+Если вы знаете другие классные команды, пожалуйста, научите меня!
+
+Вот более стильная версия [Bash-Oneliner-EU](https://onceupon.github.io/Bash-Oneliner/)~.
+
+## Удобные однострочники Bash
+
+- [Terminal Tricks](#терминальные-трюки)
+- [Переменные](#переменные)
+- [Math](#математика)
+- [Grep](#grep)
+- [Sed](#sed)
+- [Awk](#awk)
+- [Xargs](#xargs)
+- [Find](#find)
+- [Условие и цикл](#условия-и-циклы)
+- [Time](#time)
+- [Download](#загрузка)
+- [Random](#random)
+- [Xwindow](#xwindow)
+- [System](#system)
+- [Hardware](#hardware)
+- [Networking](#networking)
+- [Data Wrangling](#обработка-данных)
+- [Другие](#другие)
+
+## Терминальные трюки
+
+### Использование клавиш Ctrl
+
+```text
+Ctrl + n : то же, что и стрелка вниз.
+Ctrl + p : то же, что и стрелка вверх.
+Ctrl + r : начинает обратный поиск в истории команд (продолжайте нажимать Ctrl + r, чтобы двигаться назад).
+Ctrl + s : остановить вывод на терминал.
+Ctrl + q : возобновление вывода на терминал после Ctrl + s.
+Ctrl + a : переход к началу строки.
+Ctrl + e : перемещение в конец строки.
+Ctrl + d : если вы что-то набрали, Ctrl + d удаляет символ под курсором, в противном случае происходит выход из текущей оболочки.
+Ctrl + k : удалить весь текст от курсора до конца строки.
+Ctrl + x + backspace : удалить весь текст от начала строки до курсора.
+Ctrl + t : транспонировать символ перед курсором с символом под курсором, нажмите Esc + t, чтобы транспонировать два слова перед курсором.
+Ctrl + w : вырезать слово перед курсором; затем Ctrl + y вставить его.
+Ctrl + u : вырезать строку перед курсором; затем Ctrl + y вставить ее.
+Ctrl + _ : отменить ввод.
+Ctrl + l : эквивалентно очистить.
+Ctrl + x + Ctrl + e : запуск редактора, определенного $EDITOR, для ввода вашей команды. Полезно для многострочных команд.
+```
+
+### Изменить регистр
+
+```bash
+Esc + u
+# переводит текст от курсора до конца слова в верхний регистр.
+Esc + l
+# переводит текст от курсора до конца слова в нижний регистр.
+Esc + c
+# переводит букву под курсором в верхний регистр, остальное слово - в нижний.
+```
+
+### Номер истории выполнения (например, 53)
+
+```bash
+!53
+```
+
+### Выполнить последнюю команду
+
+```bash
+!!
+# запустите предыдущую команду с помощью sudo
+sudo !!!
+```
+
+### Выполните последнюю команду и измените какой-либо параметр, используя подстановку каретки (например, последняя команда: echo 'aaa' -> повторное выполнение как: echo 'bbb')
+
+```bash
+#last command: echo 'aaa'
+^aaa^bbb
+
+#echo 'bbb'
+#bbb
+
+#Обратите внимание, что будет заменен только первый aaa, если вы хотите заменить все 'aaa', используйте ':&' для повторения:
+^aaa^bbb^:&
+#or
+!!:gs/aaa/bbb/
+
+```
+
+### Запустите прошлую команду, которая начиналась с (например, cat filename)
+
+```bash
+!cat
+# или
+!c
+# запустите cat filename снова
+```
+
+### Bash globbing
+
+```bash
+# '*' служит "дикой картой" для расширения имени файла.
+/etc/pa*wd #/etc/passwd
+
+# '?' служит односимвольной "дикой картой" для расширения имени файла.
+/b?n/?at #/bin/cat
+
+# '[]' служит для поиска символа из диапазона.
+ls -l [a-z]* # список всех файлов с алфавитом в имени файла.
+
+# '{}' может использоваться для поиска имен файлов с более чем одним шаблоном
+ls *.{sh,py}   #список всех файлов .sh и .py
+```
+
+### Некоторые удобные переменные окружения
+
+```bash
+$0 :имя оболочки или сценария оболочки.
+$1, $2, $3, ... :позиционные параметры.
+$# :количество позиционных параметров.
+$? :последний статус выхода из конвейера переднего плана.
+$- :текущий набор опций для оболочки.
+$$ :pid текущей оболочки (не под-оболочки).
+$! :PID последней фоновой команды.
+
+$DESKTOP_SESSION текущий менеджер дисплея.
+$EDITOR предпочитаемый текстовый редактор.
+$LANG текущий язык.
+$PATH список каталогов для поиска исполняемых файлов (т.е. готовых к запуску программ).
+$PWD текущий каталог
+$SHELL текущая оболочка
+$USER текущее имя пользователя
+$HOSTNAME текущее имя хоста
+```
+
+## Переменные
+
+[[назад к началу](#удобные-однострочники-bash)]
+
+### Подстановка переменных в кавычках
+
+```bash
+# foo=bar
+echo $foo
+# bar
+echo "$foo"
+# bar
+# одинарные кавычки приводят к тому, что переменные не расширяются
+echo '$foo'
+# $foo
+# одинарные кавычки внутри двойных кавычек не отменяют расширения и являются частью вывода
+echo "'$foo'"
+# 'bar'
+# удвоенные одинарные кавычки действуют как двойные кавычки, заставляя переменные расширяться
+echo ''$foo''
+# bar
+```
+
+### Получение длины переменной
+
+```bash
+var="некоторая строка"
+echo ${#var}
+# 11
+```
+
+### Получение первого символа переменной
+
+```bash
+var=строка
+echo "${var:0:1}"
+#s
+
+# или
+echo ${var%%"${var#?"}}
+```
+
+### Удаление первой или последней строки из переменной
+
+```bash
+var="некоторая строка"
+echo ${var:2}
+#me string
+```
+
+### Замена (например, удаление первого ведущего 0)
+
+```bash
+var="0050"
+echo ${var[@]#0}
+#050
+```
+
+### Замена (например, заменить 'a' на ',')
+
+```bash
+{var/a/,}
+```
+
+### Замена всех (например, заменить все 'a' на ',')
+
+```bash
+{var//a/,}
+```
+
+### Grep строки со строками из файла (например, строки с 'stringA или 'stringB' или 'stringC')
+
+```bash
+#с grep
+test="stringA stringB stringC"
+grep ${test// /\\\\\|} file.txt
+# превращая пробел в 'или' (\||) в grep
+```
+
+### Для изменения регистра строки, хранящейся в переменной, на нижний регистр (Расширение параметров)
+
+```bash
+var=HelloWorld
+echo ${var,,}
+helloworld
+```
 
-  gtag('config', 'UA-88670245-2');
-</script>
+### Развернуть и затем выполнить переменную/аргумент
+
+```bash
+cmd="bar=foo"
+eval "$cmd"
+echo "$bar" # foo
+```
 
+## Математика
+
+[[назад к началу](#удобные-однострочники-bash)]
+
+### Арифметическое расширение в Bash (операторы: +, -, *, /, % и т.д.)
+
+```bash
+echo $((( 10 + 5 ))  #15
+x=1
+echo $(( x++ )) #1 , обратите внимание, что это все еще 1, так как это пост-инкремент
+echo $(( x++ )) #2
+echo $((( ++x )) #4 , обратите внимание, что это не 3, так как это пре-инкремент
+echo $(( x-- )) #4
+echo $((( x-- )) #3
+echo $(( --x )) #1
+x=2
+y=3
+echo $((( x ** y )) #8
+```
+
+### Выведите простые коэффициенты числа (например, 50)
+
+```bash
+фактор 50
+# 50: 2 5 5
+```
 
-<a id="handy-bash-oneliner-commands-for-tsv-file-editing" class="anchor" href="#handy-bash-oneliner-commands-for-tsv-file-editing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Handy Bash oneliner commands for tsv file editing
+### Суммирование входного списка (например, seq 10)
+
+```bash
+seq 10|paste -sd+|bc
+```
+
+### Суммирование файла (каждая строка в файле содержит только одно число)
 
-<ul>
-<li><a href="#grep">Grep</a></li>
-<li><a href="#sed">Sed</a></li>
-<li><a href="#awk">Awk</a></li>
-<li><a href="#xargs">Xargs</a></li>
-<li><a href="#find">Find</a></li>
-<li><a href="#loops">Loops</a></li>
-<li><a href="#download">Download</a></li>
-<li><a href="#random">Random</a></li>
-<li><a href="#others">Others</a></li>
-<li><a href="#system">System</a></li>
-</ul>
+```bash
+awk '{s+=$1} END {print s}' filename
+```
 
-<h2>
-<a id="grep" class="anchor" href="#grep" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Grep</h2>
+### Вычитание столбцов
 
-<h5>
-<a id="extract-text-bewteen-words-eg-w1w2" class="anchor" href="#extract-text-bewteen-words-eg-w1w2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>extract text bewteen words (e.g. w1,w2)</h5>
+```bash
+cat file| awk -F '\t' 'BEGIN {SUM=0}{SUM+=$3-$2}END{print SUM}'
+```
 
-<div class="highlight highlight-source-shell"><pre>grep -o -P <span class="pl-s"><span class="pl-pds">'</span>(?&lt;=w1).*(?=w2)<span class="pl-pds">'</span></span></pre></div>
+### Простая математика с помощью expr
 
-<h5>
-<a id="grep-lines-without-word-eg-bbo" class="anchor" href="#grep-lines-without-word-eg-bbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep lines without word (e.g. bbo)</h5>
+```bash
+expr 10+20 #30
+expr 10\*20 #600
+expr 30 \> 20 #1 (true)
+```
 
-<div class="highlight highlight-source-shell"><pre>grep -v bbo filename</pre></div>
+### Больше математики с bc
 
-<h5>
-<a id="grep-only-onefirst-match-eg-bbo" class="anchor" href="#grep-only-onefirst-match-eg-bbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep only one/first match (e.g. bbo)</h5>
+```bash
+# Количество десятичных цифр/значащая цифра
+echo "scale=2;2/3" | bc
+#.66
 
-<div class="highlight highlight-source-shell"><pre>grep -m 1 bbo filename</pre></div>
+# Оператор экспоненты
+echo "10^2"| bc
+#100
 
-<h5>
-<a id="grep-and-count-eg-bbo" class="anchor" href="#grep-and-count-eg-bbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep and count (e.g. bbo)</h5>
+# Использование переменных
+echo "var=5;--var"| bc
+#4
+```
 
-<div class="highlight highlight-source-shell"><pre>grep -c bbo filename</pre></div>
+## Grep
 
-<h5>
-<a id="insensitive-grep-eg-bbobbobbo" class="anchor" href="#insensitive-grep-eg-bbobbobbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>insensitive grep (e.g. bbo/BBO/Bbo)</h5>
+[[назад к началу](#удобные-однострочники-bash)]
 
-<div class="highlight highlight-source-shell"><pre>grep -i <span class="pl-s"><span class="pl-pds">"</span>bbo<span class="pl-pds">"</span></span> filename </pre></div>
+### Тип grep
 
-<h5>
-<a id="count-occurrence-eg-three-times-a-line-count-three-times" class="anchor" href="#count-occurrence-eg-three-times-a-line-count-three-times" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>count occurrence (e.g. three times a line count three times)</h5>
+```bash
+grep = grep -G # базовое регулярное выражение (BRE)
+fgrep = grep -F # фиксированный текст, игнорирующий мета-символы
+egrep = grep -E # расширенное регулярное выражение (ERE)
+pgrep = grep -P # Perl-совместимые регулярные выражения (PCRE)
+rgrep = grep -r # рекурсивный
+```
 
-<div class="highlight highlight-source-shell"><pre>grep -o bbo filename </pre></div>
+### Grep и подсчет количества пустых строк
 
-<h5>
-<a id="color-the-match-eg-bbo" class="anchor" href="#color-the-match-eg-bbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>COLOR the match (e.g. bbo)!</h5>
+```bash
+grep -c "^$"
+```
 
-<div class="highlight highlight-source-shell"><pre>grep --color bbo filename </pre></div>
+### Поиск и возврат только целого числа
 
-<h5>
-<a id="grep-search-all-files-in-a-directoryeg-bbo" class="anchor" href="#grep-search-all-files-in-a-directoryeg-bbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep search all files in a directory(e.g. bbo)</h5>
+```bash
+grep -o '[0-9]*
+#or
+grep -oP '\d*'
+```
 
-<div class="highlight highlight-source-shell"><pre>grep -R bbo /path/to/directory </pre></div>
+### Поиск целого числа с определенным количеством цифр (например, 3)
 
-<p>or</p>
+```bash
+grep '[0-9]\{3\}'
+# или
+grep -E '[0-9]{3}'
+# или
+grep -P '\d{3}'
+```
 
-<div class="highlight highlight-source-shell"><pre>grep -r bbo /path/to/directory </pre></div>
+### Искать только IP-адрес
 
-<h5>
-<a id="search-all-files-in-directory-only-output-file-names-with-matcheseg-bbo" class="anchor" href="#search-all-files-in-directory-only-output-file-names-with-matcheseg-bbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>search all files in directory, only output file names with matches(e.g. bbo)</h5>
+```bash
+grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}''
+# или
+grep -Po '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+```
 
-<div class="highlight highlight-source-shell"><pre>grep -Rh bbo /path/to/directory </pre></div>
+### Grep целое слово (например, 'target')
 
-<p>or</p>
+```bash
+grep -w 'target'
 
-<div class="highlight highlight-source-shell"><pre>grep -rh bbo /path/to/directory </pre></div>
+#или используя RE
+grep '\btarget\b'
+```
 
-<h5>
-<a id="grep-or-eg-a-or-b-or-c-or-d" class="anchor" href="#grep-or-eg-a-or-b-or-c-or-d" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep OR (e.g. A or B or C or D)</h5>
+### Grep возвращает строки до и после совпадения (например, 'bbo')
 
-<pre><code>grep 'A\|B\|C\|D' 
-</code></pre>
+```bash
+# возвращает также 3 строки после совпадения
+grep -A 3 'bbo'
 
-<h5>
-<a id="grep-and-eg-a-and-b" class="anchor" href="#grep-and-eg-a-and-b" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep AND (e.g. A and B)</h5>
+# возвращает также 3 строки до совпадения
+grep -B 3 'bbo'
 
-<div class="highlight highlight-source-shell"><pre>grep <span class="pl-s"><span class="pl-pds">'</span>A.*B<span class="pl-pds">'</span></span> </pre></div>
+# возвращает также 3 строки до и после совпадения
+grep -C 3 'bbo'
+```
 
-<h5>
-<a id="grep-all-content-of-a-filea-from-fileb" class="anchor" href="#grep-all-content-of-a-filea-from-fileb" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep all content of a fileA from fileB</h5>
+### Поиск строки, начинающейся с (например, 'S')
 
-<div class="highlight highlight-source-shell"><pre>grep -f fileA fileB </pre></div>
+```bash
+grep -o 'S.*'
+```
 
-<h5>
-<a id="grep-a-tab" class="anchor" href="#grep-a-tab" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep a tab</h5>
+### Извлечение текста между словами (например, w1,w2)
 
-<div class="highlight highlight-source-shell"><pre>grep <span class="pl-s"><span class="pl-pds">$'</span><span class="pl-cce">\t</span><span class="pl-pds">'</span></span> </pre></div>
+```bash
+grep -o -P '(?<=w1).*(?=w2)'
+```
 
-<h5>
-<a id="grep-variable-from-variable" class="anchor" href="#grep-variable-from-variable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep variable from variable</h5>
+### Grep строки без слова (например, 'bbo')
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-smi">$echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$long_str</span><span class="pl-pds">"</span></span><span class="pl-k">|</span>grep -q <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$short_str</span><span class="pl-pds">"</span></span>
-<span class="pl-k">if</span> [ <span class="pl-smi">$?</span> <span class="pl-k">-eq</span> 0 ]<span class="pl-k">;</span> <span class="pl-k">then</span> <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">'</span>found<span class="pl-pds">'</span></span><span class="pl-k">;</span> <span class="pl-k">fi</span></pre></div>
+```bash
+grep -v bbo filename
+```
 
-<p>//grep -q will output 0 if match found
-//remember to add space between []!</p>
+### Поиск строк, не начинающихся со строки (например, #)
 
-<h5>
-<a id="grep-strings-between-a-bracket" class="anchor" href="#grep-strings-between-a-bracket" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep strings between a bracket()</h5>
+```bash
+grep -v '^#' file.txt
+```
 
-<div class="highlight highlight-source-shell"><pre>grep -oP <span class="pl-s"><span class="pl-pds">'</span>\(\K[^\)]+<span class="pl-pds">'</span></span></pre></div>
+### Искать переменные с пробелом внутри (например, myvar="some strings")
 
-<h5>
-<a id="grep-number-of-characters-with-known-strings-in-betweeneg-aael000001-ra" class="anchor" href="#grep-number-of-characters-with-known-strings-in-betweeneg-aael000001-ra" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>grep number of characters with known strings in between(e.g. AAEL000001-RA)</h5>
+```bash
+grep "$myvar" filename
+#не забудьте заключить переменную в кавычки!
+```
 
-<div class="highlight highlight-source-shell"><pre>grep -o -w <span class="pl-s"><span class="pl-pds">"</span>\w\{10\}\-R\w\{1\}<span class="pl-pds">"</span></span></pre></div>
+### Искать только одно/первое совпадение (например, 'bbo')
 
-<p>// \w word character [0-9a-zA-Z_] \W not word character </p>
+```bash
+grep -m 1 bbo filename
+```
 
-<h5>
-<a id="a-lot-examples-here" class="anchor" href="#a-lot-examples-here" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>a lot examples here</h5>
+### Искать и возвращать номер совпадающей строки (например, 'bbo')
 
-<p><a href="http://www.cyberciti.biz/faq/grep-regular-expressions/">http://www.cyberciti.biz/faq/grep-regular-expressions/</a></p>
+```bash
+grep -c bbo filename
+```
 
-<h2>
-<a id="sed" class="anchor" href="#sed" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sed</h2>
+### Подсчет вхождений (например, три раза строка считается три раза)
 
-<p>[<a href="#handy-bash-oneliner-commands-for-tsv-file-editing">back to top</a>]</p>
+```bash
+grep -o bbo filename |wc -l
+```
 
-<h5>
-<a id="remove-lines-with-word-eg-bbo" class="anchor" href="#remove-lines-with-word-eg-bbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>remove lines with word (e.g. bbo)</h5>
+### Нечувствительный к регистру grep (например, 'bbo'/'BBO'/'Bbo')
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">"</span>/bbo/d<span class="pl-pds">"</span></span> filename</pre></div>
+```bash
+grep -i "bbo" filename
+```
 
-<h5>
-<a id="edit-infile-edit-and-save" class="anchor" href="#edit-infile-edit-and-save" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>edit infile (edit and save)</h5>
+### Выявить совпадение (например, 'bbo')
 
-<div class="highlight highlight-source-shell"><pre>sed -i <span class="pl-s"><span class="pl-pds">"</span>/bbo/d<span class="pl-pds">"</span></span> filename</pre></div>
+```bash
+grep --color bbo filename
+```
 
-<h5>
-<a id="when-using-variable-eg-i-use-double-quotes--" class="anchor" href="#when-using-variable-eg-i-use-double-quotes--" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>when using variable (e.g. $i), use double quotes " "</h5>
+### Grep ищет все файлы в каталоге (например, 'bbo')
 
-<p>e.g. add &gt;$i to the first line (to make a FASTA file)</p>
+```bash
+grep -R bbo /path/to/directory
+# или
+grep -r bbo /path/to/directory
+```
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">"</span>1i &gt;<span class="pl-smi">$i</span><span class="pl-pds">"</span></span>  </pre></div>
+### Поиск всех файлов в каталоге, не выводите имена файлов (например, 'bbo')
 
-<p>//notice the double quotes! in other examples, you can use a single quote, but here, no way! 
-//'1i' means insert to first line</p>
+```bash
+grep -rh bbo /path/to/directory
+```
 
-<h5>
-<a id="delete-empty-lines" class="anchor" href="#delete-empty-lines" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>delete empty lines</h5>
+### Поиск всех файлов в каталоге, вывод ТОЛЬКО имен файлов с совпадениями (например, 'bbo')
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>/^\s*$/d<span class="pl-pds">'</span></span> </pre></div>
+```bash
+grep -rl bbo /path/to/directory
+```
 
-<p>or</p>
+### Grep OR (например, A или B или C или D)
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>s/^$/d<span class="pl-pds">'</span></span> </pre></div>
+```grep
+grep 'A\|B\|C\|D'
+```
 
-<h5>
-<a id="delete-last-line" class="anchor" href="#delete-last-line" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>delete last line</h5>
+### Grep AND (например, A и B)
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>$d<span class="pl-pds">'</span></span> </pre></div>
+```bash
+grep 'A.*B'
+```
 
-<h5>
-<a id="delete-last-character-from-end-of-file" class="anchor" href="#delete-last-character-from-end-of-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>delete last character from end of file</h5>
+### Regex любой отдельный символ (например, ACB или AEB)
 
-<div class="highlight highlight-source-shell"><pre>sed -i <span class="pl-s"><span class="pl-pds">'</span>$ s/.$//<span class="pl-pds">'</span></span> filename</pre></div>
+```bash
+grep 'A.B'
+```
 
-<h5>
-<a id="add-string-to-end-of-file-eg-" class="anchor" href="#add-string-to-end-of-file-eg-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>add string to end of file (e.g. "]")</h5>
+### Regex с определенным символом или без него (например, color или color)
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>$s/$/]/<span class="pl-pds">'</span></span> filename</pre></div>
+```bash
+grep 'colou\?r'
+```
 
-<h5>
-<a id="add-string-to-end-of-each-line-eg-" class="anchor" href="#add-string-to-end-of-each-line-eg-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>add string to end of each line (e.g. "}")</h5>
+### Перепечатка всего содержимого файлаА из файлаВ
 
-<div class="highlight highlight-source-shell"><pre>sed -e <span class="pl-s"><span class="pl-pds">'</span>s/$/\}\]/<span class="pl-pds">'</span></span> filename</pre></div>
+```bash
+grep -f fileA fileB
+```
 
-<h5>
-<a id="add-n-every-nth-character-eg-every-4th-character" class="anchor" href="#add-n-every-nth-character-eg-every-4th-character" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>add \n every nth character (e.g. every 4th character)</h5>
+### Найти вкладку
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>s/.\{4\}/&amp;\n/g<span class="pl-pds">'</span></span> </pre></div>
+```bash
+grep $'\t'
+```
 
-<h5>
-<a id="concatenatecombinejoin-files-with-a-seperator-and-next-line-eg-seperate-by-" class="anchor" href="#concatenatecombinejoin-files-with-a-seperator-and-next-line-eg-seperate-by-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>concatenate/combine/join files with a seperator and next line (e.g seperate by ",")</h5>
+### Поиск переменной из переменной
 
-<div class="highlight highlight-source-shell"><pre>sed -s <span class="pl-s"><span class="pl-pds">'</span>$a,<span class="pl-pds">'</span></span> <span class="pl-k">*</span>.json <span class="pl-k">&gt;</span> all.json</pre></div>
+```bash
+$echo "$long_str"|grep -q "$short_str"
+if [ $? -eq 0 ]; then echo 'found'; fi
+#grep -q выведет 0, если совпадение найдено
+#не забудьте добавить пробел между []!
+```
 
-<h5>
-<a id="substitution-eg-replace-a-by-b" class="anchor" href="#substitution-eg-replace-a-by-b" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>substitution (e.g. replace A by B)</h5>
+### Grep-строки между скобками()
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>s/A/B/g<span class="pl-pds">'</span></span> filename </pre></div>
+```bash
+grep -oP '\(\K[^\)]+'
+```
 
-<h5>
-<a id="select-lines-start-with-string-eg-bbo" class="anchor" href="#select-lines-start-with-string-eg-bbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>select lines start with string (e.g. bbo)</h5>
+### Поиск количества символов с известными строками между ними (например, AAEL000001-RA)
 
-<div class="highlight highlight-source-shell"><pre>sed -n <span class="pl-s"><span class="pl-pds">'</span>/^@S/p<span class="pl-pds">'</span></span> </pre></div>
+```bash
+grep -o -w "\w\{10\}\-R\w\{1\}"
+# \w слово символ [0-9a-zA-Z_] \W не слово символ
+```
 
-<h5>
-<a id="delete-lines-with-string-eg-bbo" class="anchor" href="#delete-lines-with-string-eg-bbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>delete lines with string (e.g. bbo)</h5>
+### Пропустить каталог (например, 'bbo')
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>/bbo/d<span class="pl-pds">'</span></span> filename </pre></div>
+```bash
+grep -d skip 'bbo' /path/to/files/*
+```
 
-<h5>
-<a id="print-every-nth-lines" class="anchor" href="#print-every-nth-lines" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>print every nth lines</h5>
+## Sed
 
-<div class="highlight highlight-source-shell"><pre>sed -n <span class="pl-s"><span class="pl-pds">'</span>0~3p<span class="pl-pds">'</span></span> filename</pre></div>
+[[назад к началу](#удобные-однострочники-bash)]
 
-<p>//catch 0: start; 3: step</p>
+### Удалите 1-ю строку
 
-<h5>
-<a id="print-every-odd--lines" class="anchor" href="#print-every-odd--lines" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>print every odd # lines</h5>
+```bash
+sed 1d filename
+```
 
-<div class="highlight highlight-source-shell"><pre>sed -n <span class="pl-s"><span class="pl-pds">'</span>1~2p<span class="pl-pds">'</span></span> </pre></div>
+### Удалить первые 100 строк (удалить строки 1-100)
 
-<h5>
-<a id="print-every-third-line-including-the-first-line" class="anchor" href="#print-every-third-line-including-the-first-line" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>print every third line including the first line</h5>
+```bash
+sed 1,100d filename
+```
 
-<div class="highlight highlight-source-shell"><pre>sed -n <span class="pl-s"><span class="pl-pds">'</span>1p;0~3p<span class="pl-pds">'</span></span> </pre></div>
+### Удалите строки со строкой (например, 'bbo')
 
-<h5>
-<a id="remove-leading-whitespace-and-tabs" class="anchor" href="#remove-leading-whitespace-and-tabs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>remove leading whitespace and tabs</h5>
+```bash
+sed "/bbo/d" filename
+# нечувствительно к регистру:
+sed "/bbo/Id" filename
+```
 
-<div class="highlight highlight-source-shell"><pre>sed -e <span class="pl-s"><span class="pl-pds">'</span>s/^[ \t]*//<span class="pl-pds">'</span></span></pre></div>
+### Удалите строки, n-й символ которых не равен значению (например, 5-й символ не равен 2)
 
-<p>//notice a whitespace before '\t'!!</p>
+```bash
+sed -E '/^.{5}[^2]/d'
+#aaaa2aaa (вы можете остаться)
+#aaaa1aaa (удалить!)
+```
 
-<h5>
-<a id="remove-only-leading-whitespace" class="anchor" href="#remove-only-leading-whitespace" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>remove only leading whitespace</h5>
+### Редактирование infile (редактирование и сохранение в файл), (например, удаление строк с 'bbo' и сохранение в файл)
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>s/ *//<span class="pl-pds">'</span></span></pre></div>
+```bash
+sed -i "/bbo/d" filename
+```
 
-<p>//notice a whitespace before '*'!!</p>
+### При использовании переменной (например, $i), используйте двойные кавычки " "
 
-<h5>
-<a id="remove-ending-commas" class="anchor" href="#remove-ending-commas" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>remove ending commas</h5>
+```bash
+# например, добавьте >$i к первой строке (чтобы сделать файл FASTA для биоинформатики)
+sed "1i >$i"
+# обратите внимание на двойные кавычки! В других примерах можно использовать одинарные кавычки, но здесь - ни в коем случае!
+# '1i' означает вставить в первую строку.
+```
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>s/,$//g<span class="pl-pds">'</span></span> </pre></div>
+### Одновременное использование переменной окружения и шаблона конца строки
 
-<h5>
-<a id="add-a-column-to-the-end" class="anchor" href="#add-a-column-to-the-end" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>add a column to the end</h5>
+```bash
+# Используйте обратную косую черту для шаблона конца строки $, и двойные кавычки для выражения переменной
+sed -e "\$s/\$/\n+--$3--+/"
+```
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">"</span>s/$/\t<span class="pl-smi">$i</span>/<span class="pl-pds">"</span></span></pre></div>
+### Удаление/удаление пустых строк
 
-<p>//$i is the valuable you want to add
-e.g. add the filename to every last column of the file</p>
+```bash
+sed '/^\s*$/d'
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> <span class="pl-s"><span class="pl-pds">$(</span>ls<span class="pl-pds">)</span></span><span class="pl-k">;</span><span class="pl-k">do</span> sed -i <span class="pl-s"><span class="pl-pds">"</span>s/$/\t<span class="pl-smi">$i</span>/<span class="pl-pds">"</span></span> <span class="pl-smi">$i</span><span class="pl-k">;</span><span class="pl-k">done</span></pre></div>
+# или
 
-<h5>
-<a id="add-extension-of-filename-to-last-column" class="anchor" href="#add-extension-of-filename-to-last-column" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>add extension of filename to last column</h5>
+sed '/^$/d'
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> T000086_1.02.n T000086_1.02.p<span class="pl-k">;</span><span class="pl-k">do</span> sed <span class="pl-s"><span class="pl-pds">"</span>s/$/\t<span class="pl-smi">${i<span class="pl-k">/*</span>.<span class="pl-k">/</span>}</span>/<span class="pl-pds">"</span></span> <span class="pl-smi">$i</span><span class="pl-k">;</span><span class="pl-k">done</span> <span class="pl-k">&gt;</span>T000086_1.02.np</pre></div>
+### Удаление/удаление последней строки
 
-<h5>
-<a id="remove-newline-nextline" class="anchor" href="#remove-newline-nextline" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>remove newline\ nextline</h5>
+```bash
+sed '$d'
+```
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>:a;N;$!ba;s/\n//g<span class="pl-pds">'</span></span></pre></div>
+### Удаление/удаление последнего символа из конца файла
 
-<h5>
-<a id="print-a-number-of-lines-eg-line-10th-to-line-33-rd" class="anchor" href="#print-a-number-of-lines-eg-line-10th-to-line-33-rd" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>print a number of lines (e.g. line 10th to line 33 rd)</h5>
+```bash
+sed -i '$ s/.$//' filename
+```
 
-<div class="highlight highlight-source-shell"><pre>sed -n <span class="pl-s"><span class="pl-pds">'</span>10,33p<span class="pl-pds">'</span></span> <span class="pl-k">&lt;</span>filename</pre></div>
+### Добавить строку в начало файла (например, "\[")
 
-<h5>
-<a id="change-delimiter" class="anchor" href="#change-delimiter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>change delimiter</h5>
+```bash
+sed -i '1s/^/[/' file
+```
 
-<div class="highlight highlight-source-shell"><pre>sed <span class="pl-s"><span class="pl-pds">'</span>s=/=\\/=g<span class="pl-pds">'</span></span></pre></div>
+### Добавить строку в определенный номер строки (например, добавить 'something' в строку 1 и строку 3)
 
-<h1>
-<a id="awk" class="anchor" href="#awk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Awk</h1>
+```bash
+sed -e '1isomething' -e '3isomething'
+```
 
-<p>[<a href="#handy-bash-oneliner-commands-for-tsv-file-editing">back to top</a>]</p>
+### Добавьте строку в конец файла (например, "]")
 
-<h5>
-<a id="set-tab-as-field-separator" class="anchor" href="#set-tab-as-field-separator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>set tab as field separator</h5>
+```bash
+sed '$s/$/]/' filename
+```
 
-<div class="highlight highlight-source-shell"><pre>awk -F <span class="pl-s"><span class="pl-pds">$'</span><span class="pl-cce">\t</span><span class="pl-pds">'</span></span>  </pre></div>
+### Добавить новую строку в конец
 
-<h5>
-<a id="output-as-tab-separated-also-as-field-separator" class="anchor" href="#output-as-tab-separated-also-as-field-separator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>output as tab separated (also as field separator)</h5>
+```bash
+sed '$a\'
+```
 
-<div class="highlight highlight-source-shell"><pre>awk -v OFS=<span class="pl-s"><span class="pl-pds">'</span>\t<span class="pl-pds">'</span></span> </pre></div>
+### Добавьте строку в начало каждой строки (например, 'bbo')
 
-<h5>
-<a id="pass-variable" class="anchor" href="#pass-variable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>pass variable</h5>
+```bash
+sed -e 's/^/bbo/' file
+```
 
-<div class="highlight highlight-source-shell"><pre>a=bbo<span class="pl-k">;</span>b=obb<span class="pl-k">;</span>
-awk -v a=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> -v b=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$1</span>==a &amp;&amp; <span class="pl-smi">$1</span>0=b' filename </span></pre></div>
+### Добавьте строку в конец каждой строки (например, "}")
 
-<h5>
-<a id="print-number-of-characters-on-each-line" class="anchor" href="#print-number-of-characters-on-each-line" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>print number of characters on each line</h5>
+```bash
+sed -e 's/$/\}\]/' имя файла
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>{print length ($0);}<span class="pl-pds">'</span></span> filename </pre></div>
+### Добавить \n через каждый n-ый символ (например, через каждый 4-й символ)
 
-<h5>
-<a id="find-number-of-columns" class="anchor" href="#find-number-of-columns" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>find number of columns</h5>
+```bash
+sed 's/.\{4\}/&\n/g'
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>{print NF}<span class="pl-pds">'</span></span> </pre></div>
+### Конкатенировать/комбинировать/объединять файлы с разделителем и следующей строкой (например, разделять ",")
 
-<h5>
-<a id="reverse-column-order" class="anchor" href="#reverse-column-order" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>reverse column order</h5>
+```bash
+sed -s '$a,' *.json > all.json
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>{print $2, $1}<span class="pl-pds">'</span></span> </pre></div>
+### Подстановка (например, заменить A на B)
 
-<h5>
-<a id="check-if-there-is-a-comma-in-a-column-eg-column-1" class="anchor" href="#check-if-there-is-a-comma-in-a-column-eg-column-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>check if there is a comma in a column (e.g. column $1)</h5>
+```bash
+sed 's/A/B/g' filename
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>$1~/,/ {print}<span class="pl-pds">'</span></span>  </pre></div>
+### Подстановка с подстановочным знаком (например, заменить строку, начинающуюся с aaa= на aaa=/my/new/path)
 
-<h5>
-<a id="split-and-do-for-loop" class="anchor" href="#split-and-do-for-loop" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>split and do for loop</h5>
+```bash
+sed "s/aaa=.*/aaa=\/my\/new\/path/g"
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>{split($2, a,",");for (i in a) print $1"\t"a[i]} filename </span></pre></div>
+### Выберите строки, начинающиеся со строки (например, 'bbo')
 
-<h5>
-<a id="print-all-lines-before-nth-occurence-of-a-string-eg-stop-print-lines-when-bbo-appears-7-times" class="anchor" href="#print-all-lines-before-nth-occurence-of-a-string-eg-stop-print-lines-when-bbo-appears-7-times" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>print all lines before nth occurence of a string (e.g stop print lines when bbo appears 7 times)</h5>
+```bash
+sed -n '/^@S/p'
+```
 
-<div class="highlight highlight-source-shell"><pre>awk -v N=7 <span class="pl-s"><span class="pl-pds">'</span>{print}/bbo/&amp;&amp; --N&lt;=0 {exit}<span class="pl-pds">'</span></span></pre></div>
+### Удалить строки, начинающиеся со строки (например, 'bbo')
 
-<h5>
-<a id="print-filename-and-last-line-of-all-files-in-directory" class="anchor" href="#print-filename-and-last-line-of-all-files-in-directory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>print filename and last line of all files in directory</h5>
+```bash
+sed '/bbo/d' filename
+```
 
-<div class="highlight highlight-source-shell"><pre>ls<span class="pl-k">|</span>xargs -n1 -I file awk <span class="pl-s"><span class="pl-pds">'</span>{s=$0};END{print FILENAME,s}<span class="pl-pds">'</span></span> file<span class="pl-s"><span class="pl-pds">'</span></span></pre></div>
+### Вывести/получить/обрезать диапазон строк (например, строка 500-5000)
 
-<h5>
-<a id="add-string-to-the-beginning-of-a-column-eg-add-chr-to-column-3" class="anchor" href="#add-string-to-the-beginning-of-a-column-eg-add-chr-to-column-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>add string to the beginning of a column (e.g add "chr" to column $3)</h5>
+```bash
+sed -n 500,5000p filename
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>BEGIN{OFS="\t"}$3="chr"$3<span class="pl-pds">'</span></span> </pre></div>
+### Печать каждой n-ой строки
 
-<h5>
-<a id="remove-lines-with-string-eg-bbo" class="anchor" href="#remove-lines-with-string-eg-bbo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>remove lines with string (e.g. bbo)</h5>
+```bash
+sed -n '0~3p' filename
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>!/bbo/<span class="pl-pds">'</span></span> file </pre></div>
+# catch 0: start; 3: step
+```
 
-<h5>
-<a id="column-subtraction" class="anchor" href="#column-subtraction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>column subtraction</h5>
+### Выводите каждую нечетную # строку
 
-<div class="highlight highlight-source-shell"><pre>cat file<span class="pl-k">|</span> awk -F <span class="pl-s"><span class="pl-pds">'</span>\t<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>BEGIN {SUM=0}{SUM+=$3-$2}END{print SUM}<span class="pl-pds">'</span></span></pre></div>
+```bash
+sed -n '1~2p'
+```
 
-<h5>
-<a id="usage-and-meaning-of-nr-and-fnr" class="anchor" href="#usage-and-meaning-of-nr-and-fnr" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>usage and meaning of NR and FNR</h5>
+### Выведите каждую третью строку, включая первую
 
-<p>e.g.
-fileA:
-a
-b
-c
-fileB:
-d
-e</p>
+```bash
+sed -n '1p;0~3p'
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>print FILENAME, NR,FNR,$0}<span class="pl-pds">'</span></span> fileA fileB </pre></div>
+### Удаление пробельных символов и табуляции
 
-<p>fileA    1    1    a
-fileA    2    2    b
-fileA    3    3    c
-fileB    4    1    d
-fileB    5    2    e</p>
+```bash
+sed -e 's/^[ \t]*//'
+# Заметьте пробел перед '\t'!!!
+```
 
-<h5>
-<a id="and-gate" class="anchor" href="#and-gate" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>and gate</h5>
+### Удаление только ведущих пробелов
 
-<p>e.g.
-fileA:
-1    0</p>
+```bash
+sed 's/ *//'
 
-<p>2    1</p>
+# обратите внимание на пробел перед '*'!!!
+```
 
-<p>3    1</p>
+### Удаление завершающих запятых
 
-<p>4    0</p>
+```bash
+sed 's/,$//g'
+```
 
-<p>fileB:</p>
+### Добавьте колонку в конец
 
-<p>1    0</p>
+```bash
+sed "s/$/\t$i/"
+# $i - это значение, которое вы хотите добавить.
 
-<p>2    1</p>
+# Чтобы добавить имя файла в каждый последний столбец файла
+for i in $(ls);do sed -i "s/$/\t$i/" $i;done
+```
 
-<p>3    0</p>
+### Добавить расширение имени файла в последний столбец
 
-<p>4    1</p>
+```bash
+for i in T000086_1.02.n T000086_1.02.p;do sed "s/$/\t${i/*./}/" $i;done >T000086_1.02.np
+```
 
-<div class="highlight highlight-source-shell"><pre>awk -v OFS=<span class="pl-s"><span class="pl-pds">'</span>\t<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>NR=FNR{a[$1]=$2;next} NF {print $1,((a[$1]=$2)? $2:"0")}<span class="pl-pds">'</span></span> fileA fileB </pre></div>
+### Удалить новую строку\ следующую строку
 
-<p>1    0</p>
+```bash
+sed ':a;N;$!ba;s/\n//g'
+```
 
-<p>2    1</p>
+### Вывести определенную строку (например, 123-ю строку)
 
-<p>3    0</p>
+```bash
+sed -n -e '123p'
+```
 
-<p>4    0</p>
+### Выведите ряд строк (например, от 10-й до 33-й строки)
 
-<h5>
-<a id="round-all-numbers-of-file-eg-2-significant-figure" class="anchor" href="#round-all-numbers-of-file-eg-2-significant-figure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>round all numbers of file (e.g. 2 significant figure)</h5>
+```bash
+sed -n '10,33p' <filename
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>{while (match($0, /[0-9]+\[0-9]+/)){</span>
-<span class="pl-s">    \printf "%s%.2f", substr($0,0,RSTART-1),substr($0,RSTART,RLENGTH)</span>
-<span class="pl-s">    \$0=substr($0, RSTART+RLENGTH)</span>
-<span class="pl-s">    \}</span>
-<span class="pl-s">    \print</span>
-<span class="pl-s">    \}<span class="pl-pds">'</span></span></pre></div>
+### Изменить разделитель
 
-<h5>
-<a id="give-numberindex-to-every-row" class="anchor" href="#give-numberindex-to-every-row" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>give number/index to every row</h5>
+```bash
+sed 's=/=/=\\\\/=g'
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>{printf("%s\t%s\n",NR,$0)}<span class="pl-pds">'</span></span></pre></div>
+### Заменить подстановочным знаком (например, A-1-e или A-2-e или A-3-e....)
 
-<h5>
-<a id="break-combine-column-data-into-rows" class="anchor" href="#break-combine-column-data-into-rows" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>break combine column data into rows</h5>
+```bash
+sed 's/A-.*-e//g' filename
+```
 
-<p>e.g. 
-seperate</p>
+### Удалить последний символ файла
 
-<p>David    cat,dog</p>
+```bash
+sed '$ s/.$//'
+```
 
-<p>into </p>
+### Вставить символ в указанную позицию файла (например, AAAAAA --> AAA#AAA)
 
-<p>David    cat</p>
+```bash
+sed -r -e 's/^.{3}/&#/' file
+```
 
-<p>David    dog</p>
+## Awk
 
-<p>detail here:　<a href="http://stackoverflow.com/questions/33408762/bash-turning-single-comma-separated-column-into-multi-line-string">http://stackoverflow.com/questions/33408762/bash-turning-single-comma-separated-column-into-multi-line-string</a></p>
+[[назад к началу](#удобные-однострочники-bash)]
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>{split($2,a,",");for(i in a)print $1"\t"a[i]}<span class="pl-pds">'</span></span> file</pre></div>
+### Установите табуляцию в качестве разделителя полей
 
-<h5>
-<a id="sum-up-a-file-each-line-in-file-contains-only-one-number" class="anchor" href="#sum-up-a-file-each-line-in-file-contains-only-one-number" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>sum up a file (each line in file contains only one number)</h5>
+```bash
+awk -F $'\t'
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>{s+=$1} END {print s}<span class="pl-pds">'</span></span> filename</pre></div>
+### Вывод в виде разделения табуляцией (также как разделитель полей)
 
-<h5>
-<a id="average-a-file-each-line-in-file-contains-only-one-number" class="anchor" href="#average-a-file-each-line-in-file-contains-only-one-number" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>average a file (each line in file contains only one number)</h5>
+```bash
+awk -v OFS='\t'
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>{s+=$1}END{print s/NR}<span class="pl-pds">'</span></span></pre></div>
+### Передача переменной
 
-<h5>
-<a id="print-field-start-with-string-eg-linux" class="anchor" href="#print-field-start-with-string-eg-linux" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>print field start with string (e.g Linux)</h5>
+```bash
+a=bbo;b=obb;
+awk -v a="$a" -v b="$b" "$1==a && $10=b" filename
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span>$1 ~ /^Linux/<span class="pl-pds">'</span></span></pre></div>
+### Выведите номер строки и количество символов в каждой строке
 
-<h5>
-<a id="sort-a-row-eg-1-40--35--12--23-----1-12----23--35--40" class="anchor" href="#sort-a-row-eg-1-40--35--12--23-----1-12----23--35--40" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>sort a row (e.g. 1 40  35  12  23  --&gt; 1 12    23  35  40)</h5>
+```bash
+awk '{print NR,length($0);}' filename
+```
 
-<div class="highlight highlight-source-shell"><pre>awk <span class="pl-s"><span class="pl-pds">'</span> {split( $0, a, "\t" ); asort( a ); for( i = 1; i &lt;= length(a); i++ ) printf( "%s\t", a[i] ); printf( "\n" ); }<span class="pl-pds">'</span></span></pre></div>
+### Найти количество столбцов
 
-<h2>
-<a id="xargs" class="anchor" href="#xargs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Xargs</h2>
+```bash
+awk '{print NF}'
+```
 
-<p>[<a href="#handy-bash-oneliner-commands-for-tsv-file-editing">back to top</a>]</p>
+### Обратный порядок столбцов
 
-<h5>
-<a id="set-tab-as-delimiter-defaultspace" class="anchor" href="#set-tab-as-delimiter-defaultspace" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>set tab as delimiter (default:space)</h5>
+```bash
+awk '{print $2, $1}'
+```
 
-<div class="highlight highlight-source-shell"><pre>xargs -d<span class="pl-cce">\t</span></pre></div>
+### Проверка наличия запятой в колонке (например, в колонке $1)
 
-<h5>
-<a id="display-3-items-per-line" class="anchor" href="#display-3-items-per-line" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>display 3 items per line</h5>
+```bash
+awk '$1~/,/ {print}'
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> 1 2 3 4 5 6<span class="pl-k">|</span> xargs -n 3</pre></div>
+### Разделение и выполнение цикла for
 
-<p>//1 2 3
-  4 5 6</p>
+```bash
+awk '{split($2, a,",");for (i in a) print $1"\t "a[i]}' filename
+```
 
-<h5>
-<a id="prompt-before-execution" class="anchor" href="#prompt-before-execution" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>prompt before execution</h5>
+### Вывести все строки до n-го вхождения строки (например, остановить печать строк, когда 'bbo' появляется 7 раз)
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> a b c <span class="pl-k">|</span>xargs -p -n 3</pre></div>
+```bash
+awk -v N=7 '{print}/bbo/&& --N<=0 {exit}'
+```
 
-<h5>
-<a id="print-command-along-with-output" class="anchor" href="#print-command-along-with-output" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>print command along with output</h5>
+### Выведите имя файла и последнюю строку всех файлов в каталоге
 
-<div class="highlight highlight-source-shell"><pre>xargs -t abcd</pre></div>
+```bash
+ls|xargs -n1 -I file awk '{s=$0};END{print FILENAME,s}' file
+```
 
-<p>///bin/echo abcd
-//abcd</p>
+### Добавить строку в начало столбца (например, добавить "chr" в столбец $3)
 
-<h5>
-<a id="with-find-and-rm" class="anchor" href="#with-find-and-rm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>with find and rm</h5>
+```bash
+awk 'BEGIN{OFS="\t"}$3="chr»$3’
+```
 
-<div class="highlight highlight-source-shell"><pre>find <span class="pl-c1">.</span> -name <span class="pl-s"><span class="pl-pds">"</span>*.html<span class="pl-pds">"</span></span><span class="pl-k">|</span>xargs rm -rf</pre></div>
+### Удалите строки со строкой (например, 'bbo') (AWK)
 
-<p>delete fiels with whitespace in filename (e.g. "hello 2001")</p>
+```bash
+awk '!/bbo/' file
+```
 
-<div class="highlight highlight-source-shell"><pre>find <span class="pl-c1">.</span> -name <span class="pl-s"><span class="pl-pds">"</span>*.c<span class="pl-pds">"</span></span> -print0<span class="pl-k">|</span>xargs -0 rm -rf</pre></div>
+### Удалить последний столбец
 
-<h5>
-<a id="show-limits" class="anchor" href="#show-limits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show limits</h5>
+```bash
+awk 'NF{NF-=1};1' файл
+```
 
-<div class="highlight highlight-source-shell"><pre>xargs --show-limits</pre></div>
+### Использование и значение NR и FNR
 
-<h5>
-<a id="move-files-to-folder" class="anchor" href="#move-files-to-folder" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>move files to folder</h5>
+```bash
+# Например, есть два файла:
+# fileA:
+# a
+# b
+# c
+# fileB:
+# d
+# e
+awk 'print FILENAME, NR,FNR,$0}' fileA fileB
+# fileA 1 1 a
+# fileA 2 2 b
+# fileA 3 3 c
+# fileB 4 1 d
+# fileB 5 2 e
+```
 
-<div class="highlight highlight-source-shell"><pre>find <span class="pl-c1">.</span> -name <span class="pl-s"><span class="pl-pds">"</span>*.bak<span class="pl-pds">"</span></span> -print 0<span class="pl-k">|</span>xargs -0 -I {} mv {} <span class="pl-k">~</span>/old</pre></div>
+### AND gate
 
-<p>or</p>
+```bash
+# Например, есть два файла:
+# fileA:
+# 1 0
+# 2 1
+# 3 1
+# 4 0
+# fileB:
+# 1 0
+# 2 1
+# 3 0
+# 4 1
 
-<div class="highlight highlight-source-shell"><pre>find <span class="pl-c1">.</span> -name <span class="pl-s"><span class="pl-pds">"</span>*.bak<span class="pl-pds">"</span></span> -print 0<span class="pl-k">|</span>xargs -0 -I file mv file <span class="pl-k">~</span>/old</pre></div>
+awk -v OFS='\t' 'NR=FNR{a[$1]=$2;next} NF {print $1,((a[$1]=$2)? $2: "0")}' fileA fileB
+# 1 0
+# 2 1
+# 3 0
+# 4 0
+```
 
-<h5>
-<a id="move-first-100th-files-to-a-directory-eg-d1" class="anchor" href="#move-first-100th-files-to-a-directory-eg-d1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>move first 100th files to a directory (e.g. d1)</h5>
+### Округлите все числа файла (например, до 2 значащей цифры)
 
-<div class="highlight highlight-source-shell"><pre>ls <span class="pl-k">|</span>head -100<span class="pl-k">|</span>xargs -I {} mv {} d1</pre></div>
+```bash
+awk '{while (match($0, /[0-9]+\[0-9]+/)){
+    \printf "%s%.2f", substr($0,0,RSTART-1),substr($0,RSTART,RLENGTH)
+    \$0=substr($0, RSTART+RLENGTH)
+    \}
+    \print
+    \}'
+```
 
-<h5>
-<a id="parallel" class="anchor" href="#parallel" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>parallel</h5>
+### Присвоить номер/индекс каждой строке
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">time</span> <span class="pl-c1">echo</span> {1..5} <span class="pl-k">|</span>xargs -n 1 -P 5 sleep</pre></div>
+```bash
+awk '{printf("%s\t%s\n",NR,$0)}’
+```
 
-<p>a lot faster than</p>
+### Объедините данные столбцов в строки
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">time</span> <span class="pl-c1">echo</span> {1..5} <span class="pl-k">|</span>xargs -n1 sleep</pre></div>
+```bash
+# Например, разделите следующее содержимое:
+# David cat,dog
+# в
+# David cat
+# Давид собака
 
-<h5>
-<a id="copy-all-files-from-a-to-b" class="anchor" href="#copy-all-files-from-a-to-b" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>copy all files from A to B</h5>
+awk '{split($2,a,",");for(i in a)print $1"\t "a[i]}' file
 
-<div class="highlight highlight-source-shell"><pre>find /dir/to/A -type f -name <span class="pl-s"><span class="pl-pds">"</span>*.py<span class="pl-pds">"</span></span> -print 0<span class="pl-k">|</span> xargs -0 -r -I file cp -v -p file --target-directory=/path/to/B</pre></div>
+# Деталь здесь: http://stackoverflow.com/questions/33408762/bash-turning-single-comma-separated-column-into-multi-line-string
+```
 
-<p>//v: verbose|
-//p: keep detail (e.g. owner)</p>
+### Усреднение файла (каждая строка в файле содержит только одно число)
 
-<h5>
-<a id="with-sed" class="anchor" href="#with-sed" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>with sed</h5>
+```bash
+awk '{s+=$1}END{print s/NR}'
+```
 
-<div class="highlight highlight-source-shell"><pre>ls <span class="pl-k">|</span>xargs -n1 -I file sed -i <span class="pl-s"><span class="pl-pds">'</span>/^Pos/d<span class="pl-pds">'</span></span> filename</pre></div>
+### Печать поля, начинающегося со строки (например, Linux)
 
-<h5>
-<a id="add-the-file-name-to-the-first-line-of-file" class="anchor" href="#add-the-file-name-to-the-first-line-of-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>add the file name to the first line of file</h5>
+```bash
+awk '$1 ~ /^Linux/'
+```
 
-<div class="highlight highlight-source-shell"><pre>ls <span class="pl-k">|</span>sed <span class="pl-s"><span class="pl-pds">'</span>s/.txt//g<span class="pl-pds">'</span></span><span class="pl-k">|</span>xargs -n1 -I file sed -i -e <span class="pl-s"><span class="pl-pds">'</span>1 i\&gt;file\<span class="pl-pds">'</span></span> file.txt</pre></div>
+### Сортировка строки (например, 1 40 35 12 23 --> 1 12 23 35 40)
 
-<h5>
-<a id="count-all-files" class="anchor" href="#count-all-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>count all files</h5>
+```bash
+awk ' {split( $0, a, "\t" ); asort( a ); for( i = 1; i <= length(a); i++ ) printf( "%s\t", a[i] ); printf( "\n" ); }''
+```
 
-<div class="highlight highlight-source-shell"><pre>ls <span class="pl-k">|</span>xargs -n1 wc -l</pre></div>
+### Вычитаем значения предыдущей строки (добавляем столбец6, который равен столбцу4 минус последний столбец5)
 
-<h5>
-<a id="to-filter-txt-to-a-single-line" class="anchor" href="#to-filter-txt-to-a-single-line" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>to filter txt to a single line</h5>
+```bash
+awk '{$6 = $4 - prev5; prev5 = $5; print;}'
+```
 
-<div class="highlight highlight-source-shell"><pre>ls -l<span class="pl-k">|</span> xargs</pre></div>
+## Xargs
 
-<h5>
-<a id="count-files-within-directories" class="anchor" href="#count-files-within-directories" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>count files within directories</h5>
+[[назад к началу](#удобные-однострочники-bash)]
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> mso{1..8}<span class="pl-k">|</span>xargs -n1 bash -c <span class="pl-s"><span class="pl-pds">'</span>echo -n "$1:"; ls -la "$1"| grep -w 74 |wc -l<span class="pl-pds">'</span></span> --</pre></div>
+### Установить табуляцию в качестве разделителя (по умолчанию:пробел)
 
-<p>// "--" signals the end of options and display further option processing</p>
+```bash
+xargs -d\t
+```
 
-<h5>
-<a id="download-dependencies-files-and-install-eg-requirementstxt" class="anchor" href="#download-dependencies-files-and-install-eg-requirementstxt" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>download dependencies files and install (e.g. requirements.txt)</h5>
+### Запрос команд перед их выполнением
 
-<div class="highlight highlight-source-shell"><pre>cat requirements.txt<span class="pl-k">|</span> xargs -n1 sudo pip install</pre></div>
+```bash
+ls|xargs -L1 -p head
+```
 
-<h5>
-<a id="count-lines-in-all-file-also-count-total-lines" class="anchor" href="#count-lines-in-all-file-also-count-total-lines" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>count lines in all file, also count total lines</h5>
+### Отображение 3 элементов в строке
 
-<div class="highlight highlight-source-shell"><pre>ls<span class="pl-k">|</span>xargs wc -l</pre></div>
+```bash
+echo 1 2 3 4 5 6| xargs -n 3
+# 1 2 3
+# 4 5 6
 
-<h2>
-<a id="find" class="anchor" href="#find" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Find</h2>
+```
 
-<p>[<a href="#handy-bash-oneliner-commands-for-tsv-file-editing">back to top</a>]</p>
+### Подсказка перед выполнением
 
-<h5>
-<a id="list-all-sub-directoryfile-in-the-current-directory" class="anchor" href="#list-all-sub-directoryfile-in-the-current-directory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list all sub directory/file in the current directory</h5>
+```bash
+echo a b c |xargs -p -n 3
+```
 
-<div class="highlight highlight-source-shell"><pre>find <span class="pl-c1">.</span></pre></div>
+### Печать команды вместе с выводом
 
-<h5>
-<a id="list-all-files-under-the-current-directory" class="anchor" href="#list-all-files-under-the-current-directory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list all files under the current directory</h5>
+```bash
+xargs -t abcd
+# bin/echo abcd
+# abcd
 
-<div class="highlight highlight-source-shell"><pre>find <span class="pl-c1">.</span> -type f</pre></div>
+```
 
-<h5>
-<a id="list-all-directories-under-the-current-directory" class="anchor" href="#list-all-directories-under-the-current-directory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list all directories under the current directory</h5>
+### С помощью find и rm
 
-<div class="highlight highlight-source-shell"><pre>find <span class="pl-c1">.</span> -type d</pre></div>
+```bash
+find . -name "*.html"|xargs rm
 
-<h5>
-<a id="edit-all-files-under-current-directory-eg-replace-www-with-ww" class="anchor" href="#edit-all-files-under-current-directory-eg-replace-www-with-ww" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>edit all files under current directory (e.g. replace 'www' with 'ww')</h5>
+# при использовании обратного знака
+rm ``find . -name "*.html"`
+```
 
-<div class="highlight highlight-source-shell"><pre>find <span class="pl-c1">.</span> name <span class="pl-s"><span class="pl-pds">'</span>*.php<span class="pl-pds">'</span></span> -exec sed -i <span class="pl-s"><span class="pl-pds">'</span>s/www/w/g<span class="pl-pds">'</span></span> {} <span class="pl-cce">\;</span></pre></div>
+### Удаление файлов с пробелами в имени файла (например, "hello 2001")
 
-<p>if no subdirectory</p>
+```bash
+find . -name "*.c" -print0|xargs -0 rm -rf
+```
 
-<div class="highlight highlight-source-shell"><pre>replace <span class="pl-s"><span class="pl-pds">"</span>www<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>w<span class="pl-pds">"</span></span> -- <span class="pl-k">*</span></pre></div>
+### Показать ограничения на длину командной строки
 
-<p>//a space before *</p>
+```bash
+xargs --show-limits
+# Вывод с моего Ubuntu:
+# Ваши переменные окружения занимают 3653 байта.
+# Верхний предел POSIX на длину аргумента (эта система): 2091451
+# POSIX наименьший допустимый верхний предел длины аргумента (все системы): 4096
+# Максимальная длина команды, которую мы можем реально использовать: 2087798
+# Размер буфера команд, который мы фактически используем: 131072
+# Максимальный параллелизм (--max-procs должно быть не больше): 2147483647
+```
 
-<h5>
-<a id="find-and-output-only-filename-eg-mso" class="anchor" href="#find-and-output-only-filename-eg-mso" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>find and output only filename (e.g. "mso")</h5>
+### Переместить файлы в папку
 
-<div class="highlight highlight-source-shell"><pre>find mso<span class="pl-k">*</span>/ -name M<span class="pl-k">*</span> -printf <span class="pl-s"><span class="pl-pds">"</span>%f\n<span class="pl-pds">"</span></span></pre></div>
+```bash
+find . -name "*.bak" -print 0|xargs -0 -I {} mv {} ~/old
 
-<h5>
-<a id="find-and-delete-file-with-size-less-than-eg-74-byte" class="anchor" href="#find-and-delete-file-with-size-less-than-eg-74-byte" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>find and delete file with size less than (e.g. 74 byte)</h5>
+# или
+find . -name "*.bak" -print 0|xargs -0 -I file mv file ~/old
+```
 
-<div class="highlight highlight-source-shell"><pre>find <span class="pl-c1">.</span> -name <span class="pl-s"><span class="pl-pds">"</span>*.mso<span class="pl-pds">"</span></span> -size -74c -delete</pre></div>
+### Переместите первый 100-й файл в каталог (например, d1)
 
-<p>//M for MB, etc</p>
+```bash
+ls |head -100|xargs -I {} mv {} d1
+```
 
-<h2>
-<a id="loops" class="anchor" href="#loops" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Loops</h2>
+### Parallel
 
-<p>[<a href="#handy-bash-oneliner-commands-for-tsv-file-editing">back to top</a>]</p>
+```bash
+time echo {1..5} |xargs -n 1 -P 5 sleep
 
-<h5>
-<a id="while-loop-column-subtraction-of-a-file-eg-a-3-columns-file" class="anchor" href="#while-loop-column-subtraction-of-a-file-eg-a-3-columns-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>while loop, column subtraction of a file (e.g. a 3 columns file)</h5>
+# намного быстрее, чем:
+time echo {1..5} |xargs -n 1 sleep
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">while</span> <span class="pl-c1">read</span> a b c<span class="pl-k">;</span> <span class="pl-k">do</span> <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">$((</span><span class="pl-smi">$c</span><span class="pl-k">-</span><span class="pl-smi">$b</span><span class="pl-pds">))</span></span><span class="pl-k">;</span><span class="pl-k">done</span> <span class="pl-k">&lt;</span> <span class="pl-s"><span class="pl-pds">&lt;(</span>head filename<span class="pl-pds">)</span></span></pre></div>
+### Скопируйте все файлы из A в B
 
-<p>//there is a space between the two '&lt;'s</p>
+```bash
+find /dir/to/A -type f -name "*.py" -print 0| xargs -0 -r -I file cp -v -p file --target-directory=/path/to/B
 
-<h5>
-<a id="while-loop-sum-up-column-subtraction" class="anchor" href="#while-loop-sum-up-column-subtraction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>while loop, sum up column subtraction</h5>
+# v: verbose|
+# p: сохранить детали (например, владельца)
 
-<div class="highlight highlight-source-shell"><pre>i=0<span class="pl-k">;</span> <span class="pl-k">while</span> <span class="pl-c1">read</span> a b c<span class="pl-k">;</span> <span class="pl-k">do</span> <span class="pl-s"><span class="pl-pds">((</span>i<span class="pl-k">+=</span><span class="pl-smi">$c</span><span class="pl-k">-</span><span class="pl-smi">$b</span><span class="pl-pds">))</span></span><span class="pl-k">;</span> <span class="pl-c1">echo</span> <span class="pl-smi">$i</span><span class="pl-k">;</span> <span class="pl-k">done</span> <span class="pl-k">&lt;</span> <span class="pl-s"><span class="pl-pds">&lt;(</span>head filename<span class="pl-pds">)</span></span></pre></div>
+```
 
-<h5>
-<a id="if-loop" class="anchor" href="#if-loop" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>if loop</h5>
+### С помощью sed
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">if</span> <span class="pl-s"><span class="pl-pds">((</span><span class="pl-smi">$j</span><span class="pl-k">==</span><span class="pl-smi">$u</span><span class="pl-k">+</span><span class="pl-c1">2</span><span class="pl-pds">))</span></span></pre></div>
+```bash
+ls |xargs -n1 -I file sed -i '/^Pos/d' file
+```
 
-<p>//(( )) use for arithmetic operation</p>
+### Добавьте имя файла в первую строку файла
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">if</span> [[<span class="pl-smi">$age</span> <span class="pl-k">&gt;</span>21]]</pre></div>
+```bash
+ls |sed 's/.txt//g'|xargs -n1 -I file sed -i -e '1 i\>file\' file.txt
+```
 
-<p>//[[ ]] use for comparison</p>
+### Подсчитать все файлы
 
-<h5>
-<a id="for-loop" class="anchor" href="#for-loop" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>for loop</h5>
+```bash
+ls |xargs -n1 wc -l
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> <span class="pl-s"><span class="pl-pds">$(</span>ls<span class="pl-pds">)</span></span><span class="pl-k">;</span> <span class="pl-k">do</span> <span class="pl-c1">echo</span> file <span class="pl-smi">$i</span><span class="pl-k">;</span><span class="pl-k">done</span></pre></div>
+### Превратите вывод в одну строку
 
-<h2>
-<a id="download" class="anchor" href="#download" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download</h2>
+```bash
+ls -l| xargs
+```
 
-<p>[<a href="#handy-bash-oneliner-commands-for-tsv-file-editing">back to top</a>]</p>
+### Подсчет файлов в каталогах
 
-<h5>
-<a id="download-all-from-a-page" class="anchor" href="#download-all-from-a-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>download all from a page</h5>
+```bash
+echo mso{1..8}|xargs -n1 bash -c 'echo -n "$1:"; ls -la "$1"| grep -w 74 |wc -l' -...
+# "--" сигнализирует о конце опций и отображает дальнейшую обработку опций
+```
 
-<div class="highlight highlight-source-shell"><pre>wget -r -l1 -H -t1 -nd -N -np -A mp3 -e robots=off http://example.com</pre></div>
+### Подсчет строк во всех файлах, также подсчет общего количества строк
 
-<p>//-r: recursive and download all links on page</p>
+```bash
+ls|xargs wc -l
+```
 
-<p>//-l1: only one level link</p>
+### Xargs и grep
 
-<p>//-H: span host, visit other hosts</p>
+```bash
+cat grep_list |xargs -I{} grep {} filename
+```
 
-<p>//-t1: numbers of retries</p>
+### Xargs и sed (замена всех старых ip-адресов на новые ip-адреса в каталоге /etc)
 
-<p>//-nd: don't make new directories, download to here</p>
+```bash
+grep -rl '192.168.1.111' /etc | xargs sed -i 's/192.168.1.111/192.168.2.111/g'
+```
 
-<p>//-N: turn on timestamp</p>
+## Find
 
-<p>//-nd: no parent</p>
+[[назад к началу](#удобные-однострочники-bash)]
 
-<p>//-A: type (seperate by ,)</p>
+### Список всех подкаталогов/файлов в текущем каталоге
 
-<p>//-e robots=off: ignore the robots.txt file which stop wget from crashing the site, sorry example.com</p>
+```bash
+найти
+```
 
-<h2>
-<a id="random" class="anchor" href="#random" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Random</h2>
+### Список всех файлов в текущем каталоге
 
-<p>[<a href="#handy-bash-oneliner-commands-for-tsv-file-editing">back to top</a>]</p>
+```bash
+найти . -type f
+```
 
-<h5>
-<a id="random-pick-100-lines-from-a-file" class="anchor" href="#random-pick-100-lines-from-a-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>random pick 100 lines from a file</h5>
+### Список всех каталогов под текущим каталогом
 
-<div class="highlight highlight-source-shell"><pre>shuf -n 100 filename</pre></div>
+```bash
+найти -type d
+```
 
-<h5>
-<a id="random-order-lucky-draw" class="anchor" href="#random-order-lucky-draw" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>random order (lucky draw)</h5>
+### Редактирование всех файлов в текущем каталоге (например, заменить 'www' на 'ww')
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> a b c d e<span class="pl-k">;</span> <span class="pl-k">do</span> <span class="pl-c1">echo</span> <span class="pl-smi">$i</span><span class="pl-k">;</span> <span class="pl-k">done</span><span class="pl-k">|</span> shuf</pre></div>
+```bash
+find . -name '*.php' -exec sed -i 's/www/w/g' {} \;
 
-<h5>
-<a id="echo-series-of-random-numbers-between-a-range-eg-generate-15-random-numbers-from-0-10" class="anchor" href="#echo-series-of-random-numbers-between-a-range-eg-generate-15-random-numbers-from-0-10" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>echo series of random numbers between a range (e.g. generate 15 random numbers from 0-10)</h5>
+# если нет подкаталога
+замените "www" "w" - *
+# пробел перед *
+```
 
-<div class="highlight highlight-source-shell"><pre>shuf -i 0-10 -n 15</pre></div>
+### Поиск и вывод только имени файла (например, "mso")
 
-<h5>
-<a id="echo-a-random-number" class="anchor" href="#echo-a-random-number" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>echo a random number</h5>
+```bash
+find mso*/ -name M* -printf "%f\n"
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-smi">$RANDOM</span></pre></div>
+### Поиск больших файлов в системе (например, >4G)
 
-<h5>
-<a id="random-from-0-9" class="anchor" href="#random-from-0-9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>random from 0-9</h5>
+```bash
+find / -type f -size +4G
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">$((</span>RANDOM <span class="pl-k">%</span> <span class="pl-c1">10</span><span class="pl-pds">))</span></span></pre></div>
+### Найти и удалить файл размером менее (например, 74 байта)
 
-<h5>
-<a id="random-from-1-10" class="anchor" href="#random-from-1-10" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>random from 1-10</h5>
+```bash
+find . -name "*.mso" -size -74c -delete.
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">$((</span>(RANDOM <span class="pl-k">%</span><span class="pl-c1">10</span>)<span class="pl-k">+</span><span class="pl-c1">1</span><span class="pl-pds">))</span></span></pre></div>
+# M для MB и т.д.
+```
 
-<h2>
-<a id="others" class="anchor" href="#others" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Others</h2>
+### Поиск пустых (0 байт) файлов
 
-<p>[<a href="#handy-bash-oneliner-commands-for-tsv-file-editing">back to top</a>]</p>
+```bash
+find . -type f -empty
+# для дальнейшего удаления всех пустых файлов
+find . -type f -empty -delete
+```
 
-<h5>
-<a id="remove-newline--nextline" class="anchor" href="#remove-newline--nextline" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>remove newline / nextline</h5>
+### Рекурсивный подсчет всех файлов в каталоге
 
-<div class="highlight highlight-source-shell"><pre>tr --delete <span class="pl-s"><span class="pl-pds">'</span>\n<span class="pl-pds">'</span></span> <span class="pl-k">&lt;</span>input.txt <span class="pl-k">&gt;</span>output.txt</pre></div>
+```bash
+find . -type f | wc -l
+```
 
-<h5>
-<a id="replace-newline" class="anchor" href="#replace-newline" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>replace newline</h5>
+## Условия и Циклы
 
-<div class="highlight highlight-source-shell"><pre>tr <span class="pl-s"><span class="pl-pds">'</span>\n<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span> <span class="pl-pds">'</span></span> <span class="pl-k">&lt;</span>filename</pre></div>
+[[назад к началу](#удобные-однострочники-bash)]
 
-<h5>
-<a id="compare-files-eg-filea-fileb" class="anchor" href="#compare-files-eg-filea-fileb" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>compare files (e.g. fileA, fileB)</h5>
+### Оператор If
 
-<div class="highlight highlight-source-shell"><pre>diff fileA fileB</pre></div>
+```bash
+# цикл if и else для поиска соответствия строк
+if [[ "$c" == "read" ]]; then outputdir="seq"; else outputdir="write" ; fi
 
-<p>//a: added; d:delete; c:changed</p>
+# Проверьте, содержит ли myfile строку 'test':
+if grep -q hello myfile; then echo -e "файл содержит строку!" ; fi
 
-<p>or</p>
+# Проверьте, является ли mydir каталогом, перейдите в него и сделайте другие вещи:
+if cd mydir; then
+  echo 'некоторое содержимое' >myfile
+else
+  echo >&2 "Фатальная ошибка. Этот скрипт требует наличия mydir."
+fi
 
-<div class="highlight highlight-source-shell"><pre>sdiff fileA fileB</pre></div>
+# если переменная равна null
+if [ ! -s "myvariable" ]; then echo -e "variable is null!" ; fi
+# Истина длины, если "STRING" равен нулю.
 
-<p>//side-to-side merge of file differences</p>
+# Используя команду test (такую же, как []), проверьте, является ли длина переменной ненулевой
+test -n "$myvariable" && echo myvariable is "$myvariable" || echo myvariable is not set
 
-<h5>
-<a id="number-a-file-eg-filea" class="anchor" href="#number-a-file-eg-filea" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>number a file (e.g. fileA)</h5>
+# Проверьте, существует ли файл
+if [ -e 'filename' ]
+then
+  echo -e "Файл существует!"
+fi
 
-<div class="highlight highlight-source-shell"><pre>nl fileA</pre></div>
+# Проверьте, существует ли файл, но также включая символические ссылки:
+if [ -e myfile ] || [ -L myfile ]
+, тогда
+  echo -e "файл существует!"
+fi
 
-<p>or</p>
+# Проверьте, больше или равно ли значение x 5
+if [ "$x" -ge 5 ]; then echo -e "больше или равно 5!" ; fi
 
-<div class="highlight highlight-source-shell"><pre>nl -nrz fileA</pre></div>
+# Проверьте, больше или равно ли значение x 5, в bash/ksh/zsh:
+if ((x >= 5)); then echo -e "greater or equal than 5!" ; fi
 
-<p>//add leading zeros</p>
+# Используйте (( )) для арифметических операций
+if ((j==u+2)); then echo -e "j==u+2!!!" ; fi
 
-<h5>
-<a id="combine-paste-two-files-eg-filea-fileb" class="anchor" href="#combine-paste-two-files-eg-filea-fileb" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>combine/ paste two files (e.g. fileA, fileB)</h5>
+# Используйте [[ ]] для сравнения
+if [[ $age -gt 21 ]]; then echo -e "forever 21!!!" ; fi
 
-<div class="highlight highlight-source-shell"><pre>paste fileA fileB</pre></div>
+```
 
-<p>//default tab seperated</p>
+[Больше команд if](http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_07_01.html)
 
-<h5>
-<a id="reverse-string" class="anchor" href="#reverse-string" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>reverse string</h5>
+### For loop
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> 12345<span class="pl-k">|</span> rev</pre></div>
+```bash
+# Выдаем эхом имя файла в текущем каталоге
+for i in $(ls); do echo file $i;done
+#or
+for i in *; do echo file $i; done
 
-<h5>
-<a id="read-gz-file-without-extracting" class="anchor" href="#read-gz-file-without-extracting" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>read .gz file without extracting</h5>
+# Сделать каталоги перечисленными в файле (например, myfile)
+for dir in $(<myfile); do mkdir $dir; done
 
-<div class="highlight highlight-source-shell"><pre>zmore filename</pre></div>
+# Нажмите любую клавишу для продолжения каждого цикла
+for i in $(cat tpc_stats_0925.log |grep failed|grep -o '\query\w\{1,2\}');do cat ${i}.log; read -rsp $'Press any key to continue...\n' -n1 key;done
 
-<p>or</p>
+# Печать файла построчно при нажатии клавиши,
+oifs="$IFS"; IFS=$'\n'; for line in $(cat myfile); do ...; done
+while read -r line; do ...; done <myfile
 
-<div class="highlight highlight-source-shell"><pre>zless filename</pre></div>
+#Если в строке только одно слово, просто
+for line in $(cat myfile); do echo $line; read -n1; done
 
-<h5>
-<a id="run-in-background-output-error-file" class="anchor" href="#run-in-background-output-error-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>run in background, output error file</h5>
+#Пройтись по массиву
+for i in "${arrayName[@]}"; do echo $i;done
 
-<div class="highlight highlight-source-shell"><pre>(<span class="pl-c1">command</span> here) <span class="pl-k">2&gt;</span>log <span class="pl-k">&amp;</span></pre></div>
+```
 
-<p>or</p>
+### While loop
 
-<div class="highlight highlight-source-shell"><pre>(<span class="pl-c1">command</span> here) <span class="pl-k">2&gt;&amp;1</span><span class="pl-k">|</span> tee logfile</pre></div>
+```bash
+# Вычитание столбцов из файла (например, файл с 3 столбцами)
+while read a b c; do echo $(($c-$b));done < < <(head filename)
+# между двумя '<' стоит пробел
 
-<p>or</p>
+# Суммируем вычитание столбцов
+i=0; while read a b c; do ((i+=$c-$b)); echo $i; done < <(head filename))
 
-<div class="highlight highlight-source-shell"><pre>(<span class="pl-c1">command</span> here) <span class="pl-k">2&gt;&amp;1</span> <span class="pl-k">&gt;&gt;</span>outfile</pre></div>
+# Продолжайте проверять запущенный процесс (например, perl) и запускайте другой новый процесс (например, python) сразу после него. (ЛУЧШЕ использовать команду wait! Ctrl+F 'wait')
+while [[ $(pidof perl) ]];do echo f;sleep 10;done && python timetorunpython.py
+```
 
-<p>//0: standard input; 1: standard output; 2: standard error</p>
+### switch (case in bash)
 
-<h5>
-<a id="send-mail" class="anchor" href="#send-mail" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>send mail</h5>
+```bash
+прочитать тип;
+case $type in
+  '0')
+    echo 'how'
+    ;;
+  '1')
+    echo 'are'
+    ;;
+  '2')
+    echo 'you'
+    ;;
+esac
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">'</span>heres the content<span class="pl-pds">'</span></span><span class="pl-k">|</span> mail -A <span class="pl-s"><span class="pl-pds">'</span>file.txt<span class="pl-pds">'</span></span> -s <span class="pl-s"><span class="pl-pds">'</span>mail.subject<span class="pl-pds">'</span></span> me@gmail.com</pre></div>
+## Time
 
-<p>//use -a flag to set send from (-a "From: <a href="mailto:some@mail.tld">some@mail.tld</a>")</p>
+[[назад к началу](#удобные-однострочники-bash)]
 
-<h5>
-<a id="xls-to-csv" class="anchor" href="#xls-to-csv" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>.xls to csv</h5>
+### Узнайте время, необходимое для выполнения команды
 
-<div class="highlight highlight-source-shell"><pre>xls2csv filename</pre></div>
+```bash
+time echo hi
+```
 
-<h5>
-<a id="append-to-file-eg-hihi" class="anchor" href="#append-to-file-eg-hihi" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>append to file (e.g. hihi)</h5>
+### Подождите некоторое время (например, 10 с)
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">'</span>hihi<span class="pl-pds">'</span></span> <span class="pl-k">&gt;&gt;</span>filename</pre></div>
+```bash
+sleep 10
+```
 
-<h5>
-<a id="make-beep-sound" class="anchor" href="#make-beep-sound" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>make BEEP sound</h5>
+### Выведите дату с форматированием
 
-<div class="highlight highlight-source-shell"><pre>speaker-test -t sine -f 1000 -l1</pre></div>
+```bash
+дата +%F
+# 2020-07-19
 
-<h5>
-<a id="set-beep-duration" class="anchor" href="#set-beep-duration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>set beep duration</h5>
+# или
+date +'%d-%b-%Y-%H:%M:%S'
+# 10-Apr-2020-21:54:40
 
-<div class="highlight highlight-source-shell"><pre>(speaker-test -t sine -f 1000) <span class="pl-k">&amp;</span> pid=<span class="pl-smi">$!</span><span class="pl-k">;</span>sleep 0.1s<span class="pl-k">;</span><span class="pl-c1">kill</span> -9 <span class="pl-smi">$pid</span></pre></div>
+# Возвращает текущее время с наносекундами.
+date +"%T.%N"
+# 11:42:18.664217000  
 
-<h5>
-<a id="history-edit-delete" class="anchor" href="#history-edit-delete" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>history edit/ delete</h5>
+# Получение секунд с эпохи (1 января 1970 года) для заданной даты (например, 16 марта 2021 года)
+date -d "Mar 16 2021" +%s
+# 1615852800
+# или
+date -d "Tue Mar 16 00:00:00 UTC 2021"  +%s
+# 1615852800  
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">~</span>/.bash_history</pre></div>
+# Преобразуйте количество секунд с эпохи обратно в дату
+date --date @1615852800
+# Tue Mar 16 00:00:00 UTC 2021
 
-<p>or</p>
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">history</span> -d [line_number]</pre></div>
+### ожидание произвольной длительности (например, сон 1-5 секунд, как добавление джиттера)
 
-<h5>
-<a id="get-last-historyrecord-filename" class="anchor" href="#get-last-historyrecord-filename" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>get last history/record filename</h5>
+```bash
+sleep $[ ( $RANDOM % 5 ) + 1 ]
+```
 
-<div class="highlight highlight-source-shell"><pre>head <span class="pl-k">!</span>$</pre></div>
+### Выйти из учетной записи через определенный период времени (например, 10 секунд)
 
-<h5>
-<a id="clean-screen" class="anchor" href="#clean-screen" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>clean screen</h5>
+```bash
+TMOUT=10
+#как только вы установите эту переменную, таймер выхода из системы начнет работать!
+```
 
-<div class="highlight highlight-source-shell"><pre>clear</pre></div>
+### Установите, как долго вы хотите выполнять команду
 
-<p>or</p>
+```bash
+#Это запустит команду 'sleep 10' всего на 1 секунду.
+timeout 1 sleep 10
+```
 
-<div class="highlight highlight-source-shell"><pre>Ctrl+l</pre></div>
+### Задайте время выполнения команды (например, через 1 минуту)
 
-<h5>
-<a id="send-data-to-last-edited-file" class="anchor" href="#send-data-to-last-edited-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>send data to last edited file</h5>
+```bash
+at now + 1min # единицами времени могут быть минуты, часы, дни или недели
+предупреждение: команды будут выполняться с помощью /bin/sh
+at> echo hihigithub >~/itworks
+at> <EOT> # нажмите Ctrl + D для выхода
+задание 1 at Wed Apr 18 11:16:00 2018
+```
 
-<div class="highlight highlight-source-shell"><pre>cat /directory/to/file
-<span class="pl-c1">echo</span> <span class="pl-k">100&gt;</span><span class="pl-k">!</span>$</pre></div>
+## Загрузка
 
-<h5>
-<a id="run-history-number-eg-53" class="anchor" href="#run-history-number-eg-53" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>run history number (e.g. 53)</h5>
+[[вернуться к началу](#удобные-однострочники-bash)]
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">!</span>53</pre></div>
+### Скачайте содержимое этого README.md (того, который вы сейчас просматриваете)
 
-<h5>
-<a id="run-last-command" class="anchor" href="#run-last-command" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>run last command</h5>
+```bash
+curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -f markdown -t man | man -l -...
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">!!</span></pre></div>
+# или w3m (текстовый веб-браузер и пейджер)
+curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc | w3m -T text/html
 
-<h5>
-<a id="run-last-command-that-began-with-eg-cat-filename" class="anchor" href="#run-last-command-that-began-with-eg-cat-filename" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>run last command that began with (e.g. cat filename)</h5>
+# или с помощью emacs (в текстовом редакторе emac)
+emacs --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -t org)
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">!</span>cat</pre></div>
+# или с помощью emacs (в терминале, выход с помощью Ctrl + x, затем Ctrl + c)
+emacs -nw --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -t org)
+```
 
-<p>or</p>
+### Загрузите все со страницы
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">!</span>c</pre></div>
+```bash
+wget -r -l1 -H -t1 -nd -N -np -A mp3 -e robots=off http://example.com
 
-<p>//run cat filename again</p>
+# -r: рекурсия и загрузка всех ссылок на странице
+# -l1: только ссылки одного уровня
+# -H: span host, посещать другие хосты
+# -t1: количество повторных попыток
+# -nd: не создавать новые каталоги, скачивать сюда
+# -N: включить временную метку
+# -nd: нет родителя
+# -A: тип (разделять по ,)
+# -e robots=off: игнорировать файл robots.txt, который не дает wget завалить сайт, извините example.com
+```
 
-<h5>
-<a id="extract-xf" class="anchor" href="#extract-xf" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>extract .xf</h5>
+### Загрузка файла в веб и скачивание (<https://transfer.sh/>)
 
-<pre><code>1.unxz filename.tar.xz
-2.tar -xf filename.tar
-</code></pre>
+```bash
+# Загрузите файл (например, filename.txt):
+curl --upload-file ./filename.txt https://transfer.sh/filename.txt
+# Вышеуказанная команда вернет URL, например: https://transfer.sh/tG8rM/filename.txt
 
-<h5>
-<a id="install-python-package" class="anchor" href="#install-python-package" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>install python package</h5>
+# Далее вы можете скачать его:
+curl https://transfer.sh/tG8rM/filename.txt -o filename.txt
+```
 
-<div class="highlight highlight-source-shell"><pre>pip install packagename</pre></div>
+### Загрузите файл, если необходимо
 
-<h5>
-<a id="download-file-if-necessary" class="anchor" href="#download-file-if-necessary" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download file if necessary</h5>
+```bash
+data=file.txt
+url=http://www.example.com/$data
+if [ ! -s $data ];then
+    echo "downloading test data..."
+    wget $url
+fi
+```
 
-<div class="highlight highlight-source-shell"><pre>data=file.txt
-url=http://www.example.com/<span class="pl-smi">$data</span>
-<span class="pl-k">if</span> [<span class="pl-k">!</span> <span class="pl-k">-s</span> <span class="pl-smi">$data</span>]<span class="pl-k">;</span><span class="pl-k">then</span>
-    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>downloading test data...<span class="pl-pds">"</span></span>
-    wget <span class="pl-smi">$url</span>
-<span class="pl-k">fi</span></pre></div>
+### Wget на имя файла (если имя длинное)
 
-<h5>
-<a id="wget-to-a-filename-when-a-long-name" class="anchor" href="#wget-to-a-filename-when-a-long-name" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>wget to a filename (when a long name)</h5>
+```bash
+wget -O filename "http://example.com"
+```
 
-<div class="highlight highlight-source-shell"><pre>wget -O filename <span class="pl-s"><span class="pl-pds">"</span>http://example.com<span class="pl-pds">"</span></span></pre></div>
+### Wget файлов в папку
 
-<h5>
-<a id="wget-files-to-a-folder" class="anchor" href="#wget-files-to-a-folder" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>wget files to a folder</h5>
+```bash
+wget -P /path/to/directory "http://example.com"
+```
 
-<div class="highlight highlight-source-shell"><pre>wget -P /path/to/directory <span class="pl-s"><span class="pl-pds">"</span>http://example.com<span class="pl-pds">"</span></span></pre></div>
+### Дайте команду curl следовать за любым перенаправлением, пока оно не достигнет конечного пункта назначения
 
-<h5>
-<a id="delete-current-bash-command" class="anchor" href="#delete-current-bash-command" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>delete current bash command</h5>
+```bash
+curl -L google.com
+```
 
-<div class="highlight highlight-source-shell"><pre>Ctrl+U</pre></div>
+## Random
 
-<p>or</p>
+[[назад к началу](#удобные-однострочники-bash)]
 
-<div class="highlight highlight-source-shell"><pre>Ctrl+C</pre></div>
+### Случайная генерация пароля (например, сгенерировать 5 паролей длиной 13)
 
-<p>or</p>
+```bash
+sudo apt install pwgen
+pwgen 13 5
+#sahcahS9dah4a xieXaiJaey7xa UuMeo0ma7eic9 Ahpah9see3zai acerae7Huigh7
+```
 
-<div class="highlight highlight-source-shell"><pre>Alt+Shift+#</pre></div>
+### Случайная выборка 100 строк из файла
 
-<p>//to make it to history</p>
+```bash
+shuf -n 100 имя файла
+```
 
-<h5>
-<a id="add-things-to-history-eg-addmetohistory" class="anchor" href="#add-things-to-history-eg-addmetohistory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>add things to history (e.g. "addmetohistory")</h5>
+### Случайный порядок (счастливый жребий)
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c">#addmetodistory</span></pre></div>
+```bash
+for i in a b c d e; do echo $i; done | shuf
+```
 
-<p>//just add a "#" before~~</p>
+### Эхо серии случайных чисел между диапазонами (например, перетасовать числа от 0-100, затем выбрать 15 из них случайным образом)
 
-<h5>
-<a id="sleep-awhile-or-wait-for-a-moment-or-schedule-a-job" class="anchor" href="#sleep-awhile-or-wait-for-a-moment-or-schedule-a-job" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>sleep awhile or wait for a moment or schedule a job</h5>
+```bash
+shuf -i 0-100 -n 15
+```
 
-<div class="highlight highlight-source-shell"><pre>sleep 5<span class="pl-k">;</span><span class="pl-c1">echo</span> hi</pre></div>
+### Эхо случайного числа
 
-<h5>
-<a id="count-the-time-for-executing-a-command" class="anchor" href="#count-the-time-for-executing-a-command" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>count the time for executing a command</h5>
+```bash
+echo $RANDOM
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">time</span> <span class="pl-c1">echo</span> hi</pre></div>
+### Случайное число от 0-9
 
-<h5>
-<a id="backup-with-rsync" class="anchor" href="#backup-with-rsync" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>backup with rsync</h5>
+```bash
+echo $((RANDOM % 10))
+```
 
-<div class="highlight highlight-source-shell"><pre>rsync -av filename filename.bak
+### Случайный от 1-10
+
+```bash
+echo $(((RANDOM %10)+1))
+```
+
+## Xwindow
+
+[[назад к началу](#удобные-однострочники-bash)]
+
+X11 GUI-приложения! Вот несколько GUI-инструментов для вас, если вам наскучило окружение, состоящее только из текста.
+
+### Включите переадресацию X11, чтобы использовать графические приложения на серверах
+
+```bash
+ssh -X имя_пользователя@ip_адрес
+
+# или настройка через xhost
+# --> Установите следующее для Centos:
+# xorg-x11-xauth
+# xorg-x11-fonts-*
+# xorg-x11-utils
+```
+
+### Маленькие инструменты xwindow
+
+```bash
+xclock
+xeyes
+xcowsay
+```
+
+### Открываем картинки/изображения с ssh-сервера
+
+```bash
+1. ssh -X имя_пользователя@ip_адрес
+2. apt-get install eog
+3. eog picture.png
+```
+
+### Просмотр видео на сервере
+
+```bash
+1. ssh -X имя_пользователя@ip_адрес
+2. sudo apt install mpv
+3. mpv myvideo.mp4
+```
+
+### Использование gedit на сервере (GUI редактор)
+
+```bash
+1. ssh -X имя_пользователя@ip_адрес
+2. apt-get install gedit
+3. gedit filename.txt
+```
+
+### Открыть PDF файл с ssh сервера
+
+```bash
+1. ssh -X имя_пользователя@ip_адрес
+2. apt-get install evince
+3. evince filename.pdf
+```
+
+### Использование браузера google-chrome с ssh-сервера
+
+```bash
+1. ssh -X имя_пользователя@ip_адрес
+2. apt-get install libxss1 libappindicator1 libindicator7
+3. wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+4. sudo apt-get install -f
+5. dpkg -i google-chrome*.deb
+6. google-chrome
+ ```
+
+## System
+
+[[назад к началу](#удобные-однострочники-bash)]
+
+### Работа с историей yum
+
+```bash
+# Вывести историю yum (например, установка, обновление)
+sudo yum history
+# Пример вывода:
+# Загруженные плагины: extras_suggestions, langpacks, priorities, update-motd
+# ID | Логин пользователя | Дата и время | Действие(и) | Изменено
+# ---------------------------------------
+# 11 | ... <myuser> | 2020-04-10 10:57 | Install | 1 P<
+# 10 | ... <myuser> | 2020-03-27 05:21 | Установить | 1 >P
+# 9 | ... <myuser> | 2020-03-05 11:57 | I, U | 56 *<
+# ...
+
+# Показать более подробную информацию об истории yum (например, история #11)
+sudo yum history info 11
+
+# Отменить историю yum (например, историю #11, это приведет к деинсталляции некоторых пакетов)
+sudo yum history undo 11
+```
+
+### Аудит файлов, чтобы узнать, кто внес изменения в файл [только для систем на базе RedHat]
+
+```bash
+# Для рекурсивного аудита каталога на предмет изменений (например, myproject)
+auditctl -w /path/to/myproject/ -p wa
+
+# Если вы удалите файл с именем "VIPfile", удаление будет записано в /var/log/audit/audit.log
+sudo grep VIPfile /var/log/audit/audit.log
+#type=PATH msg=audit(1581417313.678:113): item=1 name="VIPfile" inode=300115 dev=ca:01 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=DELETE cap_fp=00000000 cap_fi=00000000 cap_fe=0 cap_fver=0
+```
+
+### Проверьте, включен ли SELinux
+
+```bash
+sestatus
+# SELinux status: enabled
+# SELinuxfs mount:                /sys/fs/selinux
+# SELinux root directory:         /etc/selinux
+# Имя загруженной политики: target
+# Текущий режим: усиление
+# Режим из файла конфигурации: enforcing
+# Политика MLS статус: включена
+# Статус политики deny_unknown: разрешено
+# Максимальная версия политики ядра: 31
+```
+
+### Генерируем открытый ключ из закрытого ключа
+
+```bash
+ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
+```
+
+### Скопируйте ваш открытый ключ по умолчанию удаленному пользователю
+
+```bash
+ssh-copy-id <имя_пользователя>@<IP_сервера>
+# затем вам нужно ввести пароль
+# и в следующий раз вам не нужно будет вводить пароль при ssh к этому пользователю
+```
+
+### Скопируйте открытый ключ по умолчанию удаленному пользователю, используя необходимый закрытый ключ (например, используйте ваш ключ mykey.pem для копирования вашего id_rsa.pub удаленному пользователю)
+
+```bash
+# перед тем, как использовать mykey.pem для ssh к удаленному пользователю.
+ssh-copy-id -i ~/.ssh/id_rsa.pub -o "IdentityFile ~/Downloads/mykey.pem" <имя_пользователя>@<IP_сервера>
+# теперь вам не нужно использовать ключ для ssh для этого пользователя.
+```
+
+### SSH Agent Forwarding
+
+```bash
+# Чтобы взять с собой ключ при ssh на серверА, а затем ssh на серверВ с сервераА, используя ключ.
+ssh-agent
+ssh-add /path/to/mykey.pem
+ssh -A <имя пользователя>@<IP_of_serverA>
+# Далее можно выполнить ssh на серверB
+ssh <имя пользователя>@<IP_of_serverB>
+```
+
+### Установите пользователя и ключ по умолчанию для хоста при использовании SSH
+
+```bash
+# добавьте следующее в ~/.ssh/config
+Хост myserver
+  Пользователь myuser
+  IdentityFile ~/path/to/mykey.pem
+
+# Далее, вы можете запустить "ssh myserver" вместо "ssh -i ~/path/to/mykey.pem myuser@myserver"
+```
+
+### Следите за последними логами сервиса
+
+```bash
+journalctl -u <имя_службы> -f
+```
+
+### Устраните зомби
+
+```bash
+# Зомби уже мертв, поэтому вы не можете его убить. Вы можете уничтожить зомби, убив его родителя.
+# Сначала найдите PID зомби.
+ps aux| grep 'Z'
+# Затем найдите PID родителя зомби.
+pstree -p -s <zombie_PID>
+# Затем вы можете убить его родителя, и вы заметите, что зомби исчез.
+sudo kill 9 <parent_PID>
+```
+
+#### Показать использование памяти
+
+```bash
+free -c 10 -mhs 1
+# вывести 10 раз с интервалом в 1 секунду
+```
+
+### Показать статистику CPU и IO для устройств и разделов
+
+```bash
+# обновлять каждую секунду
+iostat -x -t 1
+```
+
+### Отображение использования пропускной способности сетевого интерфейса (например, enp175s0f0)
+
+```bash
+iftop -i enp175s0f0
+```
+
+### Узнать, как долго работает система и количество пользователей
+
+```bash
+uptime
+```
+
+### Проверить, запущен ли root
+
+```bash
+if [ "$EUID" -ne 0 ]; then
+        echo "Пожалуйста, запустите это от имени root"
+        exit 1
+fi
+```
+
+### Изменение оболочки пользователя (например, bonnie)
+
+```bash
+chsh -s /bin/sh bonnie
+# /etc/shells: действительные оболочки для входа в систему
+```
+
+### Изменить root / fake root / jail (например, изменить root на newroot)
+
+```bash
+chroot /home/newroot /bin/bash
+
+# Для выхода из chroot
+exit
+```
+
+### Отображение состояния файла (размер; время доступа, изменения, модификации и т.д.) файла (например, filename.txt)
+
+```bash
+stat filename.txt
+```
+
+### Снимок текущих процессов
+
+```bash
+ps aux
+```
+
+### Отображение дерева процессов
+
+```bash
+pstree
+```
+
+### Найти максимальное количество процессов
+
+```bash
+cat /proc/sys/kernel/pid_max
+```
+
+### Печать или управление кольцевым буфером ядра
+
+```bash
+dmesg
+```
+
+### Показать IP-адрес
+
+```bash
+ip add show
+
+# или
+ifconfig
+```
+
+### Выведите предыдущий и текущий уровень выполнения SysV
+
+```bash
+runlevel
+
+# или
+who -r
+```
+
+### Изменение уровня SysV runlevel (например, 5)
+
+```bash
+init 5
+#or
+telinit 5
+```
+
+### Отображение всех доступных сервисов на всех уровнях выполнения
+
+```bash
+chkconfig -list
+# update-rc.d эквивалент chkconfig в ubuntu
+```
+
+### Проверка версии системы
+
+```bash
+cat /etc/*-release
+```
+
+### Linux Programmer's Manuel: hier- описание иерархии файловой системы
+
+```bash
+man hier
+```
+
+### Управление менеджером систем и служб systemd
+
+```bash
+# Например, проверьте статус службы cron
+systemctl status cron.service
+
+# например, остановить службу cron
+systemctl stop cron.service
+```
+
+### List job
+
+```bash
+jobs -l
+```
+
+### Запуск программы с измененным приоритетом (например, ./test.sh)
+
+```bash
+# значение nice регулируется от -20 (наиболее благоприятное) до +19
+# чем приятнее приложение, тем ниже приоритет.
+# По умолчанию приятность: 10; приоритет по умолчанию: 80
+
+nice -10 ./test.sh
+```
+
+### Export PATH
+
+```bash
+export PATH=$PATH:~/path/you/want
+```
+
+### Сделать файл исполняемым
+
+```bash
+chmod +x filename
+# теперь вы можете открыть ./filename, чтобы выполнить его
+```
+
+### Печать системной информации
+
+```bash
+uname -a
+
+# Проверьте аппаратную платформу системы (x86-64)
+uname -i
+```
+
+### Серфинг в сети
+
+```bash
+ссылки www.google.com
+```
+
+### Добавить пользователя, установить passwd
+
+```bash
+useradd имя пользователя
+passwd имя пользователя
+```
+
+### Редактирование переменной PS1 для bash (например, отображение всего пути)
+
+```bash
+1. vi ~/.bash_profile
+2. export PS1='\u@\h:\w\$'
+# $PS1 - это переменная, определяющая оформление и стиль командного интерпретатора.
+# Вы можете использовать эмодзи и добавить метку времени к каждой подсказке, используя следующее значение:
+# export PS1="\t@🦁:\w\$ "
+3. источник ~/.bash_profile
+```
+
+### Редактирование параметров окружения (например, псевдонима)
+
+```bash
+1. vi ~/.bash_profile
+2. alias pd="pwd" // больше не нужно набирать это 'w'!
+3. source ~/.bash_profile
+```
+
+### Вывести все псевдонимы
+
+```bash
+alias -p
+```
+
+### Unalias (например, после alias ls='ls --color=auto')
+
+```bash
+unalias ls
+```
+
+### Установка и снятие опций оболочки
+
+```bash
+# вывести все опции оболочки
+shopt
+
+# для удаления (или остановки) псевдонимов
+shopt -u expand_aliases
+
+# для установки (или запуска) псевдонимов
+shopt -s expand_aliases
+```
+
+### Список переменных окружения (например, PATH)
+
+```bash
+echo $PATH
+# список каталогов, разделенных двоеточием
+```
+
+### Список всех переменных окружения для текущего пользователя
+
+```bash
+env
+```
+
+### Сброс переменной окружения (например, сброс переменной 'MYVAR')
+
+```bash
+unset MYVAR
+```
+
+### Показать формат раздела
+
+```bash
+lsblk
+```
+
+### Информирование ОС об изменениях в таблице разделов
+
+```bash
+partprobe
+```
+
+### Мягкая ссылка программы на bin
+
+```bash
+ln -s /path/to/program /home/usr/bin
+# должен быть полный путь к программе
+```
+
+### Показать шестнадцатеричное представление данных
+
+```bash
+hexdump -C filename.class
+```
+
+### Перейти к другому узлу
+
+```bash
+rsh имя_узла
+```
+
+### Проверка порта (активное интернет-соединение)
+
+```bash
+netstat -tulpn
+```
+
+### Печать разрешенных символических ссылок или канонических имен файлов
+
+```bash
+readlink filename
+```
+
+### Узнайте тип команды и ссылку на нее (например, python)
+
+```bash
+type python
+# python это /usr/bin/python
+# Существует 5 различных типов, проверьте их с помощью флага 'type -f'.
+# 1. alias (псевдоним оболочки)
+# 2. function (функция оболочки, тип также выводит тело функции)
+# 3. builtin (встроенная функция оболочки)
+# 4. file (дисковый файл)
+# 5. keyword (зарезервированное слово оболочки)
+
+# Вы также можете использовать `which
+какой python
+# /usr/bin/python
+```
+
+### Список имен всех функций
+
+```bash
+объявить -F
+```
+
+### Список общего размера каталога
+
+```bash
+du -hs .
+
+# или
+du -sb
+```
+
+### Копирование каталога с установкой разрешения
+
+```bash
+cp -rp /path/to/directory
+```
+
+### Сохранить текущий каталог
+
+```bash
+pushd .
+
+# then pop
+popd
+
+#или используйте dirs для отображения списка текущих запомненных каталогов.
+dirs -l
+```
+
+### Показать использование диска
+
+```bash
+df -h
+
+# или
+du -h
+
+# или
+du -sk /var/log/* |sort -rn |head -10
+```
+
+### проверьте использование Inode
+
+```bash
+df -i
+# Файловая система Inodes IUsed IFree IUse% Mounted on
+# devtmpfs 492652 304 492348 1% /dev
+# tmpfs 497233 2 497231 1% /dev/shm
+# tmpfs 497233 439 496794 1% /run
+# tmpfs 497233 16 497217 1% /sys/fs/cgroup
+# /dev/nvme0n1p1 5037976 370882 4667094 8% /
+# tmpfs 497233 1 497232 1% /run/user/1000
+```
+
+### Показать все типы файловых систем
+
+```bash
+df -TH
+```
+
+### Показать текущий уровень выполнения
+
+```bash
+runlevel
+```
+
+### Переключение уровня выполнения
+
+```bash
+init 3
+
+#or
+telinit 3
+```
+
+### Постоянное изменение уровня выполнения
+
+```bash
+1. отредактируйте /etc/init/rc-sysinit.conf
+2. env DEFAULT_RUNLEVEL=2
+```
+
+### Стать root
+
+```bash
+su
+```
+
+### Стать кем-то
+
+```bash
+su somebody
+```
+
+### Сообщить о кавычках пользователя на устройстве
+
+```bash
+repquota -auvs
+```
+
+### Получение записей в ряде важных баз данных
+
+```bash
+getent имя_базы_данных
+
+# (например, база данных 'passwd')
+getent passwd
+# список всех учетных записей пользователей (всех локальных и LDAP)
+
+# (например, получить список учетных записей grop)
+getent group
+# хранить в базе данных 'group'
+```
+
+### Изменить владельца файла
+
+```bash
+chown имя_пользователя имя_файла
+chown -R user_name /path/to/directory/
+# chown user:group filename
+```
+
+### Монтирование и размонтирование
+
+```bash
+# например, смонтировать /dev/sdb в /home/test
+mount /dev/sdb /home/test
+
+# например, размонтировать /home/test
+umount /home/test
+```
+
+### List current mount detail
+
+```bash
+mount
+# или
+df
+```
+
+### Список текущих имен пользователей и номеров пользователей
+
+```bash
+cat /etc/passwd
+```
+
+### Получить все имя пользователя
+
+```bash
+getent passwd| awk '{FS="[:]"; print $1}'
+```
+
+### Показать всех пользователей
+
+```bash
+compgen -u
+```
+
+### Показать все группы
+
+```bash
+compgen -g
+```
+
+### Показать группу пользователя
+
+```bash
+имя пользователя группы
+```
+
+### Показать uid, gid, группу пользователя
+
+```bash
+id имя пользователя
+
+# переменная для UID
+echo $UID
+```
+
+### Проверьте, является ли он root
+
+```bash
+if [ $(id -u) -ne 0 ];then
+    echo "Вы не root!"
+    exit;
+fi
+# 'id -u' выводит 0, если вы не root
+```
+
+### Узнать информацию о процессоре
+
+```bash
+more /proc/cpuinfo
+
+# или
+lscpu
+```
+
+### Установите квоту для пользователя (например, мягкий лимит диска: 120586240; жесткий лимит: 125829120)
+
+```bash
+setquota username 120586240 125829120 0 0 /home
+```
+
+### Показать квоту для пользователя
+
+```bash
+quota -v имя пользователя
+```
+
+### Отображение текущих библиотек из кэша
+
+```bash
+ldconfig -p
+```
+
+### Печать зависимостей общих библиотек (например, для 'ls')
+
+```bash
+ldd /bin/ls
+```
+
+### Проверка входа пользователя в систему
+
+```bash
+lastlog
+```
+
+### Проверка истории последних перезагрузок
+
+```bash
+последняя перезагрузка
+```
+
+### Редактирование пути для всех пользователей
+
+```bash
+joe /etc/environment
+# отредактируйте этот файл
+```
+
+### Показать и установить лимит пользователей
+
+```bash
+ulimit -u
+```
+
+### Выведите количество ядер/процессоров
+
+```bash
+nproc -all
+```
+
+### Проверка состояния каждого ядра
+
+```terminal
+1. верх
+2. нажмите '1'
+```
+
+### Показать задания и PID
+
+```bash
+jobs -l
+```
+
+### Список всех запущенных служб
+
+```bash
+service --status-all
+```
+
+### Запланируйте выключение сервера
+
+```bash
+shutdown -r +5 "Сервер будет перезапущен через 5 минут. Пожалуйста, сохраните свою работу."
+```
+
+### Отмена запланированного выключения
+
+```bash
+shutdown -c
+```
+
+### Трансляция всем пользователям
+
+```bash
+wall -n hihi
+```
+
+### Убить все процессы пользователя
+
+```bash
+pkill -U имя_пользователя
+```
+
+### Убить все процессы программы
+
+```bash
+kill -9 $(ps aux | grep 'имя_программы' | awk '{print $2}')
+```
+
+### Установить привилегии gedit на сервере
+
+```bash
+# Возможно, вам придется установить следующее:
+
+apt-get install libglib2.0-bin;
+# или
+yum install dconf dconf-editor;
+yum install dbus dbus-x11;
+
+# Проверить список
+gsettings list-recursively
+
+# Изменить некоторые настройки
+gsettings set org.gnome.gedit.preferences.editor highlight-current-line true
+gsettings set org.gnome.gedit.preferences.editor scheme 'cobalt'
+gsettings set org.gnome.gedit.preferences.editor use-default-font false
+gsettings set org.gnome.gedit.preferences.editor editor editor-font 'Cantarell Regular 12'
+```
+
+### Добавьте пользователя в группу (например, добавьте пользователя 'nice' в группу 'docker', чтобы он мог запускать docker без sudo)
+
+```bash
+sudo gpasswd -a nice docker
+```
+
+### Pip install python package without root
+
+```bash
+1. pip install --user имя_пакета
+2. Вам может понадобиться экспортировать ~/.local/bin/ в PATH: export PATH=$PATH:~/.local/bin/
+```
+
+### Удаление старых ядер linux (когда /boot почти заполнен...)
+
+```bash
+1. uname -a #проверьте текущее ядро, которое НЕ должно быть удалено
+2. sudo apt-get purge linux-image-X.X.X-X-generic #заменить старую версию
+```
+
+### Изменить имя хоста
+
+```bash
+sudo hostname your-new-name
+
+# если не работает, сделайте также:
+hostnamectl set-hostname your-new-hostname
+# затем проверьте с помощью:
+hostnamectl
+# Или проверьте /etc/hostname
+
+# Если все еще не работает..., отредактируйте:
+/etc/sysconfig/network
+/etc/sysconfig/network-scripts/ifcfg-ensxxx
+#add HOSTNAME="your-new-hostname"
+ ```
+
+### Список установленных пакетов
+
+```bash
+apt list -installed
+
+# или на Red Hat:
+yum list installed
+```
+
+### Проверка обновления пакета
+
+```bash
+apt list -upgradeable
+
+# или
+sudo yum check-update
+```
+
+### Запустите yum update, исключив пакет (например, не обновляйте пакет php)
+
+```bash
+sudo yum update --exclude=php*
+```
+
+### Проверьте, какой файл делает устройство занятым при umount
+
+```bash
+lsof /mnt/dir
+```
+
+### Когда звук не работает
+
+```bash
+killall pulseaudio
+# затем нажмите Alt-F2 и введите pulseaudio
+```
+
+### Список информации об устройствах SCSI
+
+```bash
+lsscsi
+```
+
+### Руководство по настройке собственного DNS-сервера
+
+<http://onceuponmine.blogspot.tw/2017/08/set-up-your-own-dns-server.html>
+
+### Учебник по созданию простого демона
+
+<http://onceuponmine.blogspot.tw/2017/07/create-your-first-simple-daemon.html>
+
+### Учебник по использованию gmail для отправки электронной почты
+
+<http://onceuponmine.blogspot.tw/2017/10/setting-up-msmtprc-and-use-your-gmail.html>
+
+### Использование telnet для проверки открытых портов, проверка возможности подключения к порту (например, 53) сервера (например, 192.168.2.106)
+
+```bash
+telnet 192.168.2.106 53
+```
+
+### Изменение максимальной единицы передачи (mtu) сети (например, изменить на 9000)
+
+```bash
+ifconfig eth0 mtu 9000
+```
+
+### Получение pid запущенного процесса (например, python)
+
+```bash
+pidof python
+
+# или
+ps aux|grep python
+```
+
+### Проверка статуса процесса по PID
+
+```bash
+ps -p <PID>
+
+#or
+cat /proc/<PID>/status
+cat /proc/<PID>/stack
+cat /proc/<PID>/stat
+```
+
+### NTP
+
+```bash
+# Запустите ntp:
+ntpd
+
+# Проверить ntp:
+ntpq -p
+```
+
+### Удалите ненужные файлы, чтобы очистить ваш сервер
+
+```bash
+sudo apt-get autoremove
+sudo apt-get clean
+sudo rm -rf ~/.cache/thumbnails/*
+
+# Удалите старое ядро:
+sudo dpkg --list 'linux-image*'
+sudo apt-get remove linux-image-OLDER_VERSION
+```
+
+### Увеличение/изменение размера корневого раздела (корневой раздел является логическим томом LVM)
+
+```bash
+pvscan
+lvextend -L +130G /dev/rhel/root -r
+# Добавление -r приведет к росту файловой системы после изменения размера тома.
+```
+
+### Создайте загрузочный USB-накопитель UEFI (например, /dev/sdc1)
+
+```bash
+sudo dd if=~/path/to/isofile.iso of=/dev/sdc1 oflag=direct bs=1048576
+```
+
+### Найдите и удалите пакет
+
+```bash
+sudo dpkg -l | grep <имя_пакета>
+sudo dpkg --purge <имя_пакета>
+```
+
+### Создание ssh-туннеля
+
+```bash
+ssh -f -L 9000:targetservername:8088 root@192.168.14.72 -N
+#-f: работать в фоновом режиме; -L: слушать; -N: ничего не делать
+#теперь 9000 вашего компьютера подключен к 8088 порту targetservername через 192.168.14.72
+#так что вы можете увидеть содержимое targetservername:8088, введя localhost:9000 из вашего браузера.
+```
+
+### Получение идентификатора процесса (например, sublime_text)
+
+```bash
+#pidof
+pidof sublime_text
+
+#pgrep, вам не нужно набирать имя программы целиком
+pgrep sublim
+
+#pgrep, эхо 1, если процесс найден, эхо 0, если такого процесса нет
+pgrep -q sublime_text && echo 1 || echo 0
+
+#top, занимает больше времени
+top|grep sublime_text
+```
+
+### Некоторые инструменты бенчмаркинга для вашего сервера
+
+[aio-stress](https://openbenchmarking.org/test/pts/aio-stress) - бенчмарк AIO.  
+[bandwidth](https://zsmith.co/bandwidth.html) - бенчмарк пропускной способности памяти.  
+[bonnie++](https://www.coker.com.au/bonnie++/) - бенчмарк производительности жесткого диска и файловой системы.  
+[dbench](https://dbench.samba.org/) - генерирование рабочих нагрузок ввода-вывода либо на файловую систему, либо на сетевой сервер CIFS или NFS.  
+[dnsperf](https://www.dnsperf.com/) - авторизованные и рекурсивные DNS-серверы.  
+[filebench](https://github.com/filebench/filebench) - генератор рабочих нагрузок файловой системы на основе модели.  
+[fio](https://linux.die.net/man/1/fio) - бенчмарк ввода-вывода.  
+[fs_mark](https://github.com/josefbacik/fs_mark) - эталон синхронного/асинхронного создания файлов.  
+[httperf](https://github.com/httperf/httperf) - измерение производительности веб-сервера.  
+[interbench](https://github.com/ckolivas/interbench) - бенчмарк интерактивности linux.  
+[ioblazer](https://labs.vmware.com/flings/ioblazer) - мультиплатформенный микробенчмарк стека хранения данных.  
+[iozone](http://www.iozone.org/) - бенчмарк файловой системы.  
+[iperf3](https://iperf.fr/iperf-download.php) - измерение производительности TCP/UDP/SCTP.  
+[kcbench](https://github.com/knurd/kcbench) - бенчмарк компиляции ядра, компилирует ядро и измеряет время, затраченное на это.  
+[lmbench](http://www.bitmover.com/lmbench/) - набор простых, переносимых бенчмарков.  
+[netperf](https://github.com/HewlettPackard/netperf) - измерение производительности сети, тестирование однонаправленной пропускной способности и сквозной задержки.  
+[netpipe](https://linux.die.net/man/1/netpipe) - независимый оценщик производительности сетевых протоколов.  
+[nfsometer](http://wiki.linux-nfs.org/wiki/index.php/NFSometer) - система оценки производительности NFS.  
+[nuttcp](https://www.nuttcp.net/Welcome%20Page.html) - измерение производительности сети.  
+[phoronix-test-suite](https://www.phoronix-test-suite.com/) - комплексная платформа автоматизированного тестирования и бенчмаркинга.  
+[seeker](https://github.com/fidlej/seeker) - портативный бенчмарк поиска диска.  
+[siege](https://github.com/JoeDog/siege) - тестер нагрузки http и бенчмарк.  
+[sockperf](https://github.com/Mellanox/sockperf) - утилита сетевого бенчмаркинга через API сокетов.  
+[spew](https://linux.die.net/man/1/spew) - измеряет производительность ввода-вывода и/или генерирует нагрузку на ввод-вывод.  
+[stress](https://people.seas.harvard.edu/~apw/stress/) - генератор рабочей нагрузки для POSIX-систем.  
+[sysbench](https://github.com/akopytov/sysbench) - скриптовый эталон производительности баз данных и систем.  
+[tiobench](https://github.com/mkuoppal/tiobench) - эталон потокового ввода-вывода.  
+[unixbench](https://github.com/kdlucas/byte-unixbench) - оригинальный набор эталонов BYTE UNIX, обеспечивает базовый показатель производительности Unix-подобной системы.  
+[wrk](https://github.com/wg/wrk) - эталон HTTP.  
+
+### Инструмент мониторинга производительности - sar
+
+```bash
+# установка
+# Он собирает данные каждые 10 минут и генерирует отчет ежедневно. За сбор и генерацию отчетов отвечает файл crontab (/etc/cron.d/sysstat).
+yum install sysstat
+systemctl start sysstat
+systemctl enable sysstat
+
+# показывает загрузку процессора 5 раз каждые 2 секунды.
+sar 2 5
+
+# показать использование памяти 5 раз каждые 2 секунды.
+sar -r 2 5
+
+# показывать статистику подкачки 5 раз каждые 2 секунды.
+sar -B 2 5
+
+# Вывести всю сетевую статистику:
+sar -n ALL
+
+# чтение файла журнала SAR с помощью команды -f
+sar -f /var/log/sa/sa31|tail
+```
+
+### Чтение из файла журнала
+
+```bash
+journalctl --file ./log/journal/a90c18f62af546ccba02fa3734f00a04/system.journal --since "2020-02-11 00:00:00"
+```
+
+### Показать список последних вошедших в систему пользователей
+
+```bash
+lastb
+```
+
+### Показать список текущих вошедших пользователей, распечатать информацию о них
+
+```bash
+who
+```
+
+### Показать, кто вошел в систему и что он делает
+
+```bash
+w
+```
+
+### Выведите имена пользователей, вошедших в систему на текущем хосте
+
+```bash
+users
+```
+
+### Остановка хвоста файла при завершении программы
+
+```bash
+tail -f --pid=<PID> filename.txt
+# замените <PID> на идентификатор процесса программы.
+```
+
+### Список всех включенных служб
+
+```bash
+systemctl list-unit-files|grep enabled
+```
+
+## Hardware
+
+[[назад к началу](#удобные-однострочники-bash)]
+
+### Соберите и обобщите всю информацию об аппаратном обеспечении вашей машины
+
+```bash
+lshw -json >report.json
+# Другие опции: [ -html ] [ -short ] [ -xml ] [ -json ] [ -businfo ] [ -sanitize ] и т.д.
+```
+
+### Выяснение деталей устройства памяти
+
+```bash
+sudo dmidecode -t memory
+```
+
+### Вывод подробной информации об аппаратном обеспечении процессора
+
+```bash
+dmidecode -t 4
+# Информация о типе
+# 0 BIOS
+# 1 Система
+# 2 Базовая плата
+# 3 Шасси
+# 4 Процессор
+# 5 Контроллер памяти
+# 6 Модуль памяти
+# 7 Кэш
+# 8 Разъем порта
+# 9 Системные слоты
+# 11 OEM-строки
+# 13 Язык BIOS
+# 15 Журнал системных событий
+# 16 Массив физической памяти
+# 17 Устройство памяти
+# 18 Ошибка 32-битной памяти
+# 19 Адрес сопоставления массива памяти
+# 20 Адрес сопоставления устройства памяти
+# 21 Встроенное указательное устройство
+# 22 Портативная батарея
+# 23 Сброс системы
+# 24 Аппаратная безопасность
+# 25 Управление питанием системы
+# 26 Щуп напряжения
+# 27 Устройство охлаждения
+# 28 Датчик температуры
+# 29 Щуп электрического тока
+# 30 Внеполосный удаленный доступ
+# 31 Службы целостности загрузки
+# 32 Загрузка системы
+# 34 Устройство управления
+# 35 Компонент устройства управления
+# 36 Пороговые данные устройства управления
+# 37 Канал памяти
+# 38 Устройство IPMI
+# 39 Источник питания
+```
+
+### Подсчитайте количество жестких дисков Segate
+
+```bash
+lsscsi|grep SEAGATE|wc -l
+# или
+sg_map -i -x|grep SEAGATE|wc -l
+```
+
+### Получение UUID диска (например, sdb)
+
+```bash
+lsblk -f /dev/sdb
+
+# или
+sudo blkid /dev/sdb
+```
+
+### Сгенерируйте UUID
+
+```bash
+uuidgen
+```
+
+### Печать подробной информации обо всех жестких дисках
+
+```bash
+lsblk -io KNAME,TYPE,MODEL,VENDOR,SIZE,ROTA
+#где ROTA означает вращающееся устройство / вращающиеся жесткие диски (1 - если истинно, 0 - если ложно)
+```
+
+### Список всех устройств PCI (Peripheral Component Interconnect)
+
+```bash
+lspci
+# Список информации о сетевой карте
+lspci | egrep -i --color 'network|ethernet'
+```
+
+### Список всех USB-устройств
+
+```bash
+lsusb
+```
+
+### Модули Linux
+
+```bash
+# Показать статус модулей в ядре Linux
+lsmod
+
+# Добавление и удаление модулей из ядра Linux
+modprobe
+
+# или
+# Удалить модуль
+rmmod
+
+# Вставить модуль
+insmod
+```
+
+### Управление устройствами с поддержкой IPMI (например, BMC)
+
+```bash
+# Удаленное выяснение состояния питания сервера
+ipmitool -U <bmc_username> -P <bmc_password> -I lanplus -H <bmc_ip_address> power status
+
+# Удаленное включение сервера
+ipmitool -U <bmc_username> -P <bmc_password> -I lanplus -H <bmc_ip_address> power on
+
+# Включите индикатор идентификации панели (по умолчанию 15 с)
+ipmitool chassis identify 255
+
+# Узнайте температуру датчиков сервера
+ipmitool sensors |grep -i Temp
+
+# Сброс BMC
+ipmitool bmc reset cold
+
+# Prnt BMC network
+ipmitool lan print 1
+
+# Настройка сети BMC
+ipmitool -I bmc lan set 1 ipaddr 192.168.0.55
+ipmitool -I bmc lan set 1 netmask 255.255.255.0
+ipmitool -I bmc lan set 1 defgw ipaddr 192.168.0.1
+```
+
+## Networking
+
+[[назад к началу](#удобные-однострочники-bash)]
+
+### Разрешить домен в IP-адрес(ы)
+
+```bash
+dig +short www.example.com
+
+# или
+хост www.example.com
+```
+
+### Получение DNS TXT записи a домена
+
+```bash
+dig -t txt www.example.com
+
+# или
+host -t txt www.example.com
+```
+
+### Отправьте ping с ограничением TTL до 10 (TTL: Time-To-Live, это максимальное количество переходов, которое пакет может пройти через Интернет, прежде чем будет отброшен)
+
+```bash
+ping 8.8.8.8 -t 10
+```
+
+### Печать трассировки маршрутных пакетов до узла сети
+
+```bash
+traceroute google.com
+```
+
+### Проверка соединения с хостом (например, проверка соединения с 80 и 22 портом google.com)
+
+```bash
+nc -vw5 google.com 80
+# Подключение к 80 порту [tcp/http] google.com успешно!
+
+nc -vw5 google.com 22
+# nc: соединение с google.com порт 22 (tcp) прервано: Операция продолжается
+# nc: connect to google.com port 22 (tcp) failed: Network is unreachable
+```
+
+### Nc как инструмент чата
+
+```bash
+# С сервера A:
+$ sudo nc -l 80
+# затем вы можете подключиться к порту 80 с другого сервера (например, сервера B):
+# например, telnet <IP-адрес сервера A> 80
+# затем введите что-нибудь на сервере B.
+# и вы увидите результат на сервере A!
+```
+
+### Проверьте, какие порты слушают TCP соединения из сети
+
+```bash
+#заметьте, что некоторым компаниям может не понравиться, что вы используете nmap
+nmap -sT -O localhost
+
+# проверьте порт 0-65535
+nmap -p0-65535 localhost
+```
+
+### Проверка работоспособности хоста и сканирование открытых портов, также пропуск обнаружения хоста
+
+```bash
+#пропускает проверку, жив ли хост, что иногда может вызвать ложное срабатывание и остановить сканирование.
+$ nmap google.com -Pn
+
+# Пример вывода:
+# Starting Nmap 7.01 ( https://nmap.org ) at 2020-07-18 22:59 CST
+# Отчет о сканировании Nmap для google.com (172.217.24.14)
+# Host is up (0.013s latency).
+# Другие адреса для google.com (не сканировались): 2404:6800:4008:802::200e
+# Запись rDNS для 172.217.24.14: tsa01s07-in-f14.1e100.net
+# Не показано: 998 отфильтрованных портов
+# ОБСЛУЖИВАНИЕ СОСТОЯНИЯ ПОРТА
+# 80/tcp open http
+# 443/tcp open https
+#
+# Nmap done: 1 IP-адрес (1 хост) отсканирован за 3,99 секунды
+```
+
+### Сканирование на наличие открытых портов и определение ОС и версии (например, сканирование домена "scanme.nmap.org")
+
+```bash
+$ nmap -A -T4 scanme.nmap.org
+# -A для включения обнаружения ОС и версий, сканирования скриптов и traceroute; -T4 для более быстрого выполнения
+```
+
+### Поиск информации о сайте (например, сервера имен), поиск объекта в базе данных RFC 3912
+
+```bash
+whois google.com
+```
+
+### Показать SSL-сертификат домена
+
+```bash
+openssl s_client -showcerts -connect www.example.com:443
+```
+
+### Показать IP-адрес (ip)
+
+```bash
+ip a
+```
+
+### Показать WAN-адрес (ip)
+
+```bash
+curl ifconfig.me
+```
+
+### Отображение таблицы маршрутов
+
+```bash
+ip r
+```
+
+### Отображение ARP-кэша (ARP-кэш отображает MAC-адреса устройств в той же сети, к которой вы подключились)
+
+```bash
+ip n
+```
+
+### Добавить переходные IP-адреса (сбрасываются после перезагрузки) (например, добавить 192.168.140.3/24 к устройству eno16777736)
+
+```bash
+ip address add 192.168.140.3/24 dev eno16777736
+```
+
+### Сохранение изменений конфигурации сети
+
+```bash
+sudo vi /etc/sysconfig/network-scripts/ifcfg-enoxxx
+# затем отредактируйте поля: BOOTPROT, DEVICE, IPADDR, NETMASK, GATEWAY, DNS1 и т.д.
+```
+
+### Refresh NetworkManager
+
+```bash
+sudo nmcli c reload
+```
+
+### Перезапустите все интерфейсы
+
+```bash
+sudo systemctl restart network.service
+```
+
+### Для одновременного просмотра имени хоста, ОС, ядра, архитектуры
+
+```bash
+hostnamectl
+```
+
+### Установить имя хоста (установить все переходные, статические, красивые имена хостов сразу)
+
+```bash
+hostnamectl set-hostname "mynode"
+```
+
+### Выяснить веб-сервер (например, Nginx или Apache) веб-сайта
+
+```bash
+curl -I http://example.com/
+# HTTP/1.1 200 OK
+# Сервер: nginx
+# Date: Thu, 02 Jan 2020 07:01:07 GMT
+# Content-Type: text/html
+# Content-Length: 1119
+# Connection: keep-alive
+# Vary: Accept-Encoding
+# Last-Modified: Mon, 09 Sep 2019 10:37:49 GMT
+# ETag: "xxxxxx"
+# Accept-Ranges: bytes
+# Vary: Accept-Encoding
+```
+
+### Узнайте http код состояния URL-адреса
+
+```bash
+curl -s -o /dev/null -w "%{http_code}" https://www.google.com
+```
+
+### Сокращение сокращенного URL-адреса
+
+```bash
+curl -s -o /dev/null -w "%{redirect_url}" https://bit.ly/34EFwWC
+```
+
+### Проведите тесты пропускной способности сети
+
+```bash
+# серверная сторона:
+$ sudo iperf -s -p 80
+
+# клиентская сторона:
+iperf -c <IP-адрес сервера> --parallel 2 -i 1 -t 2 -p 80
+```
+
+### Чтобы заблокировать порт 80 (HTTP-сервер) с помощью iptables
+
+```bash
+sudo iptables -A INPUT -p tcp --dport 80 -j DROP
+
+# блокировать соединение только с IP-адреса
+sudo iptables -A INPUT -s <IP> -p tcp -dport 80 -j DROP
+```
+
+## Обработка данных
+
+[[назад к началу](#удобные-однострочники-bash)]
+
+### Выведите некоторые слова, которые начинаются с определенной строки (например, слова, начинающиеся с 'phy')
+
+```bash
+# Если файл не указан, используется файл /usr/share/dict/words.
+look phy|head -n 10
+# phycic
+# Phyciodes
+# phycite
+# Phycitidae
+# phycitol
+# phyco-
+# phycochrom
+# phycochromaceae
+# phycochromaceous
+# фикохром
+```
+
+### Повторите печать строки n раз (например, напечатайте "hello world" пять раз)
+
+```bash
+printf 'hello world\n%.0s' {1..5}
+```
+
+### Не выводить эхом завершающую новую строку
+
+```bash
+username=`echo -n "bashoneliner"`
+```
+
+### Копирование файла в несколько файлов (например, копирование файлаА в файл(B-D))
+
+```bash
+tee <fileA fileB fileC fileD >/dev/null
+```
+
+### Удалить все непечатные символы
+
+```bash
+tr -dc '[:print:]' < имя файла
+```
+
+### Удалить новую строку / следующую строку
+
+```bash
+tr --delete '\n' <input.txt >output.txt
+```
+
+### Заменить новую строку
+
+```bash
+tr '\n' ' ' <filename
+```
+
+### В прописные/строчные буквы
+
+```bash
+tr /a-z/ /A-Z/
+
+```
+
+### Перевести диапазон символов (например, заменить a-z на a)
+
+```bash
+echo 'something' |tr a-z a
+# aaaaaaaaaaa
+```
+
+### Сравнить два файла (например, файлА, файлВ)
+
+```bash
+diff fileA fileB
+# a: добавлено; d:удалено; c:изменено
+
+# или
+sdiff fileA fileB
+# слияние различий файлов по бокам
+```
+
+### Сравните два файла, удалите возврат каретки/следующую строку (например, fileA, fileB)
+
+```bash
+diff fileA fileB --strip-trailing-cr
+```
+
+### Найти общие/различающиеся строки
+
+```bash
+# имея два отсортированных и унифицированных файла (например, после выполнения команды `$ sort -uo fileA fileA` и то же самое для файлаB):
+# ---
+# fileA:
+# ---
+# joey
+# котенок
+# поросёнок
+# щенок
+# ---
+# fileB:
+# ---
+# теленок
+# птенец
+# мальчик
+# щенок
+#
+# Найдите строки в обоих файлах
+comm -12 fileA fileB
+# joey
+# щенок
+#
+# Найдите строки в файлеB, которые НЕ находятся в файлеA
+comm -13 fileA fileB
+# теленок
+# птенец
+#
+# Найдите строки в файлеА, которые НЕ находятся в файлеВ
+comm -23 fileA fileB
+# котенок
+# поросёнок
+```
+
+### Номер файла (например, fileA)
+
+```bash
+nl fileA
+
+#or
+nl -nrz fileA
+# добавить ведущие нули
+
+#or
+nl -w1 -s ' '
+# упростить, отделить пустые строки
+```
+
+### Объедините два файла по полям с помощью табуляции (по умолчанию объединение происходит по первому столбцу обоих файлов, а разделителем по умолчанию является пробел)
+
+```bash
+# файлА и файлВ должны иметь одинаковый порядок строк.
+join -t '\t' fileA fileB
+
+# Объединить, используя указанное поле (например, столбец 3 файлаА и столбец 5 файлаВ)
+join -1 3 -2 5 fileA fileB
+```
+
+### Объединить/вставить два или более файлов в колонки (например, fileA, fileB, fileC)
+
+```bash
+paste fileA fileB fileC
+# default tab separate
+```
+
+### Группировка/объединение строк в одну строку
+
+```bash
+# например.
+# AAAA
+# BBBB
+# CCCC
+# DDDD
+cat filename|paste - -
+# AAAABBBB
+# CCCCDDDD
+cat filename|paste - - - - - -
+# AAAABBBBBCCCCDDDDDD
+```
+
+### Fastq в fasta (fastq и fasta - распространенные форматы файлов для данных последовательности в биоинформатике)
+
+```bash
+cat file.fastq | paste - - - - - | sed 's/^@/>/g'| cut -f1-2 | tr '\t' '\n' >file.fa
+```
+
+### Обратная строка
+
+```bash
+echo 12345| rev
+```
+
+### Генерирование последовательности 1-10
+
+```bash
+seq 10
+```
+
+### Найдите среднее значение входного списка/файла целых чисел
+
+```bash
+i=`wc -l filename|cut -d ' ' -f1`; cat filename| echo "scale=2;(`paste -sd+`)/"$i|bc
+```
+
+### Сгенерируйте все комбинации (например, 1,2)
+
+```bash
+echo {1,2}{1,2}
+# 1 1, 1 2, 2 1, 2 2
+```
+
+### Сгенерируйте все комбинации (например, A,T,C,G)
+
+```bash
+set = {A,T,C,G}
+группа = 5
+for ((i=0; i<$group; i++));do
+    repetition=$set$repetition;done
+    bash -c "echo "$repetition""
+```
+
+### Чтение содержимого файла в переменную
+
+```bash
+foo=$(<test1)
+```
+
+### Вывод размера переменной
+
+```bash
+echo ${#foo}
+```
+
+### Эхо табуляции
+
+```bash
+echo -e ' \t '
+```
+
+### Разделить файл на меньший файл
+
+```bash
+# Разделение по строкам (например, 1000 строк/большой файл)
+split -d -l 1000 bigfile.txt
+
+# Разделение по байтам без разрыва строк между файлами
+split -C 10 bigfile.txt
+```
+
+### Создайте большое количество фиктивных файлов (например, 100000 файлов, по 10 байт каждый)
+
+```bash
+#1. Создайте большой файл
+dd if=/dev/zero of=bigfile bs=1 count=1000000
+
+#2. Разделите большой файл на 100000 10-байтовых файлов
+ split -b 10 -a 10 bigfile
+```
+
+### Переименуйте все файлы (например, удалите ABC из всех .gz файлов)
+
+```bash
+rename 's/ABC//' *.gz
+```
+
+### Удалить расширение файла (например, удалить .gz из файла filename.gz)
+
+```bash
+basename filename.gz .gz
+
+zcat filename.gz> $(basename filename.gz .gz).unpacked
+```
+
+### Добавьте расширение файла ко всем файлам (например, добавьте .txt)
+
+```bash
+rename s/$/.txt/ *
+# Вы можете использовать команду rename -n s/$/.txt/ * для проверки результата, она выведет только что-то вроде этого:
+# rename(a, a.txt)
+# rename(b, b.txt)
+# rename(c, c.txt)
+```
+
+### Выдавливание повторяющихся паттернов (например, /t/t --> /t)
+
+```bash
+tr -s "/t" < имя файла
+```
+
+### Не печатать следующую строку с помощью echo
+
+```bash
+echo -e 'текст здесь \c'
+```
+
+### Просмотр первых 50 символов файла
+
+```bash
+head -c 50 file
+```
+
+### Вырезать и получить последний столбец файла
+
+```bash
+cat file|rev | cut -d/ -f1 | rev
+```
+
+### Добавление единицы к переменной/увеличение/ i++ числовой переменной (например, $var)
+
+```bash
+((var++))
+# или
+var=$((var+1))
+
+```
+
+### Вырежьте последний столбец
+
+```bash
+cat filename|rev|cut -f1|rev
+```
+
+### Кошка в файл
+
+```bash
+cat >myfile
+позвольте мне добавить кое-что
+выход по control + c
+^C
+```
+
+### Очистить содержимое файла (например, имя файла)
+
+```bash
+>filename
+```
+
+### Добавить в файл (например, hihi)
+
+```bash
+echo 'hihi' >>filename
+```
+
+### Работа с json данными
+
+```bash
+#установите полезный пакет jq
+#sudo apt-get install jq
+#Например, чтобы получить все значения ключа 'url', просто передайте json в следующую команду jq (вы можете использовать .[]. для выбора внутреннего json, т.е. jq '.[].url')
+cat file.json | jq '.url'
+```
+
+### Десятичная система счисления в двоичную (например, получить двоичное число 5)
+
+```bash
+D2B=({0..1}{0..1}{0..1}{0..1}{0..1}{0..1}{0..1}{0..1})
+echo -e ${D2B[5]}
+#00000101
+echo -e ${D2B[255]}
+#11111111
+```
+
+### Оберните каждую строку ввода, чтобы она поместилась в указанную ширину (например, 4 целых числа на строку)
+
+```bash
+echo "00110010101110001101" | fold -w4
+# 0011
+# 0010
+# 1011
+# 1000
+# 1101
+```
+
+### Сортировка файла по столбцам с сохранением исходного порядка
+
+```bash
+sort -k3,3 -s
+```
+
+### Выравнивание столбца по правому краю (выравнивание по правому краю 2-го столбца)
+
+```bash
+cat file.txt|rev|column -t|rev
+```
+
+### Для просмотра и сохранения вывода
+
+```bash
+echo 'hihihihi' | tee outputfile.txt
+# используйте '-a' с tee для добавления в файл.
+```
+
+### Показать непечатные символы (Ctrl) с помощью cat
+
+```bash
+cat -v имя файла
+```
+
+### Преобразование табуляции в пробел
+
+```bash
+расширить имя файла
+```
+
+### Преобразование пробела в табуляцию
+
+```bash
+раскрыть имя файла
+```
+
+### Отображение файла в восьмеричной системе счисления (вы также можете использовать od для отображения шестнадцатеричной, десятичной и т.д.)
+
+```bash
+od имя файла
+```
+
+### Перевернуть файл в формате cat
+
+```bash
+tac имя файла
+```
+
+### Обратный результат от `uniq -c`
+
+```bash
+while read a b; do yes $b |head -n $a ;done <test.txt
+```
+
+## Другие
+
+[[назад к началу](#удобные-однострочники-bash)]
+
+### Опишите формат и характеристики файлов изображений
+
+```bash
+определить myimage.png
+#myimage.png PNG 1049x747 1049x747+0+0 8-bit sRGB 1.006MB 0.000u 0:00.000
+```
+
+### Bash auto-complete (например, показывать варианты "now tomorrow never", когда вы нажимаете 'tab' после ввода "dothis")
+
+[Больше примеров](https://iridakos.com/tutorials/2018/03/01/bash-programmable-completion-tutorial.html)
+
+```bash
+complete -W "now tomorrow never" dothis
+# ~$ dothis  
+# никогда сейчас завтра
+# нажмите 'tab' снова для автозаполнения после ввода 'n' или 't'
+```
+
+### Отображает календарь
+
+```bash
+# выведите текущий месяц, сегодняшний будет выделен.
+cal
+# October 2019      
+# Su Mo Tu We Th Fr Sa  
+# 1 2 3 4 5  
+# 6 7 8 9 10 11 12  
+# 13 14 15 16 17 18 19  
+# 20 21 22 23 24 25 26  
+# 27 28 29 30 31  
+
+# отображать только ноябрь
+cal -m 11
+```
+
+### Преобразуйте шестнадцатеричное значение контрольной суммы MD5 в его base64-кодированный формат
+
+```bash
+openssl md5 -binary /path/to/file| base64
+# NWbeOpeQbtuY0ATWuUeumw==
+```
+
+### Заставляет приложения использовать язык по умолчанию для вывода
+
+```bash
+export LC_ALL=C
+
+# для возврата:
+unset LC_ALL
+```
+
+### Кодирование строк как строк Base64
+
+```bash
+echo test|base64
+#dGVzdAo=
+```
+
+### Получение родительского каталога текущего каталога
+
+```bash
+dirname `pwd`
+```
+
+### Чтение .gz файла без извлечения
+
+```bash
+zmore имя файла
+
+# или
+zless filename
+```
+
+### Выполнение команды в фоновом режиме, вывод файла ошибок
+
+```bash
+some_commands &>log &
+
+# или
+some_commands 2>log &
+
+# или
+some_commands 2>&1| tee logfile
+
+# или
+some_commands |& tee logfile
+
+# или
+some_commands 2>&1 >>outfile
+#0: стандартный ввод; 1: стандартный вывод; 2: стандартная ошибка
+```
+
+### Выполнение нескольких команд в фоновом режиме
+
+```bash
+# запускать последовательно
+(sleep 2; sleep 3) &
+
+# выполнять параллельно
+sleep 2 & sleep 3 &
+```
+
+### Запуск процесса даже при выходе из системы (невосприимчивость к зависаниям, с выводом на не-tty)
+
+```bash
+# Например, запустите myscript.sh даже при выходе из системы.
+nohup bash myscript.sh
+```
+
+### Отправка почты
+
+```bash
+echo 'вот содержимое'| mail -a /path/to/attach_file.txt -s 'mail.subject' me@gmail.com
+# используйте флаг -a для установки отправки от (-a "From: some@mail.tld")
+```
+
+### Преобразование .xls в csv
+
+```bash
+xls2csv имя файла
+```
+
+### Сделать звук BEEP
+
+```bash
+speaker-test -t sine -f 1000 -l1
+```
+
+### Установите длительность звукового сигнала
+
+```bash
+(speaker-test -t sine -f 1000) & pid=$!;sleep 0.1s;kill -9 $pid
+```
+
+### Редактирование своей истории
+
+```bash
+история -w
+vi ~/.bash_history
+history -r
+
+#or
+history -d [номер_строки]
+```
+
+### Взаимодействие с историей
+
+```bash
+# список 5 предыдущих команд (аналогично `history |tail -n 5`, но не выводит саму команду history)
+fc -l -5
+```
+
+### Удаление текущей команды bash
+
+```bash
+Ctrl+U
+
+# или
+Ctrl+C
+
+# или
+Alt+Shift+#
+# чтобы перейти к истории
+```
+
+### Добавить что-то в историю (например, "addmetohistory")
+
+```bash
+# addmetodistory
+# просто добавьте "#" перед~~.
+```
+
+### Получить имя файла последней истории/записи
+
+```bash
+head !$
+```
+
+### Очистить экран
+
+```bash
+clear
+# или просто Ctrl+l
+```
+
+### Резервное копирование с помощью rsync
+
+```bash
+rsync -av filename filename.bak
 rsync -av directory directory.bak
 rsync -av --ignore_existing directory/ directory.bak
-rsync -av --update directory directory.bak</pre></div>
+rsync -av --update directory directory.bak
 
-<p>//skip files that are newer on receiver (i prefer this one!)</p>
+rsync -av directory user@ip_address:/path/to/directory.bak
+# пропускать файлы, которые новее на приемнике (я предпочитаю этот вариант!)
+```
 
-<h5>
-<a id="make-all-directories-at-one-time" class="anchor" href="#make-all-directories-at-one-time" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>make all directories at one time!</h5>
+### Сделайте все каталоги за один раз
 
-<div class="highlight highlight-source-shell"><pre>mkdir -p project/{lib/ext,bin,src,doc/{html,info,pdf},demo/stat}</pre></div>
+```bash
+mkdir -p project/{lib/ext,bin,src,doc/{html,info,pdf},demo/stat}
+# -p: сделать родительский каталог
+# это создаст project/doc/html/; project/doc/info; project/lib/ext и т.д.
+```
 
-<p>//-p: make parent directory
-//this will create project/doc/html/; project/doc/info; project/lib/ext ,etc</p>
+### Выполняйте команду, только если другая команда возвращает нулевой статус выхода (хорошо сделано)
 
-<h5>
-<a id="run-command-only-if-another-command-returns-zero-exit-status-well-done" class="anchor" href="#run-command-only-if-another-command-returns-zero-exit-status-well-done" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>run command only if another command returns zero exit status (well done)</h5>
+```bash
+cd tmp/ && tar xvf ~/a.tar
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> tmp/ <span class="pl-k">&amp;&amp;</span> tar xvf <span class="pl-k">~</span>/a.tar</pre></div>
+### Выполнение команды только в том случае, если другая команда возвращает ненулевой статус выхода (не закончено)
 
-<h5>
-<a id="run-command-only-if-another-command-returns-non-zero-exit-status-not-finish" class="anchor" href="#run-command-only-if-another-command-returns-non-zero-exit-status-not-finish" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>run command only if another command returns non-zero exit status (not finish)</h5>
+```bash
+cd tmp/a/b/c ||mkdir -p tmp/a/b/c
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> tmp/a/b/c <span class="pl-k">||</span>mkdir -p tmp/a/b/c</pre></div>
+### Используйте обратную косую черту "\", чтобы прервать длинную команду
 
-<h5>
-<a id="extract-to-a-path" class="anchor" href="#extract-to-a-path" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>extract to a path</h5>
+```bash
+cd tmp/a/b/c \
+> || \
+>mkdir -p tmp/a/b/c
+```
 
-<div class="highlight highlight-source-shell"><pre>tar xvf -C /path/to/directory filename.gz</pre></div>
+### Перечислите тип файла (например, /tmp/)
 
-<h5>
-<a id="use-backslash--to-break-long-command" class="anchor" href="#use-backslash--to-break-long-command" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>use backslash "\" to break long command</h5>
+```bash
+file /tmp/
+# tmp/: каталог
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> tmp/a/b/c \
-<span class="pl-k">&gt;</span> <span class="pl-k">||</span> \
-<span class="pl-k">&gt;</span>mkdir -p tmp/a/b/c</pre></div>
+### Написание сценария Bash ('#!' называется shebang )
 
-<h5>
-<a id="get-pwd" class="anchor" href="#get-pwd" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>get pwd</h5>
+```bash
+#!/bin/bash
+file=${1#*.}
+# удалить строку перед "."
+```
 
-<div class="highlight highlight-source-shell"><pre>VAR=<span class="pl-smi">$PWD</span><span class="pl-k">;</span> <span class="pl-c1">cd</span> <span class="pl-k">~</span><span class="pl-k">;</span> tar xvf -C <span class="pl-smi">$VAR</span> file.tar</pre></div>
+### Python простой HTTP сервер
 
-<p>//PWD need to be capital letter</p>
+```bash
+python -m SimpleHTTPServer
+# или при использовании python3:
+python3 -m http.server
+```
 
-<h5>
-<a id="list-file-type-of-file-eg-tmp" class="anchor" href="#list-file-type-of-file-eg-tmp" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list file type of file (e.g. /tmp/)</h5>
+### Чтение пользовательского ввода
 
-<div class="highlight highlight-source-shell"><pre>file /tmp/</pre></div>
+```bash
+чтение ввода
+echo $input
+```
 
-<p>//tmp/: directory</p>
+### Массив
 
-<h5>
-<a id="bash-script" class="anchor" href="#bash-script" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>bash script</h5>
+```bash
+declare -a array=()
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c">#!/bin/bash</span>
-file=<span class="pl-smi">${1<span class="pl-k">#*</span>.}</span></pre></div>
+# или
+declare array=()
 
-<p>//remove string before a "."</p>
+# или ассоциативный массив
+declare -A array=()
+```
 
-<div class="highlight highlight-source-shell"><pre>file=<span class="pl-smi">${1<span class="pl-k">%</span>.<span class="pl-k">*</span>}</span></pre></div>
+### Отправить каталог
 
-<p>//remove string after a "."</p>
+```bash
+scp -r directoryname user@ip:/path/to/send
+```
 
-<h5>
-<a id="search-from-history" class="anchor" href="#search-from-history" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>search from history</h5>
+### Fork bomb
 
-<div class="highlight highlight-source-shell"><pre>Ctrl+r</pre></div>
+```bash
+# Не пытайтесь сделать это дома!
+# Это функция, которая вызывает себя дважды при каждом вызове, пока не закончатся системные ресурсы.
+# '# ' добавляется спереди для безопасности, удалите его, когда будете серьезно тестировать.
+# :(){:|:&};:
+```
 
-<h5>
-<a id="python-simple-http-server" class="anchor" href="#python-simple-http-server" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>python simple HTTP Server</h5>
+### Используйте последний аргумент
 
-<div class="highlight highlight-source-shell"><pre>python -m SimpleHTTPServer</pre></div>
+```bash
+!$
+```
 
-<h5>
-<a id="variables" class="anchor" href="#variables" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>variables</h5>
+### Проверка последнего кода выхода
 
-<div class="highlight highlight-source-shell"><pre>{i/a/,}</pre></div>
+```bash
+echo $?
+```
 
-<p>e.g. replace all</p>
+### Извлечение .xz
 
-<div class="highlight highlight-source-shell"><pre>{i//a/,}</pre></div>
+```bash
+unxz filename.tar.xz
+# тогда
+tar -xf filename.tar
+```
 
-<p>//for variable i, replace all 'a' with a comma</p>
+### Разархивируйте файл tar.bz2 (например, file.tar.bz2)
 
-<h5>
-<a id="read-user-input" class="anchor" href="#read-user-input" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>read user input</h5>
+```bash
+tar xvfj file.tar.bz2
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">read</span> input
-<span class="pl-c1">echo</span> <span class="pl-smi">$input</span></pre></div>
+### Разархивировать файл tar.xz (например, file.tar.xz)
 
-<h5>
-<a id="generate-sequence-1-10" class="anchor" href="#generate-sequence-1-10" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>generate sequence 1-10</h5>
+```bash
+unxz file.tar.xz
+tar xopf file.tar
+```
 
-<div class="highlight highlight-source-shell"><pre>seq 10</pre></div>
+### Извлечь по пути
 
-<h5>
-<a id="sum-up-input-list-eg-seq-10" class="anchor" href="#sum-up-input-list-eg-seq-10" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>sum up input list (e.g. seq 10)</h5>
+```bash
+tar xvf -C /path/to/directory filename.gz
+```
 
-<div class="highlight highlight-source-shell"><pre>seq 10<span class="pl-k">|</span>paste -sd+<span class="pl-k">|</span>bc</pre></div>
+### Запилить содержимое каталога, не включая сам каталог
 
-<h5>
-<a id="find-average-of-input-listfile" class="anchor" href="#find-average-of-input-listfile" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>find average of input list/file</h5>
+```bash
+# Сначала перейдите в каталог, затем запустите:
+zip -r -D ../myzipfile .
+# Вы увидите myzipfile.zip в родительском каталоге (cd ...)
+```
 
-<div class="highlight highlight-source-shell"><pre>i=<span class="pl-s"><span class="pl-pds">`</span>wc -l filename<span class="pl-k">|</span>cut -d <span class="pl-s"><span class="pl-pds">'</span> <span class="pl-pds">'</span></span> -f1<span class="pl-pds">`</span></span><span class="pl-k">;</span> cat filename<span class="pl-k">|</span> <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>scale=2;(<span class="pl-s"><span class="pl-pds">`</span>paste -sd+<span class="pl-pds">`</span></span>)/<span class="pl-pds">"</span></span><span class="pl-smi">$i</span><span class="pl-k">|</span>bc</pre></div>
+### Выводим y/n несколько раз, пока не будет убит
 
-<h5>
-<a id="generate-all-combination-eg-12" class="anchor" href="#generate-all-combination-eg-12" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>generate all combination (e.g. 1,2)</h5>
+```bash
+# 'y':
+yes
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> {1,2}{1,2}</pre></div>
+# или 'n':
+yes n
 
-<p>//1 1, 1 2, 2 1, 2 2</p>
+# или 'anything':
+да что угодно
 
-<h5>
-<a id="generate-all-combination-eg-atcg" class="anchor" href="#generate-all-combination-eg-atcg" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>generate all combination (e.g. A,T,C,G)</h5>
+# передайте yes в другую команду
+yes | rm -r big_directory
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">set</span> = {A,T,C,G}
-group= 5
-<span class="pl-k">for</span> <span class="pl-s"><span class="pl-pds">((</span>i<span class="pl-k">=</span><span class="pl-c1">0</span>; i<span class="pl-k">&lt;</span><span class="pl-smi">$group</span>; i<span class="pl-k">++</span><span class="pl-pds">))</span></span><span class="pl-k">;</span><span class="pl-k">do</span>
-    repetition=<span class="pl-smi">$set$repetition</span><span class="pl-k">;</span><span class="pl-k">done</span>
-    bash -c <span class="pl-s"><span class="pl-pds">"</span>echo <span class="pl-pds">"</span></span><span class="pl-smi">$repetition</span><span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span></pre></div>
+### Мгновенно создайте большой фиктивный файл определенного размера (например, 10GiB)
 
-<h5>
-<a id="read-file-content-to-variable" class="anchor" href="#read-file-content-to-variable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>read file content to variable</h5>
+```bash
+fallocate -l 10G 10Gigfile
+```
 
-<div class="highlight highlight-source-shell"><pre>foo=<span class="pl-s"><span class="pl-pds">$(</span><span class="pl-k">&lt;</span>test1<span class="pl-pds">)</span></span></pre></div>
+### Создать фиктивный файл определенного размера (например, 200мб)
 
-<h5>
-<a id="echo-size-of-variable" class="anchor" href="#echo-size-of-variable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>echo size of variable</h5>
+```bash
+dd if=/dev/zero of=//dev/shm/200m bs=1024k count=200
+# или
+dd if=/dev/zero of=//dev/shm/200m bs=1M count=200
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-smi">${<span class="pl-k">#</span>foo}</span></pre></div>
+# Стандартный вывод:
+# 200+0 записей in
+# 200+0 записей на выходе
+# 209715200 байт (210 МБ) скопировано, 0.0955679 с, 2.2 ГБ/с
+```
 
-<h5>
-<a id="echo-tab" class="anchor" href="#echo-tab" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>echo tab</h5>
+### Продолжайте /повторяйте выполнение одной и той же команды (например, повторяйте 'wc -l filename' каждые 1 секунду)
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">'</span> \t <span class="pl-pds">'</span></span></pre></div>
+```bash
+watch -n 1 wc -l filename
+```
 
-<h5>
-<a id="array" class="anchor" href="#array" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>array</h5>
+### Выводить команды и их аргументы при выполнении (например, echo `expr 10 + 20`)
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">declare</span> -A array=()</pre></div>
+```bash
+set -x; echo `expr 10 + 20`
+```
 
-<h5>
-<a id="send-a-directory" class="anchor" href="#send-a-directory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>send a directory</h5>
+### Выведите несколько осмысленных предложений (сначала установите fortune)
 
-<div class="highlight highlight-source-shell"><pre>scp -r directoryname user@ip:/path/to/send</pre></div>
+```bash
+fortune
+```
 
-<h5>
-<a id="split-file-into-lines-eg-1000-linessmallfile" class="anchor" href="#split-file-into-lines-eg-1000-linessmallfile" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>split file into lines (e.g. 1000 lines/smallfile)</h5>
+### Красочная (и полезная) версия top (сначала установите htop)
 
-<div class="highlight highlight-source-shell"><pre>$ split -d -l 1000 bigfilename</pre></div>
+```bash
+htop
+```
 
-<h2>
-<a id="system" class="anchor" href="#system" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>System</h2>
+### Нажмите любую клавишу, чтобы продолжить
 
-<p>[<a href="#handy-bash-oneliner-commands-for-tsv-file-editing">back to top</a>]</p>
+```bash
+read -rsp $'Нажмите любую клавишу для продолжения...\n' -n1 key
+```
 
-<h5>
-<a id="snapshot-of-the-current-processes" class="anchor" href="#snapshot-of-the-current-processes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>snapshot of the current processes</h5>
+### Выполните sql-подобную команду над файлами из терминала
 
-<div class="highlight highlight-source-shell"><pre>ps </pre></div>
+```bash
+# download:
+# https://github.com/harelba/q
+# пример:
+q -d "," "select c3,c4,c5 from /path/to/file.txt where c3='foo' and c5='boo'"
+```
 
-<h5>
-<a id="check-graphics-card" class="anchor" href="#check-graphics-card" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>check graphics card</h5>
+### Использование Screen для нескольких терминальных сессий
 
-<div class="highlight highlight-source-shell"><pre>lspci</pre></div>
+```bash
+# Создайте сессию и подключите ее:
+screen
 
-<h5>
-<a id="show-ip-address" class="anchor" href="#show-ip-address" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show IP address</h5>
+# Создайте экран и назовите его 'test'
+screen -S test
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-smi">$ip</span> add show</pre></div>
+# Создать отделенную сессию foo:
+screen -S foo -d -m
 
-<p>or</p>
+# Отсоединенная сессия foo:
+screen: ^a^d
 
-<div class="highlight highlight-source-shell"><pre>ifconfig</pre></div>
+# Список сессий:
+screen -ls
 
-<h5>
-<a id="check-system-version" class="anchor" href="#check-system-version" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>check system version</h5>
+# Присоединить последнюю сессию:
+screen -r
 
-<div class="highlight highlight-source-shell"><pre>cat /etc/<span class="pl-k">*</span>-release</pre></div>
+# Прикрепить к сеансу foo:
+screen -r foo
 
-<h5>
-<a id="linux-programmers-manuel-hier--description-of-the-filesystem-hierarchy" class="anchor" href="#linux-programmers-manuel-hier--description-of-the-filesystem-hierarchy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Linux Programmer's Manuel: hier- description of the filesystem hierarchy</h5>
+# Убить сессию foo:
+screen -r foo -X quit
 
-<div class="highlight highlight-source-shell"><pre>man hier</pre></div>
 
-<h5>
-<a id="list-job" class="anchor" href="#list-job" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list job</h5>
+# Прокрутка:
+# Нажмите комбинацию префиксов экрана (C-a / control+A), затем нажмите Escape.
+# Перемещение вверх/вниз с помощью клавиш со стрелками (↑ и ↓).  
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">jobs</span> -l</pre></div>
+# Перенаправить вывод уже запущенного процесса в Screen:
+# (C-a / control+A), затем нажмите 'H'.  
 
-<h5>
-<a id="export-path" class="anchor" href="#export-path" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>export PATH</h5>
+# Сохранить вывод экрана для Screen:
+# Ctrl+A, Shift+H  
+# Вы найдете файл screen.log в текущем каталоге.  
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">export</span> PATH=<span class="pl-smi">$PATH</span>:<span class="pl-k">~</span>/path/you/want</pre></div>
+### Использование Tmux для нескольких терминальных сессий
 
-<h5>
-<a id="make-file-execuable" class="anchor" href="#make-file-execuable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>make file execuable</h5>
+```bash
+# Создайте сессию и подключите ее:
+tmux
 
-<div class="highlight highlight-source-shell"><pre>chmod +x filename</pre></div>
+# Присоединить к сессии foo:
+tmux attach -t foo
 
-<p>//you can now ./filename to execute it</p>
+# Отсоединить сессию foo:
+^bd
 
-<h5>
-<a id="list-screen" class="anchor" href="#list-screen" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list screen</h5>
+# Список сессий:
+tmux ls
 
-<div class="highlight highlight-source-shell"><pre>screen -d -r</pre></div>
+# Присоединить последнюю сессию:
+tmux attach
 
-<h5>
-<a id="echo-screen-name" class="anchor" href="#echo-screen-name" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>echo screen name</h5>
+# Убить сессию foo:
+tmux kill-session -t foo
 
-<div class="highlight highlight-source-shell"><pre>screen -ls</pre></div>
+# Создать отделенную сессию foo:
+tmux new -s foo -d
 
-<h5>
-<a id="check-system-x86-64" class="anchor" href="#check-system-x86-64" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>check system (x86-64)</h5>
+# Отправьте команду всем панелям в tmux:
+Ctrl-B
+:setw synchronize-panes
 
-<div class="highlight highlight-source-shell"><pre>uname -i</pre></div>
+# Некоторые команды управления панелями tmux:
+Ctrl-B
+# Панели (сплиты), Нажмите Ctrl+B, затем введите следующий символ:
+# % горизонтальное разделение
+# вертикальное разделение
+# o поменять панели местами
+# q показать номера панелей
+# x - закрыть панель
+# пробел - переключение между макетами
 
-<h5>
-<a id="surf-the-net" class="anchor" href="#surf-the-net" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>surf the net</h5>
+# Распределить по вертикали (ряды):
+select-layout even-vertical
+# или
+Ctrl+b, Alt+2
 
-<div class="highlight highlight-source-shell"><pre>links www.google.com</pre></div>
+# Распределить по горизонтали (столбцы):
+select-layout even-horizontal
+# или
+Ctrl+b, Alt+1
 
-<h5>
-<a id="add-user-set-passwd" class="anchor" href="#add-user-set-passwd" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>add user, set passwd</h5>
+# Прокрутка
+Ctrl-b, затем \[ затем вы можете использовать обычные навигационные клавиши для прокрутки.
+Нажмите q, чтобы выйти из режима прокрутки.
+```
 
-<div class="highlight highlight-source-shell"><pre>useradd username
-passwd username</pre></div>
+### Передайте пароль для ssh
 
-<h5>
-<a id="edit-variable-for-bash-eg-displaying-the-whole-path" class="anchor" href="#edit-variable-for-bash-eg-displaying-the-whole-path" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>edit variable for bash, (e.g. displaying the whole path)</h5>
+```bash
+sshpass -p mypassword ssh root@10.102.14.88 "df -h"
+```
 
-<div class="highlight highlight-source-shell"><pre>1. joe <span class="pl-k">~</span>/.bash_profile 
-2. <span class="pl-k">export</span> PS1=<span class="pl-s"><span class="pl-pds">'</span>\u@\h:\w\$<span class="pl-pds">'</span></span> </pre></div>
+### Ожидание завершения pid (задания)
 
-<p>//$PS1 is a variable that defines the makeup and style of the command prompt </p>
+```bash
+wait %1
+# или
+ждать $PID
+wait ${!}
+#wait ${!} для ожидания последнего фонового процесса ($! - PID последнего фонового процесса)
+```
 
-<div class="highlight highlight-source-shell"><pre>3. <span class="pl-c1">source</span> <span class="pl-k">~</span>/.bash_profile</pre></div>
+### Преобразование pdf в txt
 
-<h5>
-<a id="edit-environment-setting-eg-alias" class="anchor" href="#edit-environment-setting-eg-alias" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>edit environment setting (e.g. alias)</h5>
+```bash
+sudo apt-get install poppler-utils
+pdftotext example.pdf example.txt
+```
 
-<div class="highlight highlight-source-shell"><pre>1. joe <span class="pl-k">~</span>/.bash_profile
-2. <span class="pl-c1">alias</span> pd=<span class="pl-s"><span class="pl-pds">"</span>pwd<span class="pl-pds">"</span></span> //no more need to <span class="pl-c1">type</span> that <span class="pl-s"><span class="pl-pds">'</span>w<span class="pl-pds">'</span></span><span class="pl-k">!</span>
-3. <span class="pl-c1">source</span> <span class="pl-k">~</span>/.bash_profile</pre></div>
+### Список только директорий
 
-<h5>
-<a id="list-environment-variables-eg-path" class="anchor" href="#list-environment-variables-eg-path" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list environment variables (e.g. PATH)</h5>
+```bash
+ls -d */
+```
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-smi">$echo</span> <span class="pl-smi">$PATH</span></pre></div>
+### Перечислять по одному файлу в строке
 
-<p>//list of directories separated by a colon</p>
+```bash
+ls -1
+# или перечислить все, не игнорируйте записи, начинающиеся с .
+ls -1a
+```
 
-<h5>
-<a id="list-all-environment-variables-for-current-user" class="anchor" href="#list-all-environment-variables-for-current-user" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list all environment variables for current user</h5>
+### Захват/запись/сохранение вывода терминала (захват всего, что вы вводите и выводите)
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-smi">$env</span></pre></div>
+```bash
+script output.txt
+# начните использовать терминал
+# чтобы выйти из экранной сессии (прекратить сохранение содержимого), введите exit.
+```
 
-<h5>
-<a id="show-partition-format" class="anchor" href="#show-partition-format" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show partition format</h5>
+### Перечислите содержимое каталогов в древовидном формате
 
-<div class="highlight highlight-source-shell"><pre>lsblk</pre></div>
+```bash
+tree
+# перейдите в каталог, который вы хотите перечислить, и введите tree (sudo apt-get install tree)
+# output:
+# home/
+# └── project
+# ├── 1
+# ├── 2
+# ├── 3
+# ├── 4
+# └── 5
+#
 
-<h5>
-<a id="soft-link-program-to-bin" class="anchor" href="#soft-link-program-to-bin" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>soft link program to bin</h5>
+# установите каталоги уровней вглубь (например, уровень 1)
+tree -L 1
+# home/
+# └── проект
+```
 
-<div class="highlight highlight-source-shell"><pre>ln -s /path/to/program /home/usr/bin</pre></div>
+### Установите virtualenv(sandbox) для python
 
-<p>//must be the whole path to the program</p>
-
-<h5>
-<a id="show-hexadecimal-view-of-data" class="anchor" href="#show-hexadecimal-view-of-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show hexadecimal view of data</h5>
-
-<div class="highlight highlight-source-shell"><pre>hexdump -C filename.class</pre></div>
-
-<h5>
-<a id="jump-to-different-node" class="anchor" href="#jump-to-different-node" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>jump to different node</h5>
-
-<div class="highlight highlight-source-shell"><pre>rsh node_name</pre></div>
-
-<h5>
-<a id="check-port-active-internet-connection" class="anchor" href="#check-port-active-internet-connection" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>check port (active internet connection)</h5>
-
-<div class="highlight highlight-source-shell"><pre>netstat -tulpn</pre></div>
-
-<h5>
-<a id="find-whick-link-to-a-file" class="anchor" href="#find-whick-link-to-a-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>find whick link to a file</h5>
-
-<div class="highlight highlight-source-shell"><pre>readlink filename</pre></div>
-
-<h5>
-<a id="check-where-a-command-link-to-eg-python" class="anchor" href="#check-where-a-command-link-to-eg-python" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>check where a command link to (e.g. python)</h5>
-
-<div class="highlight highlight-source-shell"><pre>which python</pre></div>
-
-<h5>
-<a id="list-total-size-of-a-directory" class="anchor" href="#list-total-size-of-a-directory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list total size of a directory</h5>
-
-<div class="highlight highlight-source-shell"><pre>du -hs <span class="pl-c1">.</span></pre></div>
-
-<p>or</p>
-
-<div class="highlight highlight-source-shell"><pre>du -sb</pre></div>
-
-<h5>
-<a id="copy-directory-with-permission-setting" class="anchor" href="#copy-directory-with-permission-setting" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>copy directory with permission setting</h5>
-
-<div class="highlight highlight-source-shell"><pre>cp -rp /path/to/directory</pre></div>
-
-<h5>
-<a id="store-current-directory" class="anchor" href="#store-current-directory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>store current directory</h5>
-
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">pushd</span> <span class="pl-c1">.</span> <span class="pl-smi">$popd</span> <span class="pl-k">;</span><span class="pl-c1">dirs</span> -l </pre></div>
-
-<h5>
-<a id="show-disk-usage" class="anchor" href="#show-disk-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show disk usage</h5>
-
-<div class="highlight highlight-source-shell"><pre>df -h </pre></div>
-
-<p>or</p>
-
-<div class="highlight highlight-source-shell"><pre>du -h </pre></div>
-
-<p>or</p>
-
-<div class="highlight highlight-source-shell"><pre>du -sk /var/log/<span class="pl-k">*</span> <span class="pl-k">|</span>sort -rn <span class="pl-k">|</span>head -10</pre></div>
-
-<h5>
-<a id="show-current-runlevel" class="anchor" href="#show-current-runlevel" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show current runlevel</h5>
-
-<div class="highlight highlight-source-shell"><pre>runlevel</pre></div>
-
-<h5>
-<a id="switch-runlevel" class="anchor" href="#switch-runlevel" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>switch runlevel</h5>
-
-<div class="highlight highlight-source-shell"><pre>init 3 </pre></div>
-
-<p>or</p>
-
-<div class="highlight highlight-source-shell"><pre>telinit 3 </pre></div>
-
-<h5>
-<a id="permanently-modify-runlevel" class="anchor" href="#permanently-modify-runlevel" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>permanently modify runlevel</h5>
-
-<div class="highlight highlight-source-shell"><pre>1. edit /etc/init/rc-sysinit.conf 
-2. env DEFAULT_RUNLEVEL=2 </pre></div>
-
-<h5>
-<a id="become-root" class="anchor" href="#become-root" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>become root</h5>
-
-<div class="highlight highlight-source-shell"><pre>su</pre></div>
-
-<h5>
-<a id="become-somebody" class="anchor" href="#become-somebody" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>become somebody</h5>
-
-<div class="highlight highlight-source-shell"><pre>su somebody</pre></div>
-
-<h5>
-<a id="report-user-quotes-on-device" class="anchor" href="#report-user-quotes-on-device" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>report user quotes on device</h5>
-
-<div class="highlight highlight-source-shell"><pre>requota -auvs</pre></div>
-
-<h5>
-<a id="get-entries-in-a-number-of-important-databases" class="anchor" href="#get-entries-in-a-number-of-important-databases" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>get entries in a number of important databases</h5>
-
-<div class="highlight highlight-source-shell"><pre>getent database_name</pre></div>
-
-<p>(e.g. the 'passwd' database)</p>
-
-<div class="highlight highlight-source-shell"><pre>getent passwd</pre></div>
-
-<p>//list all user account (all local and LDAP)
-(e.g. fetch list of grop accounts)</p>
-
-<div class="highlight highlight-source-shell"><pre>getent group</pre></div>
-
-<p>//store in database 'group'</p>
-
-<h5>
-<a id="little-xwindow-tools" class="anchor" href="#little-xwindow-tools" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>little xwindow tools</h5>
-
-<div class="highlight highlight-source-shell"><pre>xclock
-xeyes</pre></div>
-
-<h5>
-<a id="change-owner-of-file" class="anchor" href="#change-owner-of-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>change owner of file</h5>
-
-<div class="highlight highlight-source-shell"><pre>chown user_name filename
-chown -R user_name /path/to/directory/</pre></div>
-
-<p>//chown user:group filename</p>
-
-<h5>
-<a id="list-current-mount-detail" class="anchor" href="#list-current-mount-detail" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list current mount detail</h5>
-
-<div class="highlight highlight-source-shell"><pre>df</pre></div>
-
-<h5>
-<a id="list-current-usernames-and-user-numbers" class="anchor" href="#list-current-usernames-and-user-numbers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>list current usernames and user-numbers</h5>
-
-<div class="highlight highlight-source-shell"><pre>cat /etc/passwd</pre></div>
-
-<h5>
-<a id="get-all-username" class="anchor" href="#get-all-username" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>get all username</h5>
-
-<div class="highlight highlight-source-shell"><pre>getent passwd<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{FS="[:]"; print $1}<span class="pl-pds">'</span></span></pre></div>
-
-<h5>
-<a id="show-all-users" class="anchor" href="#show-all-users" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show all users</h5>
-
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">compgen</span> -u</pre></div>
-
-<h5>
-<a id="show-all-groups" class="anchor" href="#show-all-groups" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show all groups</h5>
-
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">compgen</span> -g</pre></div>
-
-<h5>
-<a id="show-group-of-user" class="anchor" href="#show-group-of-user" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show group of user</h5>
-
-<div class="highlight highlight-source-shell"><pre>group username</pre></div>
-
-<h5>
-<a id="show-uid-gid-group-of-user" class="anchor" href="#show-uid-gid-group-of-user" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show uid, gid, group of user</h5>
-
-<div class="highlight highlight-source-shell"><pre>id username</pre></div>
-
-<h5>
-<a id="check-if-its-root" class="anchor" href="#check-if-its-root" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>check if it's root</h5>
-
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">if</span> [<span class="pl-s"><span class="pl-pds">$(</span>id -u<span class="pl-pds">)</span></span> <span class="pl-k">-ne</span> 0]<span class="pl-k">;</span><span class="pl-k">then</span>
-    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>You are not root!<span class="pl-pds">"</span></span>
-    <span class="pl-c1">exit</span><span class="pl-k">;</span>
-<span class="pl-k">fi</span></pre></div>
-
-<p>//'id -u' output 0 if it's not root</p>
-
-<h5>
-<a id="find-out-cpu-information" class="anchor" href="#find-out-cpu-information" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>find out CPU information</h5>
-
-<div class="highlight highlight-source-shell"><pre>more /proc/cpuinfo</pre></div>
-
-<p>or</p>
-
-<div class="highlight highlight-source-shell"><pre>lscpu</pre></div>
-
-<h5>
-<a id="set-quota-for-user-eg-disk-soft-limit-120586240-hard-limit-125829120" class="anchor" href="#set-quota-for-user-eg-disk-soft-limit-120586240-hard-limit-125829120" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>set quota for user (e.g. disk soft limit: 120586240; hard limit: 125829120)</h5>
-
-<div class="highlight highlight-source-shell"><pre>setquota username 120586240 125829120 0 0 /home</pre></div>
-
-<h5>
-<a id="show-quota-for-user" class="anchor" href="#show-quota-for-user" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show quota for user</h5>
-
-<div class="highlight highlight-source-shell"><pre>quota -v username</pre></div>
-
-<h5>
-<a id="fork-bomb" class="anchor" href="#fork-bomb" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>fork bomb</h5>
-
-<div class="highlight highlight-source-shell"><pre>:(){:<span class="pl-k">|</span>:<span class="pl-k">&amp;</span>}<span class="pl-k">;</span>:</pre></div>
-
-<p>//dont try this at home</p>
-
-<h5>
-<a id="check-user-login" class="anchor" href="#check-user-login" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>check user login</h5>
-
-<div class="highlight highlight-source-shell"><pre>lastlog</pre></div>
-
-<h5>
-<a id="edit-path-for-all-users" class="anchor" href="#edit-path-for-all-users" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>edit path for all users</h5>
-
-<div class="highlight highlight-source-shell"><pre>joe /etc/environment</pre></div>
-
-<p>//edit this file</p>
-
-<h5>
-<a id="show-running-processes" class="anchor" href="#show-running-processes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show running processes</h5>
-
-<div class="highlight highlight-source-shell"><pre>ps aux</pre></div>
-
-<h5>
-<a id="find-maximum-number-of-processes" class="anchor" href="#find-maximum-number-of-processes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>find maximum number of processes</h5>
-
-<div class="highlight highlight-source-shell"><pre>cat /proc/sys/kernal/pid_max</pre></div>
-
-<h5>
-<a id="show-and-set-user-limit" class="anchor" href="#show-and-set-user-limit" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>show and set user limit</h5>
-
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">ulimit</span> -u</pre></div>
-
-<h5>
-<a id="which-ports-are-listening-for-tcp-connections-from-the-network" class="anchor" href="#which-ports-are-listening-for-tcp-connections-from-the-network" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>which ports are listening for TCP connections from the network</h5>
-
-<div class="highlight highlight-source-shell"><pre>nmap -sT -O localhost</pre></div>
-
-<h5>
-<a id="print-out-number-of-cores-processors" class="anchor" href="#print-out-number-of-cores-processors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>print out number of cores/ processors</h5>
-
-<div class="highlight highlight-source-shell"><pre>nproc --all</pre></div>
-
-<h5>
-<a id="check-status-of-each-core" class="anchor" href="#check-status-of-each-core" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>check status of each core</h5>
-
-<ol>
-<li>top</li>
-<li>press '1'</li>
-</ol>
-
-<p>=-=-=-=-=-A lot more coming!! =-=-=-=-=-=-=-=-=-=waitwait-=-=-=-=-=-=-=-=-=-</p>
-
+```bash
+# 1. установите virtualenv.
+sudo apt-get install virtualenv
+# 2. Создайте каталог (назовите его .venv или любым другим именем) для вашей новой блестящей изолированной среды.
+virtualenv .venv
+# 3. источник virtual bin
+source .venv/bin/activate
+# 4. Вы можете проверить, находитесь ли вы теперь внутри песочницы.
+type pip
+# 5. Теперь вы можете установить ваш пакет pip, здесь requirements.txt - это просто txt-файл, содержащий все пакеты, которые вам нужны. (например, tornado==4.5.3).
+pip install -r requirements.txt
+# 6. Выйдите из виртуальной среды
+деактивировать
+```
