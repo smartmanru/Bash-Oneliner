@@ -1,24 +1,24 @@
-# Bash-Oneliner
-I am glad that you are here! I was working on bioinformatics a few years ago and was amazed by those single-word bash commands which are much faster than my dull scripts, time saved through learning command-line shortcuts and scripting. Recent years I am working on cloud computing and I keep recording those useful commands here. Not all of them is oneliner, but i put effort on making them brief and swift. I am mainly using Ubuntu, Amazon Linux, RedHat, Linux Mint, Mac and CentOS, sorry if the commands don't work on your system.
+# Баш-Онелинер (translate by deepl)
+Я рад, что вы здесь! Несколько лет назад я занимался биоинформатикой и был поражен этими однословными командами bash, которые намного быстрее, чем мои скучные скрипты, время, сэкономленное благодаря изучению сочетаний клавиш командной строки и сценариев. В последние годы я работаю над облачными вычислениями и продолжаю записывать эти полезные команды здесь. Не все они односложные, но я прилагаю усилия, чтобы сделать их краткими и быстрыми. В основном я использую Ubuntu, Amazon Linux, RedHat, Linux Mint, Mac и CentOS, извините, если команды не работают в вашей системе.
 
-This blog will focus on simple bash commands for parsing data and Linux system maintenance that i acquired from work and LPIC exam. I apologize that there are no detailed citation for all the commands, but they are probably from dear Google and Stack Overflow.
+Этот блог будет посвящен простым командам bash для анализа данных и обслуживания системы Linux, которые я приобрел во время работы и экзамена LPIC. Я извиняюсь, что нет подробных ссылок на все команды, но они, вероятно, взяты из уважаемых Google и Stack Overflow.
 
-English and bash are not my first language, please correct me anytime, thank you.
-If you know other cool commands, please teach me!
+Английский и bash не являются моим родным языком, пожалуйста, поправьте меня в любое время, спасибо.
+Если вы знаете другие классные команды, пожалуйста, научите меня!
 
-Here's a more stylish version of [Bash-Oneliner](https://onceupon.github.io/Bash-Oneliner/)~
+Вот более стильная версия [Bash-Oneliner-EU](https://onceupon.github.io/Bash-Oneliner/)~.
 
-## Handy Bash one-liners
+## Удобные однострочники Bash
 
-- [Terminal Tricks](#terminal-tricks)
-- [Variable](#variable)
-- [Math](#math)
+- [Terminal Tricks](#Терминальные-трюки)
+- [Переменные](#переменные)
+- [Math](#математика)
 - [Grep](#grep)
 - [Sed](#sed)
 - [Awk](#awk)
 - [Xargs](#xargs)
 - [Find](#find)
-- [Condition and Loop](#condition-and-loop)
+- [Условие и цикл](#условия-и-циклы)
 - [Time](#time)
 - [Download](#download)
 - [Random](#random)
@@ -26,52 +26,52 @@ Here's a more stylish version of [Bash-Oneliner](https://onceupon.github.io/Bash
 - [System](#system)
 - [Hardware](#hardware)
 - [Networking](#networking)
-- [Data Wrangling](#data-wrangling)
-- [Others](#others)
+- [Data Wrangling](#обработка-данных)
+- [Другие](#другие)
 
-## Terminal Tricks
+## Терминальные трюки
 
-#####  Using Ctrl keys
+##### Использование клавиш Ctrl
 ```
-Ctrl + n : same as Down arrow.
-Ctrl + p : same as Up arrow.
-Ctrl + r : begins a backward search through command history.(keep pressing Ctrl + r to move backward)
-Ctrl + s : to stop output to terminal.
-Ctrl + q : to resume output to terminal after Ctrl + s.
-Ctrl + a : move to the beginning of line.
-Ctrl + e : move to the end of line.
-Ctrl + d : if you've type something, Ctrl + d deletes the character under the cursor, else, it escapes the current shell.
-Ctrl + k : delete all text from the cursor to the end of line.
-Ctrl + x + backspace : delete all text from the beginning of line to the cursor.
-Ctrl + t : transpose the character before the cursor with the one under the cursor, press Esc + t to transposes the two words before the cursor.
-Ctrl + w : cut the word before the cursor; then Ctrl + y paste it
-Ctrl + u : cut the line before the cursor; then Ctrl + y paste it
-Ctrl + _ : undo typing.
-Ctrl + l : equivalent to clear.
-Ctrl + x + Ctrl + e : launch editor defined by $EDITOR to input your command. Useful for multi-line commands.
+Ctrl + n : то же, что и стрелка вниз.
+Ctrl + p : то же, что и стрелка вверх.
+Ctrl + r : начинает обратный поиск в истории команд (продолжайте нажимать Ctrl + r, чтобы двигаться назад).
+Ctrl + s : остановить вывод на терминал.
+Ctrl + q : возобновление вывода на терминал после Ctrl + s.
+Ctrl + a : переход к началу строки.
+Ctrl + e : перемещение в конец строки.
+Ctrl + d : если вы что-то набрали, Ctrl + d удаляет символ под курсором, в противном случае происходит выход из текущей оболочки.
+Ctrl + k : удалить весь текст от курсора до конца строки.
+Ctrl + x + backspace : удалить весь текст от начала строки до курсора.
+Ctrl + t : транспонировать символ перед курсором с символом под курсором, нажмите Esc + t, чтобы транспонировать два слова перед курсором.
+Ctrl + w : вырезать слово перед курсором; затем Ctrl + y вставить его.
+Ctrl + u : вырезать строку перед курсором; затем Ctrl + y вставить ее.
+Ctrl + _ : отменить ввод.
+Ctrl + l : эквивалентно очистить.
+Ctrl + x + Ctrl + e : запуск редактора, определенного $EDITOR, для ввода вашей команды. Полезно для многострочных команд.
 ```
-##### Change case
+##### Изменить регистр
 ```bash
 Esc + u
-# converts text from cursor to the end of the word to uppercase.
+# переводит текст от курсора до конца слова в верхний регистр.
 Esc + l
-# converts text from cursor to the end of the word to lowercase.
+# переводит текст от курсора до конца слова в нижний регистр.
 Esc + c
-# converts letter under the cursor to uppercase, rest of the word to lowercase.
+# переводит букву под курсором в верхний регистр, остальное слово - в нижний.
 ```
-##### Run history number (e.g. 53)
+##### Номер истории выполнения (например, 53).
 ```bash
 !53
 ```
 
-##### Run last command
+##### Выполнить последнюю команду
 ```bash
 !!
-# run the previous command using sudo
-sudo !!
+# запустите предыдущую команду с помощью sudo
+sudo !!!
 ```
 
-##### Run last command and change some parameter using caret substitution (e.g. last command: echo 'aaa' -> rerun as: echo 'bbb')
+##### Выполните последнюю команду и измените какой-либо параметр, используя подстановку каретки (например, последняя команда: echo 'aaa' -> повторное выполнение как: echo 'bbb')
 ```bash
 #last command: echo 'aaa'
 ^aaa^bbb
@@ -79,373 +79,373 @@ sudo !!
 #echo 'bbb'
 #bbb
 
-#Notice that only the first aaa will be replaced, if you want to replace all 'aaa', use ':&' to repeat it:
+#Обратите внимание, что будет заменен только первый aaa, если вы хотите заменить все 'aaa', используйте ':&' для повторения:
 ^aaa^bbb^:&
 #or
 !!:gs/aaa/bbb/
 
 ```
 
-##### Run past command that began with (e.g. cat filename)
+##### Запустите прошлую команду, которая начиналась с (например, cat filename)
 ```bash
 !cat
-# or
+# или
 !c
-# run cat filename again
+# запустите cat filename снова
 ```
 
 ##### Bash globbing
 ```bash
-# '*' serves as a "wild card" for filename expansion.
-/etc/pa*wd    #/etc/passwd
+# '*' служит "дикой картой" для расширения имени файла.
+/etc/pa*wd #/etc/passwd
 
-# '?' serves as a single-character "wild card" for filename expansion.
-/b?n/?at      #/bin/cat
+# '?' служит односимвольной "дикой картой" для расширения имени файла.
+/b?n/?at #/bin/cat
 
-# '[]' serves to match the character from a range.
-ls -l [a-z]*   #list all files with alphabet in its filename.
+# '[]' служит для поиска символа из диапазона.
+ls -l [a-z]* # список всех файлов с алфавитом в имени файла.
 
-# '{}' can be used to match filenames with more than one patterns
-ls *.{sh,py}   #list all .sh and .py files
+# '{}' может использоваться для поиска имен файлов с более чем одним шаблоном
+ls *.{sh,py}   #список всех файлов .sh и .py
 ```
 
-##### Some handy environment variables
+##### Некоторые удобные переменные окружения
 ```
-$0   :name of shell or shell script.
-$1, $2, $3, ... :positional parameters.
-$#   :number of positional parameters.
-$?   :most recent foreground pipeline exit status.
-$-   :current options set for the shell.
-$$   :pid of the current shell (not subshell).
-$!   :is the PID of the most recent background command.
+$0 :имя оболочки или сценария оболочки.
+$1, $2, $3, ... :позиционные параметры.
+$# :количество позиционных параметров.
+$? :последний статус выхода из конвейера переднего плана.
+$- :текущий набор опций для оболочки.
+$$ :pid текущей оболочки (не под-оболочки).
+$! :PID последней фоновой команды.
 
-$DESKTOP_SESSION     current display manager
-$EDITOR   preferred text editor.
-$LANG   current language.
-$PATH   list of directories to search for executable files (i.e. ready-to-run programs)
-$PWD    current directory
-$SHELL  current shell
-$USER   current username
-$HOSTNAME   current hostname
+$DESKTOP_SESSION текущий менеджер дисплея.
+$EDITOR предпочитаемый текстовый редактор.
+$LANG текущий язык.
+$PATH список каталогов для поиска исполняемых файлов (т.е. готовых к запуску программ).
+$PWD текущий каталог
+$SHELL текущая оболочка
+$USER текущее имя пользователя
+$HOSTNAME текущее имя хоста
 ```
 
-## Variable
-[[back to top](#handy-bash-one-liners)]
-##### Variable substitution within quotes
+## Переменные
+[[назад к началу](#удобные-однострочники-bash)]
+##### Подстановка переменных в кавычках
 ```bash
 # foo=bar
 echo $foo
 # bar
 echo "$foo"
 # bar
-# single quotes cause variables to not be expanded
+# одинарные кавычки приводят к тому, что переменные не расширяются
 echo '$foo'
 # $foo
-# single quotes within double quotes will not cancel expansion and will be part of the output
+# одинарные кавычки внутри двойных кавычек не отменяют расширения и являются частью вывода
 echo "'$foo'"
 # 'bar'
-# doubled single quotes act as double quotes making variables expand
+# удвоенные одинарные кавычки действуют как двойные кавычки, заставляя переменные расширяться
 echo ''$foo''
 # bar
 ```
-##### Get the length of variable
+##### Получение длины переменной
 ```bash
-var="some string"
+var="некоторая строка"
 echo ${#var}
 # 11
 ```
-##### Get the first character of the variable
+##### Получение первого символа переменной
 ```bash
-var=string
+var=строка
 echo "${var:0:1}"
 #s
 
-# or
-echo ${var%%"${var#?}"}
+# или
+echo ${var%%"${var#?"}}
 ```
 
-##### Remove the first or last string from variable
+##### Удаление первой или последней строки из переменной
 ```bash
-var="some string"
+var="некоторая строка"
 echo ${var:2}
 #me string
 ```
 
-##### Replacement (e.g. remove the first leading 0 )
+##### Замена (например, удаление первого ведущего 0)
 ```bash
 var="0050"
 echo ${var[@]#0}
 #050
 ```
 
-##### Replacement (e.g. replace 'a' with ',')
+##### Замена (например, заменить 'a' на ',')
 ```bash
 {var/a/,}
 ```
 
-##### Replace all (e.g. replace all 'a' with ',')
+##### Замена всех (например, заменить все 'a' на ',')
 ```bash
 {var//a/,}
 ```
 
-##### Grep lines with strings from a file (e.g. lines with 'stringA or 'stringB' or 'stringC')
+##### Grep строки со строками из файла (например, строки с 'stringA или 'stringB' или 'stringC')
 ```bash
-#with grep
+#с grep
 test="stringA stringB stringC"
-grep ${test// /\\\|} file.txt
-# turning the space into 'or' (\|) in grep
+grep ${test// /\\\\\|} file.txt
+# превращая пробел в 'или' (\||) в grep
 ```
 
-##### To change the case of the string stored in the variable to lowercase (Parameter Expansion)
+##### Для изменения регистра строки, хранящейся в переменной, на нижний регистр (Расширение параметров)
 ```bash
 var=HelloWorld
 echo ${var,,}
 helloworld
 ```
 
-##### Expand and then execute variable/argument
+##### Развернуть и затем выполнить переменную/аргумент
 ```bash
 cmd="bar=foo"
 eval "$cmd"
 echo "$bar" # foo
 ```
 
-## Math
-[[back to top](#handy-bash-one-liners)]
-##### Arithmetic Expansion in Bash (Operators: +, -, *, /, %, etc)
+## Математика
+[[назад к началу](#удобные-однострочники-bash)]
+##### Арифметическое расширение в Bash (операторы: +, -, *, /, % и т.д.)
 ```bash
-echo $(( 10 + 5 ))  #15
+echo $((( 10 + 5 ))  #15
 x=1
-echo $(( x++ )) #1 , notice that it is still 1, since it's post-increment
+echo $(( x++ )) #1 , обратите внимание, что это все еще 1, так как это пост-инкремент
 echo $(( x++ )) #2
-echo $(( ++x )) #4 , notice that it is not 3 since it's pre-increment
+echo $((( ++x )) #4 , обратите внимание, что это не 3, так как это пре-инкремент
 echo $(( x-- )) #4
-echo $(( x-- )) #3
+echo $((( x-- )) #3
 echo $(( --x )) #1
 x=2
 y=3
-echo $(( x ** y )) #8
+echo $((( x ** y )) #8
 ```
 
-##### Print out the prime factors of a number (e.g. 50)
+##### Выведите простые коэффициенты числа (например, 50).
 ```bash
-factor 50
+фактор 50
 # 50: 2 5 5
 ```
-##### Sum up input list (e.g. seq 10)
+##### Суммирование входного списка (например, seq 10)
 ```bash
 seq 10|paste -sd+|bc
 ```
 
-##### Sum up a file (each line in file contains only one number)
+##### Суммирование файла (каждая строка в файле содержит только одно число)
 ```bash
 awk '{s+=$1} END {print s}' filename
 ```
 
-##### Column subtraction
+##### Вычитание столбцов
 ```bash
 cat file| awk -F '\t' 'BEGIN {SUM=0}{SUM+=$3-$2}END{print SUM}'
 ```
 
-##### Simple math with expr
+##### Простая математика с помощью expr
 ```bash
 expr 10+20 #30
 expr 10\*20 #600
 expr 30 \> 20 #1 (true)
 ```
 
-##### More math with bc
+##### Больше математики с bc
 ```bash
-# Number of decimal digit/ significant figure
+# Количество десятичных цифр/значащая цифра
 echo "scale=2;2/3" | bc
 #.66
 
-# Exponent operator
-echo "10^2" | bc
+# Оператор экспоненты
+echo "10^2"| bc
 #100
 
-# Using variables
+# Использование переменных
 echo "var=5;--var"| bc
 #4
 ```
 
 
 ## Grep
-[[back to top](#handy-bash-one-liners)]
+[[назад к началу](#удобные-однострочники-bash)]
 
-#####  Type of grep
+##### Тип grep
 ```bash
-grep = grep -G # Basic Regular Expression (BRE)
-fgrep = grep -F # fixed text, ignoring meta-characters
-egrep = grep -E # Extended Regular Expression (ERE)
-pgrep = grep -P # Perl Compatible Regular Expressions (PCRE)
-rgrep = grep -r # recursive
+grep = grep -G # базовое регулярное выражение (BRE)
+fgrep = grep -F # фиксированный текст, игнорирующий мета-символы
+egrep = grep -E # расширенное регулярное выражение (ERE)
+pgrep = grep -P # Perl-совместимые регулярные выражения (PCRE)
+rgrep = grep -r # рекурсивный
 ```
 
-#####  Grep and count number of empty lines
+##### Grep и подсчет количества пустых строк
 ```bash
 grep -c "^$"
 ```
 
-#####  Grep and return only integer
+##### Поиск и возврат только целого числа
 ```bash
-grep -o '[0-9]*'
+grep -o '[0-9]*
 #or
 grep -oP '\d*'
 ```
-#####  Grep integer with certain number of digits (e.g. 3)
+##### Поиск целого числа с определенным количеством цифр (например, 3)
 ```bash
 grep '[0-9]\{3\}'
-# or
+# или
 grep -E '[0-9]{3}'
-# or
+# или
 grep -P '\d{3}'
 ```
 
-#####  Grep only IP address
+##### Искать только IP-адрес
 ```bash
-grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
-# or
-grep -Po '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}''
+# или
+grep -Po '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
 ```
 
-#####  Grep whole word (e.g. 'target')
+##### Grep целое слово (например, 'target')
 ```bash
 grep -w 'target'
 
-#or using RE
+#или используя RE
 grep '\btarget\b'
 ```
-#####  Grep returning lines before and after match (e.g. 'bbo')
+##### Grep возвращает строки до и после совпадения (например, 'bbo')
 ```bash
-# return also 3 lines after match
+# возвращает также 3 строки после совпадения
 grep -A 3 'bbo'
 
-# return also 3 lines before match
+# возвращает также 3 строки до совпадения
 grep -B 3 'bbo'
 
-# return also 3 lines before and after match
+# возвращает также 3 строки до и после совпадения
 grep -C 3 'bbo'
 ```
 
-#####  Grep string starting with (e.g. 'S')
+##### Поиск строки, начинающейся с (например, 'S')
 ```bash
 grep -o 'S.*'
 ```
 
-##### Extract text between words (e.g. w1,w2)
+##### Извлечение текста между словами (например, w1,w2)
 ```bash
 grep -o -P '(?<=w1).*(?=w2)'
 ```
 
-##### Grep lines without word (e.g. 'bbo')
+##### Grep строки без слова (например, 'bbo')
 ```bash
 grep -v bbo filename
 ```
 
-##### Grep lines not begin with string (e.g. #)
+##### Поиск строк, не начинающихся со строки (например, #)
 ```bash
 grep -v '^#' file.txt
 ```
 
-##### Grep variables with space within it (e.g. myvar="some strings")
+##### Искать переменные с пробелом внутри (например, myvar="some strings")
 ```bash
 grep "$myvar" filename
-#remember to quote the variable!
+#не забудьте заключить переменную в кавычки!
 ```
 
-##### Grep only one/first match (e.g. 'bbo')
+##### Искать только одно/первое совпадение (например, 'bbo')
 ```bash
 grep -m 1 bbo filename
 ```
 
-##### Grep and return number of matching line(e.g. 'bbo')
+##### Искать и возвращать номер совпадающей строки (например, 'bbo')
 ```bash
 grep -c bbo filename
 ```
 
-##### Count occurrence (e.g. three times a line count three times)
+##### Подсчет вхождений (например, три раза строка считается три раза)
 ```bash
 grep -o bbo filename |wc -l
 ```
 
-##### Case insensitive grep (e.g. 'bbo'/'BBO'/'Bbo')
+##### Нечувствительный к регистру grep (например, 'bbo'/'BBO'/'Bbo')
 ```bash
 grep -i "bbo" filename
 ```
 
-##### COLOR the match (e.g. 'bbo')!
+##### Выявить совпадение (например, 'bbo')!
 ```bash
 grep --color bbo filename
 ```
 
-##### Grep search all files in a directory(e.g. 'bbo')
+##### Grep ищет все файлы в каталоге (например, 'bbo')
 ```bash
 grep -R bbo /path/to/directory
-# or
+# или
 grep -r bbo /path/to/directory
 ```
 
-##### Search all files in directory, do not ouput the filenames (e.g. 'bbo')
+##### Поиск всех файлов в каталоге, не выводите имена файлов (например, 'bbo')
 ```bash
 grep -rh bbo /path/to/directory
 ```
 
-##### Search all files in directory, output ONLY the filenames with matches(e.g. 'bbo')
+##### Поиск всех файлов в каталоге, вывод ТОЛЬКО имен файлов с совпадениями (например, 'bbo')
 ```bash
 grep -rl bbo /path/to/directory
 ```
 
-##### Grep OR (e.g. A or B or C or D)
+##### Grep OR (например, A или B или C или D)
 ```
 grep 'A\|B\|C\|D'
 ```
 
-##### Grep AND (e.g. A and B)
+##### Grep AND (например, A и B)
 ```bash
 grep 'A.*B'
 ```
 
-##### Regex any single character (e.g. ACB or AEB)
+##### Regex любой отдельный символ (например, ACB или AEB)
 ```bash
 grep 'A.B'
 ```
 
-##### Regex with or without a certain character (e.g. color or colour)
+##### Regex с определенным символом или без него (например, color или color)
 ```bash
 grep 'colou\?r'
 ```
 
-##### Grep all content of a fileA from fileB
+##### Перепечатка всего содержимого файлаА из файлаВ
 ```bash
 grep -f fileA fileB
 ```
 
-##### Grep a tab
+##### Найти вкладку
 ```bash
 grep $'\t'
 ```
 
-##### Grep variable from variable
+##### Поиск переменной из переменной
 ```bash
 $echo "$long_str"|grep -q "$short_str"
 if [ $? -eq 0 ]; then echo 'found'; fi
-#grep -q will output 0 if match found
-#remember to add space between []!
+#grep -q выведет 0, если совпадение найдено
+#не забудьте добавить пробел между []!
 ```
 
-##### Grep strings between a bracket()
+##### Grep-строки между скобками()
 ```bash
 grep -oP '\(\K[^\)]+'
 ```
 
-##### Grep number of characters with known strings in between(e.g. AAEL000001-RA)
+##### Поиск количества символов с известными строками между ними (например, AAEL000001-RA)
 ```bash
 grep -o -w "\w\{10\}\-R\w\{1\}"
-# \w word character [0-9a-zA-Z_] \W not word character
+# \w слово символ [0-9a-zA-Z_] \W не слово символ
 ```
 
-##### Skip directory (e.g. 'bbo')
+##### Пропустить каталог (например, 'bbo')
 ```bash
 grep -d skip 'bbo' /path/to/files/*
 ```
@@ -453,286 +453,286 @@ grep -d skip 'bbo' /path/to/files/*
 
 
 ## Sed
-[[back to top](#handy-bash-one-liners)]
-##### Remove the 1st line
+[[назад к началу](#удобные-однострочники-bash)]
+##### Удалите 1-ю строку
 ```bash
 sed 1d filename
 ```
 
-##### Remove the first 100 lines (remove line 1-100)
+##### Удалить первые 100 строк (удалить строки 1-100)
 ```bash
 sed 1,100d filename
 ```
 
-##### Remove lines with string (e.g. 'bbo')
+##### Удалите строки со строкой (например, 'bbo')
 ```bash
 sed "/bbo/d" filename
-# case insensitive:
+# нечувствительно к регистру:
 sed "/bbo/Id" filename
 ```
 
-##### Remove lines whose nth character not equal to a value (e.g. 5th character not equal to 2)
+##### Удалите строки, n-й символ которых не равен значению (например, 5-й символ не равен 2).
 ```bash
 sed -E '/^.{5}[^2]/d'
-#aaaa2aaa (you can stay)
-#aaaa1aaa (delete!)
+#aaaa2aaa (вы можете остаться)
+#aaaa1aaa (удалить!)
 ```
 
-##### Edit infile (edit and save to file), (e.g. deleting the lines with 'bbo' and save to file)
+##### Редактирование infile (редактирование и сохранение в файл), (например, удаление строк с 'bbo' и сохранение в файл)
 ```bash
 sed -i "/bbo/d" filename
 ```
 
-##### When using variable (e.g. $i), use double quotes " "
+##### При использовании переменной (например, $i), используйте двойные кавычки " ".
 ```bash
-# e.g. add >$i to the first line (to make a bioinformatics FASTA file)
+# например, добавьте >$i к первой строке (чтобы сделать файл FASTA для биоинформатики)
 sed "1i >$i"
-# notice the double quotes! in other examples, you can use a single quote, but here, no way!
-# '1i' means insert to first line
+# обратите внимание на двойные кавычки! В других примерах можно использовать одинарные кавычки, но здесь - ни в коем случае!
+# '1i' означает вставить в первую строку.
 ```
 
-##### Using environment variable and end-of-line pattern at the same time.
+##### Одновременное использование переменной окружения и шаблона конца строки.
 ```bash
-# Use backslash for end-of-line $ pattern, and double quotes for expressing the variable
-sed -e "\$s/\$/\n+--$3-----+/"
+# Используйте обратную косую черту для шаблона конца строки $, и двойные кавычки для выражения переменной
+sed -e "\$s/\$/\n+--$3--+/"
 ```
 
-##### Delete/remove empty lines
+##### Удаление/удаление пустых строк
 ```bash
 sed '/^\s*$/d'
 
-# or
+# или
 
 sed '/^$/d'
 ```
-##### Delete/remove last line
+##### Удаление/удаление последней строки
 ```bash
 sed '$d'
 ```
 
-##### Delete/remove last character from end of file
+##### Удаление/удаление последнего символа из конца файла
 ```bash
 sed -i '$ s/.$//' filename
 ```
 
-##### Add string to beginning of file (e.g. "\[")
+##### Добавить строку в начало файла (например, "\[")
 ```bash
 sed -i '1s/^/[/' file
 ```
 
-##### Add string at certain line number (e.g. add 'something' to line 1 and line 3)
+##### Добавить строку в определенный номер строки (например, добавить 'something' в строку 1 и строку 3)
 ```bash
 sed -e '1isomething' -e '3isomething'
 ```
 
-##### Add string to end of file (e.g. "]")
+##### Добавьте строку в конец файла (например, "]")
 ```bash
 sed '$s/$/]/' filename
 ```
-##### Add newline to the end
+##### Добавить новую строку в конец
 ```bash
 sed '$a\'
 ```
 
-##### Add string to beginning of every line (e.g. 'bbo')
+##### Добавьте строку в начало каждой строки (например, 'bbo')
 ```bash
 sed -e 's/^/bbo/' file
 ```
 
-##### Add string to end of each line (e.g. "}")
+##### Добавьте строку в конец каждой строки (например, "}")
 ```bash
-sed -e 's/$/\}\]/' filename
+sed -e 's/$/\}\]/' имя файла
 ```
 
-##### Add \n every nth character (e.g. every 4th character)
+##### Добавить \n через каждый n-ый символ (например, через каждый 4-й символ)
 ```bash
 sed 's/.\{4\}/&\n/g'
 ```
 
-##### Concatenate/combine/join files with a separator and next line (e.g separate by ",")
+##### Конкатенировать/комбинировать/объединять файлы с разделителем и следующей строкой (например, разделять ",")
 ```bash
 sed -s '$a,' *.json > all.json
 ```
 
-##### Substitution (e.g. replace A by B)
+##### Подстановка (например, заменить A на B)
 ```bash
 sed 's/A/B/g' filename
 ```
 
-##### Substitution with wildcard (e.g. replace a line start with aaa= by aaa=/my/new/path)
+##### Подстановка с подстановочным знаком (например, заменить строку, начинающуюся с aaa= на aaa=/my/new/path)
 ```bash
 sed "s/aaa=.*/aaa=\/my\/new\/path/g"
 ```
 
-##### Select lines start with string (e.g. 'bbo')
+##### Выберите строки, начинающиеся со строки (например, 'bbo')
 ```bash
 sed -n '/^@S/p'
 ```
-##### Delete lines with string (e.g. 'bbo')
+##### Удалить строки, начинающиеся со строки (например, 'bbo')
 ```bash
 sed '/bbo/d' filename
 ```
 
-##### Print/get/trim a range of line (e.g. line 500-5000)
+##### Вывести/получить/обрезать диапазон строк (например, строка 500-5000)
 ```bash
 sed -n 500,5000p filename
 ```
 
-##### Print every nth lines
+##### Печать каждой n-ой строки
 ```bash
 sed -n '0~3p' filename
 
 # catch 0: start; 3: step
 ```
 
-##### Print every odd # lines
+##### Выводите каждую нечетную # строку
 ```bash
 sed -n '1~2p'
 ```
-##### Print every third line including the first line
+##### Выведите каждую третью строку, включая первую.
 ```bash
 sed -n '1p;0~3p'
 ```
-##### Remove leading whitespace and tabs
+##### Удаление пробельных символов и табуляции
 ```bash
 sed -e 's/^[ \t]*//'
-# Notice a whitespace before '\t'!!
+# Заметьте пробел перед '\t'!!!
 ```
 
-##### Remove only leading whitespace
+##### Удаление только ведущих пробелов
 ```bash
 sed 's/ *//'
 
-# notice a whitespace before '*'!!
+# обратите внимание на пробел перед '*'!!!
 ```
 
-##### Remove ending commas
+##### Удаление завершающих запятых
 ```bash
 sed 's/,$//g'
 ```
 
-##### Add a column to the end
+##### Добавьте колонку в конец
 ```bash
 sed "s/$/\t$i/"
-# $i is the valuable you want to add
+# $i - это значение, которое вы хотите добавить.
 
-# To add the filename to every last column of the file
+# Чтобы добавить имя файла в каждый последний столбец файла
 for i in $(ls);do sed -i "s/$/\t$i/" $i;done
 ```
 
-##### Add extension of filename to last column
+##### Добавить расширение имени файла в последний столбец.
 ```bash
 for i in T000086_1.02.n T000086_1.02.p;do sed "s/$/\t${i/*./}/" $i;done >T000086_1.02.np
 ```
 
-##### Remove newline\ nextline
+##### Удалить новую строку\ следующую строку
 ```bash
 sed ':a;N;$!ba;s/\n//g'
 ```
 
-##### Print a particular line (e.g. 123th line)
+##### Вывести определенную строку (например, 123-ю строку)
 ```bash
 sed -n -e '123p'
 ```
 
-##### Print a number of lines (e.g. line 10th to line 33 rd)
+##### Выведите ряд строк (например, от 10-й до 33-й строки)
 ```bash
 sed -n '10,33p' <filename
 ```
 
-##### Change delimiter
+##### Изменить разделитель
 ```bash
-sed 's=/=\\/=g'
+sed 's=/=/=\\\\/=g'
 ```
 
-##### Replace with wildcard (e.g A-1-e or A-2-e or A-3-e....)
+##### Заменить подстановочным знаком (например, A-1-e или A-2-e или A-3-e....)
 ```bash
 sed 's/A-.*-e//g' filename
 ```
 
-##### Remove last character of file
+##### Удалить последний символ файла
 ```bash
 sed '$ s/.$//'
 ```
 
-##### Insert character at specified position of file (e.g. AAAAAA --> AAA#AAA)
+##### Вставить символ в указанную позицию файла (например, AAAAAA --> AAA#AAA)
 ```bash
 sed -r -e 's/^.{3}/&#/' file
 ```
 
 
 ## Awk
-[[back to top](#handy-bash-one-liners)]
+[[назад к началу](#удобные-однострочники-bash)]
 
-##### Set tab as field separator
+##### Установите табуляцию в качестве разделителя полей
 ```bash
 awk -F $'\t'
 ```
 
-##### Output as tab separated (also as field separator)
+##### Вывод в виде разделения табуляцией (также как разделитель полей)
 ```bash
 awk -v OFS='\t'
 ```
 
-##### Pass variable
+##### Передача переменной
 ```bash
 a=bbo;b=obb;
 awk -v a="$a" -v b="$b" "$1==a && $10=b" filename
 ```
 
-##### Print line number and number of characters on each line
+##### Выведите номер строки и количество символов в каждой строке.
 ```bash
 awk '{print NR,length($0);}' filename
 ```
 
-##### Find number of columns
+##### Найти количество столбцов
 ```bash
 awk '{print NF}'
 ```
 
-##### Reverse column order
+##### Обратный порядок столбцов
 ```bash
 awk '{print $2, $1}'
 ```
 
-##### Check if there is a comma in a column (e.g. column $1)
+##### Проверка наличия запятой в колонке (например, в колонке $1)
 ```bash
 awk '$1~/,/ {print}'
 ```
 
-##### Split and do for loop
+##### Разделение и выполнение цикла for
 ```bash
-awk '{split($2, a,",");for (i in a) print $1"\t"a[i]}' filename
+awk '{split($2, a,",");for (i in a) print $1"\t "a[i]}' filename
 ```
 
-##### Print all lines before nth occurrence of a string (e.g stop print lines when 'bbo' appears 7 times)
+##### Вывести все строки до n-го вхождения строки (например, остановить печать строк, когда 'bbo' появляется 7 раз)
 ```bash
 awk -v N=7 '{print}/bbo/&& --N<=0 {exit}'
 ```
 
-##### Print filename and last line of all files in directory
+##### Выведите имя файла и последнюю строку всех файлов в каталоге
 ```bash
 ls|xargs -n1 -I file awk '{s=$0};END{print FILENAME,s}' file
 ```
 
-##### Add string to the beginning of a column (e.g add "chr" to column $3)
+##### Добавить строку в начало столбца (например, добавить "chr" в столбец $3)
 ```bash
-awk 'BEGIN{OFS="\t"}$3="chr"$3'
+awk 'BEGIN{OFS="\t"}$3="chr»$3’
 ```
 
-##### Remove lines with string (e.g. 'bbo')
+##### Удалите строки со строкой (например, 'bbo')
 ```bash
 awk '!/bbo/' file
 ```
 
-##### Remove last column
+##### Удалить последний столбец
 ```bash
-awk 'NF{NF-=1};1' file
+awk 'NF{NF-=1};1' файл
 ```
 
-##### Usage and meaning of NR and FNR
+##### Использование и значение NR и FNR
 ```bash
-# For example there are two files:
+# Например, есть два файла:
 # fileA:
 # a
 # b
@@ -741,35 +741,35 @@ awk 'NF{NF-=1};1' file
 # d
 # e
 awk 'print FILENAME, NR,FNR,$0}' fileA fileB
-# fileA    1    1    a
-# fileA    2    2    b
-# fileA    3    3    c
-# fileB    4    1    d
-# fileB    5    2    e
+# fileA 1 1 a
+# fileA 2 2 b
+# fileA 3 3 c
+# fileB 4 1 d
+# fileB 5 2 e
 ```
 
 ##### AND gate
 ```bash
-# For example there are two files:
+# Например, есть два файла:
 # fileA:
-# 1    0
-# 2    1
-# 3    1
-# 4    0
+# 1 0
+# 2 1
+# 3 1
+# 4 0
 # fileB:
-# 1    0
-# 2    1
-# 3    0
-# 4    1
+# 1 0
+# 2 1
+# 3 0
+# 4 1
 
-awk -v OFS='\t' 'NR=FNR{a[$1]=$2;next} NF {print $1,((a[$1]=$2)? $2:"0")}' fileA fileB
-# 1    0
-# 2    1
-# 3    0
-# 4    0
+awk -v OFS='\t' 'NR=FNR{a[$1]=$2;next} NF {print $1,((a[$1]=$2)? $2: "0")}' fileA fileB
+# 1 0
+# 2 1
+# 3 0
+# 4 0
 ```
 
-##### Round all numbers of file (e.g. 2 significant figure)
+##### Округлите все числа файла (например, до 2 значащей цифры).
 ```bash
 awk '{while (match($0, /[0-9]+\[0-9]+/)){
     \printf "%s%.2f", substr($0,0,RSTART-1),substr($0,RSTART,RLENGTH)
@@ -779,110 +779,110 @@ awk '{while (match($0, /[0-9]+\[0-9]+/)){
     \}'
 ```
 
-##### Give number/index to every row
+##### Присвоить номер/индекс каждой строке
 ```bash
-awk '{printf("%s\t%s\n",NR,$0)}'
+awk '{printf("%s\t%s\n",NR,$0)}’
 ```
 
-##### Break combine column data into rows
+##### Объедините данные столбцов в строки
 ```bash
-# For example, separate the following content:
-# David    cat,dog
-# into
-# David    cat
-# David    dog
+# Например, разделите следующее содержимое:
+# David cat,dog
+# в
+# David cat
+# Давид собака
 
-awk '{split($2,a,",");for(i in a)print $1"\t"a[i]}' file
+awk '{split($2,a,",");for(i in a)print $1"\t "a[i]}' file
 
-# Detail here:　http://stackoverflow.com/questions/33408762/bash-turning-single-comma-separated-column-into-multi-line-string
+# Деталь здесь: http://stackoverflow.com/questions/33408762/bash-turning-single-comma-separated-column-into-multi-line-string
 ```
 
-##### Average a file (each line in file contains only one number)
+##### Усреднение файла (каждая строка в файле содержит только одно число)
 ```bash
 awk '{s+=$1}END{print s/NR}'
 ```
 
-##### Print field start with string (e.g Linux)
+##### Печать поля, начинающегося со строки (например, Linux)
 ```bash
 awk '$1 ~ /^Linux/'
 ```
 
-##### Sort a row (e.g. 1 40  35  12  23  --> 1 12    23  35  40)
+##### Сортировка строки (например, 1 40 35 12 23 --> 1 12 23 35 40)
 ```bash
-awk ' {split( $0, a, "\t" ); asort( a ); for( i = 1; i <= length(a); i++ ) printf( "%s\t", a[i] ); printf( "\n" ); }'
+awk ' {split( $0, a, "\t" ); asort( a ); for( i = 1; i <= length(a); i++ ) printf( "%s\t", a[i] ); printf( "\n" ); }''
 ```
 
-##### Subtract previous row values (add column6 which equal to column4 minus last column5)
+##### Вычитаем значения предыдущей строки (добавляем столбец6, который равен столбцу4 минус последний столбец5)
 ```bash
 awk '{$6 = $4 - prev5; prev5 = $5; print;}'
 ```
 
 ## Xargs
-[[back to top](#handy-bash-one-liners)]
+[[назад к началу](#удобные-однострочники-bash)]
 
-##### Set tab as delimiter (default:space)
+##### Установить табуляцию в качестве разделителя (по умолчанию:пробел)
 ```bash
 xargs -d\t
 ```
 
-##### Prompt commands before running commands
+##### Запрос команд перед их выполнением
 ```bash
 ls|xargs -L1 -p head
 ```
 
-##### Display 3 items per line
+##### Отображение 3 элементов в строке
 ```bash
 echo 1 2 3 4 5 6| xargs -n 3
 # 1 2 3
 # 4 5 6
 
 ```
-##### Prompt before execution
+##### Подсказка перед выполнением
 ```bash
 echo a b c |xargs -p -n 3
 ```
 
-##### Print command along with output
+##### Печать команды вместе с выводом
 ```bash
 xargs -t abcd
 # bin/echo abcd
 # abcd
 
 ```
-##### With find and rm
+##### С помощью find и rm
 ```bash
 find . -name "*.html"|xargs rm
 
-# when using a backtick
-rm `find . -name "*.html"`
+# при использовании обратного знака
+rm ``find . -name "*.html"`
 ```
 
-##### Delete files with whitespace in filename (e.g. "hello 2001")
+##### Удаление файлов с пробелами в имени файла (например, "hello 2001")
 ```bash
 find . -name "*.c" -print0|xargs -0 rm -rf
 ```
 
-##### Show limits on command-line length
+##### Показать ограничения на длину командной строки
 ```bash
 xargs --show-limits
-# Output from my Ubuntu:
-# Your environment variables take up 3653 bytes
-# POSIX upper limit on argument length (this system): 2091451
-# POSIX smallest allowable upper limit on argument length (all systems): 4096
-# Maximum length of command we could actually use: 2087798
-# Size of command buffer we are actually using: 131072
-# Maximum parallelism (--max-procs must be no greater): 2147483647
+# Вывод с моего Ubuntu:
+# Ваши переменные окружения занимают 3653 байта.
+# Верхний предел POSIX на длину аргумента (эта система): 2091451
+# POSIX наименьший допустимый верхний предел длины аргумента (все системы): 4096
+# Максимальная длина команды, которую мы можем реально использовать: 2087798
+# Размер буфера команд, который мы фактически используем: 131072
+# Максимальный параллелизм (--max-procs должно быть не больше): 2147483647
 ```
 
-##### Move files to folder
+##### Переместить файлы в папку
 ```bash
 find . -name "*.bak" -print 0|xargs -0 -I {} mv {} ~/old
 
-# or
+# или
 find . -name "*.bak" -print 0|xargs -0 -I file mv file ~/old
 ```
 
-##### Move first 100th files to a directory (e.g. d1)
+##### Переместите первый 100-й файл в каталог (например, d1).
 ```bash
 ls |head -100|xargs -I {} mv {} d1
 ```
@@ -891,208 +891,208 @@ ls |head -100|xargs -I {} mv {} d1
 ```bash
 time echo {1..5} |xargs -n 1 -P 5 sleep
 
-# a lot faster than:
-time echo {1..5} |xargs -n1 sleep
+# намного быстрее, чем:
+time echo {1..5} |xargs -n 1 sleep
 ```
 
-##### Copy all files from A to B
+##### Скопируйте все файлы из A в B
 ```bash
 find /dir/to/A -type f -name "*.py" -print 0| xargs -0 -r -I file cp -v -p file --target-directory=/path/to/B
 
 # v: verbose|
-# p: keep detail (e.g. owner)
+# p: сохранить детали (например, владельца)
 
 ```
 
-##### With sed
+##### С помощью sed
 ```bash
 ls |xargs -n1 -I file sed -i '/^Pos/d' file
 ```
 
-##### Add the file name to the first line of file
+##### Добавьте имя файла в первую строку файла
 ```bash
 ls |sed 's/.txt//g'|xargs -n1 -I file sed -i -e '1 i\>file\' file.txt
 ```
 
-##### Count all files
+##### Подсчитать все файлы
 ```bash
 ls |xargs -n1 wc -l
 ```
 
-##### Turn output into a single line
+##### Превратите вывод в одну строку
 ```bash
 ls -l| xargs
 ```
 
-##### Count files within directories
+##### Подсчет файлов в каталогах
 ```bash
-echo mso{1..8}|xargs -n1 bash -c 'echo -n "$1:"; ls -la "$1"| grep -w 74 |wc -l' --
-# "--" signals the end of options and display further option processing
+echo mso{1..8}|xargs -n1 bash -c 'echo -n "$1:"; ls -la "$1"| grep -w 74 |wc -l' -...
+# "--" сигнализирует о конце опций и отображает дальнейшую обработку опций
 ```
 
-##### Count lines in all file, also count total lines
+##### Подсчет строк во всех файлах, также подсчет общего количества строк
 ```bash
 ls|xargs wc -l
 ```
-##### Xargs and grep
+##### Xargs и grep
 ```bash
 cat grep_list |xargs -I{} grep {} filename
 ```
 
-##### Xargs and sed (replace all old ip address with new ip address under /etc directory)
+##### Xargs и sed (замена всех старых ip-адресов на новые ip-адреса в каталоге /etc)
 ```bash
 grep -rl '192.168.1.111' /etc | xargs sed -i 's/192.168.1.111/192.168.2.111/g'
 ```
 
 
 ## Find
-[[back to top](#handy-bash-one-liners)]
-##### List all sub directory/file in the current directory
+[[назад к началу](#удобные-однострочники-bash)]
+##### Список всех подкаталогов/файлов в текущем каталоге
 ```bash
-find .
+найти
 ```
 
-##### List all files under the current directory
+##### Список всех файлов в текущем каталоге
 ```bash
-find . -type f
+найти . -type f
 ```
 
-##### List all directories under the current directory
+##### Список всех каталогов под текущим каталогом
 ```bash
-find . -type d
+найти -type d
 ```
 
-##### Edit all files under current directory (e.g. replace 'www' with 'ww')
+##### Редактирование всех файлов в текущем каталоге (например, заменить 'www' на 'ww')
 ```bash
 find . -name '*.php' -exec sed -i 's/www/w/g' {} \;
 
-# if there are no subdirectory
-replace "www" "w" -- *
-# a space before *
+# если нет подкаталога
+замените "www" "w" - *
+# пробел перед *
 ```
-##### Find and output only filename (e.g. "mso")
+##### Поиск и вывод только имени файла (например, "mso")
 ```bash
 find mso*/ -name M* -printf "%f\n"
 ```
 
-##### Find large files in the system (e.g. >4G)
+##### Поиск больших файлов в системе (например, >4G)
 ```bash
 find / -type f -size +4G
 ```
 
-##### Find and delete file with size less than (e.g. 74 byte)
+##### Найти и удалить файл размером менее (например, 74 байта)
 ```bash
-find . -name "*.mso" -size -74c -delete
+find . -name "*.mso" -size -74c -delete.
 
-# M for MB, etc
+# M для MB и т.д.
 ```
 
-##### Find empty (0 byte) files
+##### Поиск пустых (0 байт) файлов
 ```bash
 find . -type f -empty
-# to further delete all the empty files
+# для дальнейшего удаления всех пустых файлов
 find . -type f -empty -delete
 ```
 
-##### Recursively count all the files in a directory
+##### Рекурсивный подсчет всех файлов в каталоге
 ```bash
 find . -type f | wc -l
 ```
 
-## Condition and loop
-[[back to top](#handy-bash-one-liners)]
+## Условия и Циклы
+[[назад к началу](#удобные-однострочники-bash)]
 
-##### If statement
+##### Оператор If
 ```bash
-# if and else loop for string matching
+# цикл if и else для поиска соответствия строк
 if [[ "$c" == "read" ]]; then outputdir="seq"; else outputdir="write" ; fi
 
-# Test if myfile contains the string 'test':
-if grep -q hello myfile; then echo -e "file contains the string!" ; fi
+# Проверьте, содержит ли myfile строку 'test':
+if grep -q hello myfile; then echo -e "файл содержит строку!" ; fi
 
-# Test if mydir is a directory, change to it and do other stuff:
+# Проверьте, является ли mydir каталогом, перейдите в него и сделайте другие вещи:
 if cd mydir; then
-  echo 'some content' >myfile
+  echo 'некоторое содержимое' >myfile
 else
-  echo >&2 "Fatal error. This script requires mydir."
+  echo >&2 "Фатальная ошибка. Этот скрипт требует наличия mydir."
 fi
 
-# if variable is null
+# если переменная равна null
 if [ ! -s "myvariable" ]; then echo -e "variable is null!" ; fi
-#True of the length if "STRING" is zero.
+# Истина длины, если "STRING" равен нулю.
 
-# Using test command (same as []), to test if the length of variable is nonzero
+# Используя команду test (такую же, как []), проверьте, является ли длина переменной ненулевой
 test -n "$myvariable" && echo myvariable is "$myvariable" || echo myvariable is not set
 
-# Test if file exist
+# Проверьте, существует ли файл
 if [ -e 'filename' ]
 then
-  echo -e "file exists!"
+  echo -e "Файл существует!"
 fi
 
-# Test if file exist but also including symbolic links:
+# Проверьте, существует ли файл, но также включая символические ссылки:
 if [ -e myfile ] || [ -L myfile ]
-then
-  echo -e "file exists!"
+, тогда
+  echo -e "файл существует!"
 fi
 
-# Test if the value of x is greater or equal than 5
-if [ "$x" -ge 5 ]; then echo -e "greater or equal than 5!" ; fi
+# Проверьте, больше или равно ли значение x 5
+if [ "$x" -ge 5 ]; then echo -e "больше или равно 5!" ; fi
 
-# Test if the value of x is greater or equal than 5, in bash/ksh/zsh:
+# Проверьте, больше или равно ли значение x 5, в bash/ksh/zsh:
 if ((x >= 5)); then echo -e "greater or equal than 5!" ; fi
 
-# Use (( )) for arithmetic operation
-if ((j==u+2)); then echo -e "j==u+2!!" ; fi
+# Используйте (( )) для арифметических операций
+if ((j==u+2)); then echo -e "j==u+2!!!" ; fi
 
-# Use [[ ]] for comparison
-if [[ $age -gt 21 ]]; then echo -e "forever 21!!" ; fi
+# Используйте [[ ]] для сравнения
+if [[ $age -gt 21 ]]; then echo -e "forever 21!!!" ; fi
 
 ```
 
-[More if commands](http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_07_01.html)
+[Больше команд if](http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_07_01.html)
 
 ##### For loop
 ```bash
-# Echo the file name under the current directory
+# Выдаем эхом имя файла в текущем каталоге
 for i in $(ls); do echo file $i;done
 #or
 for i in *; do echo file $i; done
 
-# Make directories listed in a file (e.g. myfile)
+# Сделать каталоги перечисленными в файле (например, myfile)
 for dir in $(<myfile); do mkdir $dir; done
 
-# Press any key to continue each loop
+# Нажмите любую клавишу для продолжения каждого цикла
 for i in $(cat tpc_stats_0925.log |grep failed|grep -o '\query\w\{1,2\}');do cat ${i}.log; read -rsp $'Press any key to continue...\n' -n1 key;done
 
-# Print a file line by line when a key is pressed,
+# Печать файла построчно при нажатии клавиши,
 oifs="$IFS"; IFS=$'\n'; for line in $(cat myfile); do ...; done
 while read -r line; do ...; done <myfile
 
-#If only one word a line, simply
+#Если в строке только одно слово, просто
 for line in $(cat myfile); do echo $line; read -n1; done
 
-#Loop through an array
+#Пройтись по массиву
 for i in "${arrayName[@]}"; do echo $i;done
 
 ```
 
 ##### While loop,
 ```bash
-# Column subtraction of a file (e.g. a 3 columns file)
-while read a b c; do echo $(($c-$b));done < <(head filename)
-#there is a space between the two '<'s
+# Вычитание столбцов из файла (например, файл с 3 столбцами)
+while read a b c; do echo $(($c-$b));done < < <(head filename)
+# между двумя '<' стоит пробел
 
-# Sum up column subtraction
-i=0; while read a b c; do ((i+=$c-$b)); echo $i; done < <(head filename)
+# Суммируем вычитание столбцов
+i=0; while read a b c; do ((i+=$c-$b)); echo $i; done < <(head filename))
 
-# Keep checking a running process (e.g. perl) and start another new process (e.g. python) immediately after it. (BETTER use the wait command! Ctrl+F 'wait')
+# Продолжайте проверять запущенный процесс (например, perl) и запускайте другой новый процесс (например, python) сразу после него. (ЛУЧШЕ использовать команду wait! Ctrl+F 'wait')
 while [[ $(pidof perl) ]];do echo f;sleep 10;done && python timetorunpython.py
 ```
 
 ##### switch (case in bash)
 ```bash
-read type;
+прочитать тип;
 case $type in
   '0')
     echo 'how'
@@ -1107,114 +1107,114 @@ esac
 ```
 
 ## Time
-[[back to top](#handy-bash-one-liners)]
+[[назад к началу](#удобные-однострочники-bash)]
 
-##### Find out the time require for executing a command
+##### Узнайте время, необходимое для выполнения команды.
 ```bash
 time echo hi
 ```
 
-##### Wait for some time (e.g 10s)
+##### Подождите некоторое время (например, 10 с)
 ```bash
 sleep 10
 ```
 
-##### Print date with formatting
+##### Выведите дату с форматированием
 ```bash
-date +%F
+дата +%F
 # 2020-07-19
 
-# or
+# или
 date +'%d-%b-%Y-%H:%M:%S'
 # 10-Apr-2020-21:54:40
 
-# Returns the current time with nanoseconds.
+# Возвращает текущее время с наносекундами.
 date +"%T.%N"
 # 11:42:18.664217000  
 
-# Get the seconds since epoch (Jan 1 1970) for a given date (e.g Mar 16 2021)
+# Получение секунд с эпохи (1 января 1970 года) для заданной даты (например, 16 марта 2021 года)
 date -d "Mar 16 2021" +%s
 # 1615852800
-# or
+# или
 date -d "Tue Mar 16 00:00:00 UTC 2021"  +%s
 # 1615852800  
 
-# Convert the number of seconds since epoch back to date
+# Преобразуйте количество секунд с эпохи обратно в дату
 date --date @1615852800
 # Tue Mar 16 00:00:00 UTC 2021
 
 ```
 
-##### wait for random duration (e.g. sleep 1-5 second, like adding a jitter)
+##### ожидание произвольной длительности (например, сон 1-5 секунд, как добавление джиттера)
 ```bash
 sleep $[ ( $RANDOM % 5 ) + 1 ]
 ```
 
-##### Log out your account after a certain period of time (e.g 10 seconds)
+##### Выйти из учетной записи через определенный период времени (например, 10 секунд)
 ```bash
 TMOUT=10
-#once you set this variable, logout timer start running!
+#как только вы установите эту переменную, таймер выхода из системы начнет работать!
 ```
 
-##### Set how long you want to run a command
+##### Установите, как долго вы хотите выполнять команду
 ```bash
-#This will run the command 'sleep 10' for only 1 second.
+#Это запустит команду 'sleep 10' всего на 1 секунду.
 timeout 1 sleep 10
 ```
 
-##### Set when you want to run a command (e.g 1 min from now)
+##### Задайте время выполнения команды (например, через 1 минуту).
 ```bash
-at now + 1min  #time-units can be minutes, hours, days, or weeks
-warning: commands will be executed using /bin/sh
+at now + 1min # единицами времени могут быть минуты, часы, дни или недели
+предупреждение: команды будут выполняться с помощью /bin/sh
 at> echo hihigithub >~/itworks
-at> <EOT>   # press Ctrl + D to exit
-job 1 at Wed Apr 18 11:16:00 2018
+at> <EOT> # нажмите Ctrl + D для выхода
+задание 1 at Wed Apr 18 11:16:00 2018
 ```
 
 
-## Download
-[[back to top](#handy-bash-one-liners)]
+## Загрузка
+[[вернуться к началу](#handy-bash-one-liners)]
 
-##### Download the content of this README.md (the one your are viewing now)
+##### Скачайте содержимое этого README.md (того, который вы сейчас просматриваете)
 ```bash
-curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -f markdown -t man | man -l -
+curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -f markdown -t man | man -l -...
 
-# or w3m (a text based web browser and pager)
+# или w3m (текстовый веб-браузер и пейджер)
 curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc | w3m -T text/html
 
-# or using emacs (in emac text editor)
+# или с помощью emacs (в текстовом редакторе emac)
 emacs --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -t org)
 
-# or using emacs (on terminal, exit using Ctrl + x then Ctrl + c)
+# или с помощью emacs (в терминале, выход с помощью Ctrl + x, затем Ctrl + c)
 emacs -nw --eval '(org-mode)' --insert <(curl https://raw.githubusercontent.com/onceupon/Bash-Oneliner/master/README.md | pandoc -t org)
 ```
 
-##### Download all from a page
+##### Загрузите все со страницы
 ```bash
 wget -r -l1 -H -t1 -nd -N -np -A mp3 -e robots=off http://example.com
 
-# -r: recursive and download all links on page
-# -l1: only one level link
-# -H: span host, visit other hosts
-# -t1: numbers of retries
-# -nd: don't make new directories, download to here
-# -N: turn on timestamp
-# -nd: no parent
-# -A: type (separate by ,)
-# -e robots=off: ignore the robots.txt file which stop wget from crashing the site, sorry example.com
+# -r: рекурсия и загрузка всех ссылок на странице
+# -l1: только ссылки одного уровня
+# -H: span host, посещать другие хосты
+# -t1: количество повторных попыток
+# -nd: не создавать новые каталоги, скачивать сюда
+# -N: включить временную метку
+# -nd: нет родителя
+# -A: тип (разделять по ,)
+# -e robots=off: игнорировать файл robots.txt, который не дает wget завалить сайт, извините example.com
 ```
 
-##### Upload a file to web and download (https://transfer.sh/)
+##### Загрузка файла в веб и скачивание (https://transfer.sh/)
 ```bash
-#  Upload a file (e.g. filename.txt):
+# Загрузите файл (например, filename.txt):
 curl --upload-file ./filename.txt https://transfer.sh/filename.txt
-# the above command will return a URL, e.g: https://transfer.sh/tG8rM/filename.txt
+# Вышеуказанная команда вернет URL, например: https://transfer.sh/tG8rM/filename.txt
 
-# Next you can download it by:
+# Далее вы можете скачать его:
 curl https://transfer.sh/tG8rM/filename.txt -o filename.txt
 ```
 
-##### Download file if necessary
+##### Загрузите файл, если необходимо
 ```bash
 data=file.txt
 url=http://www.example.com/$data
@@ -1224,114 +1224,114 @@ if [ ! -s $data ];then
 fi
 ```
 
-##### Wget to a filename (when a long name)
+##### Wget на имя файла (если имя длинное)
 ```bash
 wget -O filename "http://example.com"
 ```
 
-##### Wget files to a folder
+##### Wget файлов в папку
 ```bash
 wget -P /path/to/directory "http://example.com"
 ```
 
-##### Instruct curl to follow any redirect until it reaches the final destination:
+##### Дайте команду curl следовать за любым перенаправлением, пока оно не достигнет конечного пункта назначения:
 ```bash
 curl -L google.com
 ```
 
 ## Random
-[[back to top](#handy-bash-one-liners)]
-##### Random generate password (e.g. generate 5 password each of length 13)
+[[назад к началу](#удобные-однострочники-bash)]
+##### Случайная генерация пароля (например, сгенерировать 5 паролей длиной 13)
 ```bash
 sudo apt install pwgen
 pwgen 13 5
 #sahcahS9dah4a xieXaiJaey7xa UuMeo0ma7eic9 Ahpah9see3zai acerae7Huigh7
 ```
 
-##### Random pick 100 lines from a file
+##### Случайная выборка 100 строк из файла
 ```bash
-shuf -n 100 filename
+shuf -n 100 имя файла
 ```
 
-##### Random order (lucky draw)
+##### Случайный порядок (счастливый жребий)
 ```bash
 for i in a b c d e; do echo $i; done | shuf
 ```
 
-##### Echo series of random numbers between a range (e.g. shuffle numbers from 0-100, then pick 15 of them randomly)
+##### Эхо серии случайных чисел между диапазонами (например, перетасовать числа от 0-100, затем выбрать 15 из них случайным образом)
 ```bash
 shuf -i 0-100 -n 15
 ```
 
-##### Echo a random number
+##### Эхо случайного числа
 ```bash
 echo $RANDOM
 ```
 
-##### Random from 0-9
+##### Случайное число от 0-9
 ```bash
 echo $((RANDOM % 10))
 ```
 
-##### Random from 1-10
+##### Случайный от 1-10
 ```bash
 echo $(((RANDOM %10)+1))
 ```
 
 ## Xwindow
-[[back to top](#handy-bash-one-liners)]
+[[назад к началу](#удобные-однострочники-bash)]
 
-X11 GUI applications! Here are some GUI tools for you if you get bored by the text-only environment.
+X11 GUI-приложения! Вот несколько GUI-инструментов для вас, если вам наскучило окружение, состоящее только из текста.
 
-##### Enable X11 forwarding,in order to use graphical application on servers
+##### Включите переадресацию X11, чтобы использовать графические приложения на серверах.
 ```bash
-ssh -X user_name@ip_address
+ssh -X имя_пользователя@ip_адрес
 
-# or setting through xhost
-# --> Install the following for Centos:
+# или настройка через xhost
+# --> Установите следующее для Centos:
 # xorg-x11-xauth
 # xorg-x11-fonts-*
 # xorg-x11-utils
 ```
 
-##### Little xwindow tools
+##### Маленькие инструменты xwindow
 ```bash
 xclock
 xeyes
 xcowsay
 ```
 
-##### Open pictures/images from ssh server
+##### Открываем картинки/изображения с ssh-сервера
 ```bash
-1. ssh -X user_name@ip_address
+1. ssh -X имя_пользователя@ip_адрес
 2. apt-get install eog
 3. eog picture.png
 ```
 
-##### Watch videos on server
+##### Просмотр видео на сервере
 ```bash
-1. ssh -X user_name@ip_address
+1. ssh -X имя_пользователя@ip_адрес
 2. sudo apt install mpv
 3. mpv myvideo.mp4
 ```
 
-##### Use gedit on server (GUI editor)
+##### Использование gedit на сервере (GUI редактор)
 ```bash
-1. ssh -X user_name@ip_address
+1. ssh -X имя_пользователя@ip_адрес
 2. apt-get install gedit
 3. gedit filename.txt
 ```
 
-##### Open PDF file from ssh server
+##### Открыть PDF файл с ssh сервера
 ```bash
-1. ssh -X user_name@ip_address
+1. ssh -X имя_пользователя@ip_адрес
 2. apt-get install evince
 3. evince filename.pdf
 ```
 
-##### Use google-chrome browser from ssh server
+##### Использование браузера google-chrome с ssh-сервера
 ```bash
-1. ssh -X user_name@ip_address
+1. ssh -X имя_пользователя@ip_адрес
 2. apt-get install libxss1 libappindicator1 libindicator7
 3. wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 4. sudo apt-get install -f
@@ -1341,218 +1341,218 @@ xcowsay
 
 
 ## System
-[[back to top](#handy-bash-one-liners)]
+[[назад к началу](#удобные-однострочники-bash)]
 
-##### Work with yum history
+##### Работа с историей yum
 ```bash
-# List yum history (e.g install, update)
+# Вывести историю yum (например, установка, обновление)
 sudo yum history
-# Example output:
-# Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
-# ID     | Login user               | Date and time    | Action(s)      | Altered
-# -------------------------------------------------------------------------------
-#     11 |  ... <myuser>       | 2020-04-10 10:57 | Install        |    1 P<
-#     10 |  ... <myuser>       | 2020-03-27 05:21 | Install        |    1 >P
-#      9 |  ... <myuser>       | 2020-03-05 11:57 | I, U           |   56 *<
+# Пример вывода:
+# Загруженные плагины: extras_suggestions, langpacks, priorities, update-motd
+# ID | Логин пользователя | Дата и время | Действие(и) | Изменено
+# ---------------------------------------
+# 11 | ... <myuser> | 2020-04-10 10:57 | Install | 1 P<
+# 10 | ... <myuser> | 2020-03-27 05:21 | Установить | 1 >P
+# 9 | ... <myuser> | 2020-03-05 11:57 | I, U | 56 *<
 # ...
 
-# Show more details of a yum history (e.g. history #11)
+# Показать более подробную информацию об истории yum (например, история #11)
 sudo yum history info 11
 
-# Undo a yum history (e.g. history #11, this will uninstall some packages)
+# Отменить историю yum (например, историю #11, это приведет к деинсталляции некоторых пакетов)
 sudo yum history undo 11
 ```
 
-##### Audit files to see who made changes to a file [RedHat based system only]
+##### Аудит файлов, чтобы узнать, кто внес изменения в файл [только для систем на базе RedHat].
 ```bash
-# To audit a directory recursively for changes (e.g. myproject)
+# Для рекурсивного аудита каталога на предмет изменений (например, myproject)
 auditctl -w /path/to/myproject/ -p wa
 
-# If you delete a file name "VIPfile", the deletion is recorded in /var/log/audit/audit.log
+# Если вы удалите файл с именем "VIPfile", удаление будет записано в /var/log/audit/audit.log
 sudo grep VIPfile /var/log/audit/audit.log
-#type=PATH msg=audit(1581417313.678:113): item=1 name="VIPfile" inode=300115 dev=ca:01 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=DELETE cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+#type=PATH msg=audit(1581417313.678:113): item=1 name="VIPfile" inode=300115 dev=ca:01 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=DELETE cap_fp=00000000 cap_fi=00000000 cap_fe=0 cap_fver=0
 ```
 
-##### Check out whether SELinux is enabled
+##### Проверьте, включен ли SELinux.
 ```bash
 sestatus
-# SELinux status:                 enabled
+# SELinux status: enabled
 # SELinuxfs mount:                /sys/fs/selinux
 # SELinux root directory:         /etc/selinux
-# Loaded policy name:             targeted
-# Current mode:                   enforcing
-# Mode from config file:          enforcing
-# Policy MLS status:              enabled
-# Policy deny_unknown status:     allowed
-# Max kernel policy version:      31
+# Имя загруженной политики: target
+# Текущий режим: усиление
+# Режим из файла конфигурации: enforcing
+# Политика MLS статус: включена
+# Статус политики deny_unknown: разрешено
+# Максимальная версия политики ядра: 31
 ```
 
-##### Generate public key from private key
+##### Генерируем открытый ключ из закрытого ключа
 ```bash
 ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
 ```
 
-##### Copy your default public key to remote user
+##### Скопируйте ваш открытый ключ по умолчанию удаленному пользователю.
 ```bash
-ssh-copy-id <user_name>@<server_IP>
-# then you need to enter the password
-# and next time you won't need to enter password when ssh to that user
+ssh-copy-id <имя_пользователя>@<IP_сервера>
+# затем вам нужно ввести пароль
+# и в следующий раз вам не нужно будет вводить пароль при ssh к этому пользователю
 ```
 
-##### Copy default public key to remote user using the required private key (e.g. use your mykey.pem key to copy your id_rsa.pub to the remote user)
+##### Скопируйте открытый ключ по умолчанию удаленному пользователю, используя необходимый закрытый ключ (например, используйте ваш ключ mykey.pem для копирования вашего id_rsa.pub удаленному пользователю)
 ```bash
-# before you need to use mykey.pem to ssh to remote user.
-ssh-copy-id -i ~/.ssh/id_rsa.pub -o "IdentityFile ~/Downloads/mykey.pem" <user_name>@<server_IP>
-# now you don't need to use key to ssh to that user.
+# перед тем, как использовать mykey.pem для ssh к удаленному пользователю.
+ssh-copy-id -i ~/.ssh/id_rsa.pub -o "IdentityFile ~/Downloads/mykey.pem" <имя_пользователя>@<IP_сервера>
+# теперь вам не нужно использовать ключ для ssh для этого пользователя.
 ```
 
 ##### SSH Agent Forwarding
 ```bash
-# To bring your key with you when ssh to serverA, then ssh to serverB from serverA using the key.
+# Чтобы взять с собой ключ при ssh на серверА, а затем ssh на серверВ с сервераА, используя ключ.
 ssh-agent
 ssh-add /path/to/mykey.pem
-ssh -A <username>@<IP_of_serverA>
-# Next you can ssh to serverB
-ssh <username>@<IP_of_serverB>
+ssh -A <имя пользователя>@<IP_of_serverA>
+# Далее можно выполнить ssh на серверB
+ssh <имя пользователя>@<IP_of_serverB>
 ```
 
-##### Set the default user and key for a host when using SSH
+##### Установите пользователя и ключ по умолчанию для хоста при использовании SSH
 ```bash
-# add the following to ~/.ssh/config
-Host myserver
-  User myuser
+# добавьте следующее в ~/.ssh/config
+Хост myserver
+  Пользователь myuser
   IdentityFile ~/path/to/mykey.pem
 
-# Next, you could run "ssh myserver" instead of "ssh -i ~/path/to/mykey.pem myuser@myserver"
+# Далее, вы можете запустить "ssh myserver" вместо "ssh -i ~/path/to/mykey.pem myuser@myserver"
 ```
 
-##### Follow the most recent logs from service
+##### Следите за последними логами сервиса.
 ```bash
-journalctl -u <service_name> -f
+journalctl -u <имя_службы> -f
 ```
 
-##### Eliminate the zombie
+##### Устраните зомби
 ```bash
-# A zombie is already dead, so you cannot kill it. You can eliminate the zombie by killing its parent.
-# First, find PID of the zombie
+# Зомби уже мертв, поэтому вы не можете его убить. Вы можете уничтожить зомби, убив его родителя.
+# Сначала найдите PID зомби.
 ps aux| grep 'Z'
-# Next find the PID of zombie's parent
+# Затем найдите PID родителя зомби.
 pstree -p -s <zombie_PID>
-# Then you can kill its parent and you will notice the zombie is gone.
+# Затем вы можете убить его родителя, и вы заметите, что зомби исчез.
 sudo kill 9 <parent_PID>
 ```
-###### Show memory usage
+###### Показать использование памяти
 ```bash
 free -c 10 -mhs 1
-# print 10 times, at 1 second interval
+# вывести 10 раз с интервалом в 1 секунду
 ```
 
-##### Display CPU and IO statistics for devices and partitions.
+##### Показать статистику CPU и IO для устройств и разделов.
 ```bash
-# refresh every second
+# обновлять каждую секунду
 iostat -x -t 1
 ```
 
-##### Display bandwidth usage on an network interface (e.g. enp175s0f0)
+##### Отображение использования пропускной способности сетевого интерфейса (например, enp175s0f0)
 ```bash
 iftop -i enp175s0f0
 ```
 
-##### Tell how long the system has been running and number of users
+##### Узнать, как долго работает система и количество пользователей.
 ```bash
 uptime
 ```
 
-##### Check if it's root running
+##### Проверить, запущен ли root
 ```bash
 if [ "$EUID" -ne 0 ]; then
-        echo "Please run this as root"
+        echo "Пожалуйста, запустите это от имени root"
         exit 1
 fi
 ```
-##### Change shell of a user (e.g. bonnie)
+##### Изменение оболочки пользователя (например, bonnie)
 ```bash
 chsh -s /bin/sh bonnie
-# /etc/shells: valid login shells
+# /etc/shells: действительные оболочки для входа в систему
 ```
 
-##### Change root / fake root / jail (e.g. change root to newroot)
+##### Изменить root / fake root / jail (например, изменить root на newroot)
 ```bash
 chroot /home/newroot /bin/bash
 
-# To exit chroot
+# Для выхода из chroot
 exit
 ```
-##### Display file status (size; access, modify and change time, etc) of a file (e.g. filename.txt)
+##### Отображение состояния файла (размер; время доступа, изменения, модификации и т.д.) файла (например, filename.txt)
 ```bash
 stat filename.txt
 ```
 
-##### Snapshot of the current processes
+##### Снимок текущих процессов
 ```bash
 ps aux
 ```
 
-##### Display a tree of processes
+##### Отображение дерева процессов
 ```bash
 pstree
 ```
 
-##### Find maximum number of processes
+##### Найти максимальное количество процессов
 ```bash
 cat /proc/sys/kernel/pid_max
 ```
 
-##### Print or control the kernel ring buffer
+##### Печать или управление кольцевым буфером ядра
 ```bash
 dmesg
 ```
 
-##### Show IP address
+##### Показать IP-адрес
 ```bash
 $ip add show
 
-# or
+# или
 ifconfig
 ```
 
-##### Print previous and current SysV runlevel
+##### Выведите предыдущий и текущий уровень выполнения SysV.
 ```bash
 runlevel
 
-# or
+# или
 who -r
 ```
 
-##### Change SysV runlevel (e.g. 5)
+##### Изменение уровня SysV runlevel (например, 5)
 ```bash
 init 5
 #or
 telinit 5
 ```
 
-##### Display all available services in all runlevels,
+##### Отображение всех доступных сервисов на всех уровнях выполнения,
 ```bash
-chkconfig --list
-# update-rc.d equivalent to chkconfig in ubuntu
+chkconfig -list
+# update-rc.d эквивалент chkconfig в ubuntu
 ```
 
-##### Check system version
+##### Проверка версии системы
 ```bash
 cat /etc/*-release
 ```
 
-##### Linux Programmer's Manuel: hier- description of the filesystem hierarchy
+##### Linux Programmer's Manuel: hier- описание иерархии файловой системы
 ```bash
 man hier
 ```
 
-##### Control the systemd system and service manager
+##### Управление менеджером систем и служб systemd.
 ```bash
-# e.g. check the status of cron service
+# Например, проверьте статус службы cron
 systemctl status cron.service
 
-# e.g. stop cron service
+# например, остановить службу cron
 systemctl stop cron.service
 ```
 
@@ -1561,11 +1561,11 @@ systemctl stop cron.service
 jobs -l
 ```
 
-##### Run a program with modified priority (e.g. ./test.sh)
+##### Запуск программы с измененным приоритетом (например, ./test.sh)
 ```bash
-# nice value is adjustable from -20 (most favorable) to +19
-# the nicer the application, the lower the priority
-# Default niceness: 10; default priority: 80
+# значение nice регулируется от -20 (наиболее благоприятное) до +19
+# чем приятнее приложение, тем ниже приоритет.
+# По умолчанию приятность: 10; приоритет по умолчанию: 80
 
 nice -10 ./test.sh
 ```
@@ -1575,198 +1575,198 @@ nice -10 ./test.sh
 export PATH=$PATH:~/path/you/want
 ```
 
-##### Make file executable
+##### Сделать файл исполняемым
 ```bash
 chmod +x filename
-# you can now ./filename to execute it
+# теперь вы можете открыть ./filename, чтобы выполнить его
 ```
 
-##### Print system information
+##### Печать системной информации
 ```bash
 uname -a
 
-# Check system hardware-platform (x86-64)
+# Проверьте аппаратную платформу системы (x86-64)
 uname -i
 ```
 
-##### Surf the net
+##### Серфинг в сети
 ```bash
-links www.google.com
+ссылки www.google.com
 ```
 
-##### Add user, set passwd
+##### Добавить пользователя, установить passwd
 ```bash
-useradd username
-passwd username
+useradd имя пользователя
+passwd имя пользователя
 ```
 
-##### Edit PS1 variable for bash (e.g. displaying the whole path)
+##### Редактирование переменной PS1 для bash (например, отображение всего пути)
 ```bash
 1. vi ~/.bash_profile
 2. export PS1='\u@\h:\w\$'
-# $PS1 is a variable that defines the makeup and style of the command prompt
-# You could use emojis and add timestamp to every prompt using the following value:
+# $PS1 - это переменная, определяющая оформление и стиль командного интерпретатора.
+# Вы можете использовать эмодзи и добавить метку времени к каждой подсказке, используя следующее значение:
 # export PS1="\t@🦁:\w\$ "
-3. source ~/.bash_profile
+3. источник ~/.bash_profile
 ```
 
-##### Edit environment setting (e.g. alias)
+##### Редактирование параметров окружения (например, псевдонима)
 ```bash
 1. vi ~/.bash_profile
-2. alias pd="pwd" //no more need to type that 'w'!
+2. alias pd="pwd" // больше не нужно набирать это 'w'!
 3. source ~/.bash_profile
 ```
-##### Print all alias
+##### Вывести все псевдонимы
 ```bash
 alias -p
 ```
 
-##### Unalias (e.g. after alias ls='ls --color=auto')
+##### Unalias (например, после alias ls='ls --color=auto')
 ```bash
 unalias ls
 ```
 
-##### Set and unset shell options
+##### Установка и снятие опций оболочки
 ```bash
-# print all shell options
+# вывести все опции оболочки
 shopt
 
-# to unset (or stop) alias
+# для удаления (или остановки) псевдонимов
 shopt -u expand_aliases
 
-# to set (or start) alias
+# для установки (или запуска) псевдонимов
 shopt -s expand_aliases
 ```
 
-##### List environment variables (e.g. PATH)
+##### Список переменных окружения (например, PATH)
 ```bash
 echo $PATH
-# list of directories separated by a colon
+# список каталогов, разделенных двоеточием
 ```
-##### List all environment variables for current user
+##### Список всех переменных окружения для текущего пользователя
 ```bash
 env
 ```
-##### Unset environment variable (e.g. unset variable 'MYVAR')
+##### Сброс переменной окружения (например, сброс переменной 'MYVAR')
 ```bash
 unset MYVAR
 ```
 
-##### Show partition format
+##### Показать формат раздела
 ```bash
 lsblk
 ```
 
-##### Inform the OS of partition table changes
+##### Информирование ОС об изменениях в таблице разделов
 ```bash
 partprobe
 ```
 
-##### Soft link program to bin
+##### Мягкая ссылка программы на bin
 ```bash
 ln -s /path/to/program /home/usr/bin
-# must be the whole path to the program
+# должен быть полный путь к программе
 ```
 
-##### Show hexadecimal view of data
+##### Показать шестнадцатеричное представление данных
 ```bash
 hexdump -C filename.class
 ```
 
-##### Jump to different node
+##### Перейти к другому узлу
 ```bash
-rsh node_name
+rsh имя_узла
 ```
 
-##### Check port (active internet connection)
+##### Проверка порта (активное интернет-соединение)
 ```bash
 netstat -tulpn
 ```
 
-##### Print resolved symbolic links or canonical file names
+##### Печать разрешенных символических ссылок или канонических имен файлов
 ```bash
 readlink filename
 ```
 
-##### Find out the type of command and where it link to (e.g. python)
+##### Узнайте тип команды и ссылку на нее (например, python).
 ```bash
 type python
-# python is /usr/bin/python
-# There are 5 different types, check using the 'type -f' flag
-# 1. alias    (shell alias)
-# 2. function (shell function, type will also print the function body)
-# 3. builtin  (shell builtin)
-# 4. file     (disk file)
-# 5. keyword  (shell reserved word)
+# python это /usr/bin/python
+# Существует 5 различных типов, проверьте их с помощью флага 'type -f'.
+# 1. alias (псевдоним оболочки)
+# 2. function (функция оболочки, тип также выводит тело функции)
+# 3. builtin (встроенная функция оболочки)
+# 4. file (дисковый файл)
+# 5. keyword (зарезервированное слово оболочки)
 
-# You can also use `which`
-which python
+# Вы также можете использовать `which
+какой python
 # /usr/bin/python
 ```
 
-##### List all functions names
+##### Список имен всех функций
 ```bash
-declare -F
+объявить -F
 ```
 
-##### List total size of a directory
+##### Список общего размера каталога
 ```bash
 du -hs .
 
-# or
+# или
 du -sb
 ```
 
-##### Copy directory with permission setting
+##### Копирование каталога с установкой разрешения
 ```bash
 cp -rp /path/to/directory
 ```
 
-##### Store current directory
+##### Сохранить текущий каталог
 ```bash
 pushd .
 
 # then pop
 popd
 
-#or use dirs to display the list of currently remembered directories.
+#или используйте dirs для отображения списка текущих запомненных каталогов.
 dirs -l
 ```
 
-##### Show disk usage
+##### Показать использование диска
 ```bash
 df -h
 
-# or
+# или
 du -h
 
-#or
+# или
 du -sk /var/log/* |sort -rn |head -10
 ```
 
-##### check the Inode utilization
+##### проверьте использование Inode
 ```
 df -i
-# Filesystem      Inodes  IUsed   IFree IUse% Mounted on
-# devtmpfs        492652    304  492348    1% /dev
-# tmpfs           497233      2  497231    1% /dev/shm
-# tmpfs           497233    439  496794    1% /run
-# tmpfs           497233     16  497217    1% /sys/fs/cgroup
-# /dev/nvme0n1p1 5037976 370882 4667094    8% /
-# tmpfs           497233      1  497232    1% /run/user/1000
+# Файловая система Inodes IUsed IFree IUse% Mounted on
+# devtmpfs 492652 304 492348 1% /dev
+# tmpfs 497233 2 497231 1% /dev/shm
+# tmpfs 497233 439 496794 1% /run
+# tmpfs 497233 16 497217 1% /sys/fs/cgroup
+# /dev/nvme0n1p1 5037976 370882 4667094 8% /
+# tmpfs 497233 1 497232 1% /run/user/1000
 ```
 
-##### Show all file system type
+##### Показать все типы файловых систем
 ```bash
 df -TH
 ```
 
-##### Show current runlevel
+##### Показать текущий уровень выполнения
 ```bash
 runlevel
 ```
 
-##### Switch runlevel
+##### Переключение уровня выполнения
 ```bash
 init 3
 
@@ -1774,321 +1774,321 @@ init 3
 telinit 3
 ```
 
-##### Permanently modify runlevel
+##### Постоянное изменение уровня выполнения
 ```bash
-1. edit /etc/init/rc-sysinit.conf
+1. отредактируйте /etc/init/rc-sysinit.conf
 2. env DEFAULT_RUNLEVEL=2
 ```
 
-##### Become root
+##### Стать root
 ```bash
 su
 ```
 
-##### Become somebody
+##### Стать кем-то
 ```bash
 su somebody
 ```
 
-##### Report user quotes on device
+##### Сообщить о кавычках пользователя на устройстве
 ```bash
 repquota -auvs
 ```
 
-##### Get entries in a number of important databases
+##### Получение записей в ряде важных баз данных
 ```bash
-getent database_name
+getent имя_базы_данных
 
-# (e.g. the 'passwd' database)
+# (например, база данных 'passwd')
 getent passwd
-# list all user account (all local and LDAP)
+# список всех учетных записей пользователей (всех локальных и LDAP)
 
-# (e.g. fetch list of grop accounts)
+# (например, получить список учетных записей grop)
 getent group
-# store in database 'group'
+# хранить в базе данных 'group'
 ```
 
-##### Change owner of file
+##### Изменить владельца файла
 ```bash
-chown user_name filename
+chown имя_пользователя имя_файла
 chown -R user_name /path/to/directory/
 # chown user:group filename
 ```
 
-##### Mount and unmount
+##### Монтирование и размонтирование
 ```bash
-# e.g. Mount /dev/sdb to /home/test
+# например, смонтировать /dev/sdb в /home/test
 mount /dev/sdb /home/test
 
-# e.g. Unmount /home/test
+# например, размонтировать /home/test
 umount /home/test
 ```
 
 ##### List current mount detail
 ```bash
 mount
-# or
+# или
 df
 ```
 
-##### List current usernames and user-numbers
+##### Список текущих имен пользователей и номеров пользователей
 ```bash
 cat /etc/passwd
 ```
 
-##### Get all username
+##### Получить все имя пользователя
 ```bash
 getent passwd| awk '{FS="[:]"; print $1}'
 ```
 
-##### Show all users
+##### Показать всех пользователей
 ```bash
 compgen -u
 ```
 
-##### Show all groups
+##### Показать все группы
 ```bash
 compgen -g
 ```
 
-##### Show group of user
+##### Показать группу пользователя
 ```bash
-group username
+имя пользователя группы
 ```
 
-##### Show uid, gid, group of user
+##### Показать uid, gid, группу пользователя
 ```bash
-id username
+id имя пользователя
 
-# variable for UID
+# переменная для UID
 echo $UID
 ```
 
-##### Check if it's root
+##### Проверьте, является ли он root
 ```bash
 if [ $(id -u) -ne 0 ];then
-    echo "You are not root!"
+    echo "Вы не root!"
     exit;
 fi
-# 'id -u' output 0 if it's not root
+# 'id -u' выводит 0, если вы не root
 ```
 
-##### Find out CPU information
+##### Узнать информацию о процессоре
 ```bash
 more /proc/cpuinfo
 
-# or
+# или
 lscpu
 ```
 
-##### Set quota for user (e.g. disk soft limit: 120586240; hard limit: 125829120)
+##### Установите квоту для пользователя (например, мягкий лимит диска: 120586240; жесткий лимит: 125829120)
 ```bash
 setquota username 120586240 125829120 0 0 /home
 ```
 
-##### Show quota for user
+##### Показать квоту для пользователя
 ```bash
-quota -v username
+quota -v имя пользователя
 ```
 
-##### Display current libraries from the cache
+##### Отображение текущих библиотек из кэша
 ```bash
 ldconfig -p
 ```
 
-##### Print shared library dependencies (e.g. for 'ls')
+##### Печать зависимостей общих библиотек (например, для 'ls')
 ```bash
 ldd /bin/ls
 ```
 
-##### Check user login
+##### Проверка входа пользователя в систему
 ```bash
 lastlog
 ```
-##### Check last reboot history
+##### Проверка истории последних перезагрузок
 ```bash
-last reboot
+последняя перезагрузка
 ```
 
-##### Edit path for all users
+##### Редактирование пути для всех пользователей
 ```bash
 joe /etc/environment
-# edit this file
+# отредактируйте этот файл
 ```
 
-##### Show and set user limit
+##### Показать и установить лимит пользователей
 ```bash
 ulimit -u
 ```
 
-##### Print out number of cores/ processors
+##### Выведите количество ядер/процессоров
 ```bash
-nproc --all
+nproc -all
 ```
 
-##### Check status of each core
+##### Проверка состояния каждого ядра
 ```
-1. top
-2. press '1'
+1. верх
+2. нажмите '1'
 ```
 
-##### Show jobs and PID
+##### Показать задания и PID
 ```bash
 jobs -l
 ```
 
-##### List all running services
+##### Список всех запущенных служб
 ```bash
 service --status-all
 ```
 
-##### Schedule shutdown server
+##### Запланируйте выключение сервера
 ```bash
-shutdown -r +5 "Server will restart in 5 minutes. Please save your work."
+shutdown -r +5 "Сервер будет перезапущен через 5 минут. Пожалуйста, сохраните свою работу."
 ```
 
-##### Cancel scheduled shutdown
+##### Отмена запланированного выключения
 ```bash
 shutdown -c
 ```
 
-##### Broadcast to all users
+##### Трансляция всем пользователям
 ```bash
 wall -n hihi
 ```
 
-##### Kill all process of a user
+##### Убить все процессы пользователя
 ```bash
-pkill -U user_name
+pkill -U имя_пользователя
 ```
 
-##### Kill all process of a program
+##### Убить все процессы программы
 ```bash
-kill -9 $(ps aux | grep 'program_name' | awk '{print $2}')
+kill -9 $(ps aux | grep 'имя_программы' | awk '{print $2}')
 ```
 
-##### Set gedit preference on server
+##### Установить привилегии gedit на сервере
 ```
-# You might have to install the following:
+# Возможно, вам придется установить следующее:
 
 apt-get install libglib2.0-bin;
-# or
+# или
 yum install dconf dconf-editor;
 yum install dbus dbus-x11;
 
-# Check list
+# Проверить список
 gsettings list-recursively
 
-# Change some settings
+# Изменить некоторые настройки
 gsettings set org.gnome.gedit.preferences.editor highlight-current-line true
 gsettings set org.gnome.gedit.preferences.editor scheme 'cobalt'
 gsettings set org.gnome.gedit.preferences.editor use-default-font false
-gsettings set org.gnome.gedit.preferences.editor editor-font 'Cantarell Regular 12'
+gsettings set org.gnome.gedit.preferences.editor editor editor-font 'Cantarell Regular 12'
 ```
-##### Add user to a group (e.g add user 'nice' to the group 'docker', so that he can run docker without sudo)
+##### Добавьте пользователя в группу (например, добавьте пользователя 'nice' в группу 'docker', чтобы он мог запускать docker без sudo)
 ```bash
 sudo gpasswd -a nice docker
 ```
 
 ##### Pip install python package without root
 ```bash
-1. pip install --user package_name
-2. You might need to export ~/.local/bin/ to PATH: export PATH=$PATH:~/.local/bin/
+1. pip install --user имя_пакета
+2. Вам может понадобиться экспортировать ~/.local/bin/ в PATH: export PATH=$PATH:~/.local/bin/
 ```
 
-##### Removing old linux kernels (when /boot almost full...)
+##### Удаление старых ядер linux (когда /boot почти заполнен...)
 ```bash
-1. uname -a  #check current kernel, which should NOT be removed
-2. sudo apt-get purge linux-image-X.X.X-X-generic  #replace old version
+1. uname -a #проверьте текущее ядро, которое НЕ должно быть удалено
+2. sudo apt-get purge linux-image-X.X.X-X-generic #заменить старую версию
 ```
 
 
-##### Change hostname
+##### Изменить имя хоста
 ```bash
 sudo hostname your-new-name
 
-# if not working, do also:
+# если не работает, сделайте также:
 hostnamectl set-hostname your-new-hostname
-# then check with:
+# затем проверьте с помощью:
 hostnamectl
-# Or check /etc/hostname
+# Или проверьте /etc/hostname
 
-# If still not working..., edit:
+# Если все еще не работает..., отредактируйте:
 /etc/sysconfig/network
 /etc/sysconfig/network-scripts/ifcfg-ensxxx
 #add HOSTNAME="your-new-hostname"
  ```
 
-##### List installed packages
+##### Список установленных пакетов
 ```bash
-apt list --installed
+apt list -installed
 
-# or on Red Hat:
+# или на Red Hat:
 yum list installed
 ```
 
-##### Check for package update
+##### Проверка обновления пакета
 ```bash
-apt list --upgradeable
+apt list -upgradeable
 
-# or
+# или
 sudo yum check-update
 ```
 
-##### Run yum update excluding a package (e.g. do not update php packages)
+##### Запустите yum update, исключив пакет (например, не обновляйте пакет php).
 ```bash
 sudo yum update --exclude=php*
 ```
 
-##### Check which file make the device busy on umount
+##### Проверьте, какой файл делает устройство занятым при umount
 ```bash
 lsof /mnt/dir
 ```
 
-##### When sound not working
+##### Когда звук не работает
 ```bash
 killall pulseaudio
-# then press Alt-F2 and type in pulseaudio
+# затем нажмите Alt-F2 и введите pulseaudio
 ```
 
-##### When sound not working
+##### Когда звук не работает
 ```bash
 killall pulseaudio
 ```
 
-##### List information about SCSI devices
+##### Список информации об устройствах SCSI
 ```bash
 lsscsi
 ```
 
-##### Tutorial for setting up your own DNS server
+##### Руководство по настройке собственного DNS-сервера
 http://onceuponmine.blogspot.tw/2017/08/set-up-your-own-dns-server.html
 
-##### Tutorial for creating a simple daemon
+##### Учебник по созданию простого демона
 http://onceuponmine.blogspot.tw/2017/07/create-your-first-simple-daemon.html
 
-##### Tutorial for using your gmail to send email
+##### Учебник по использованию gmail для отправки электронной почты
 http://onceuponmine.blogspot.tw/2017/10/setting-up-msmtprc-and-use-your-gmail.html
 
-##### Using telnet to test open ports, test if you can connect to a port (e.g 53) of a server (e.g 192.168.2.106)
+##### Использование telnet для проверки открытых портов, проверка возможности подключения к порту (например, 53) сервера (например, 192.168.2.106).
 ```bash
 telnet 192.168.2.106 53
 ```
 
-##### Change network maximum transmission unit (mtu) (e.g. change to 9000)
+##### Изменение максимальной единицы передачи (mtu) сети (например, изменить на 9000)
 ```bash
 ifconfig eth0 mtu 9000
 ```
 
-##### Get pid of a running process (e.g python)
+##### Получение pid запущенного процесса (например, python)
 ```bash
 pidof python
 
-# or
+# или
 ps aux|grep python
 ```
 
-##### Check status of a process using PID
+##### Проверка статуса процесса по PID
 ```bash
 ps -p <PID>
 
@@ -2100,286 +2100,286 @@ cat /proc/<PID>/stat
 
 ##### NTP
 ```bash
-# Start ntp:
+# Запустите ntp:
 ntpd
 
-# Check ntp:
+# Проверить ntp:
 ntpq -p
 ```
 
-##### Remove unnecessary files to clean your server
+##### Удалите ненужные файлы, чтобы очистить ваш сервер
 ```bash
 sudo apt-get autoremove
 sudo apt-get clean
 sudo rm -rf ~/.cache/thumbnails/*
 
-# Remove old kernal:
+# Удалите старое ядро:
 sudo dpkg --list 'linux-image*'
 sudo apt-get remove linux-image-OLDER_VERSION
 ```
 
-##### Increase/ resize root partition (root partition is an LVM logical volume)
+##### Увеличение/изменение размера корневого раздела (корневой раздел является логическим томом LVM)
 ```bash
 pvscan
 lvextend -L +130G /dev/rhel/root -r
-# Adding -r will grow filesystem after resizing the volume.
+# Добавление -r приведет к росту файловой системы после изменения размера тома.
 ```
 
-##### Create a UEFI Bootable USB drive (e.g. /dev/sdc1)
+##### Создайте загрузочный USB-накопитель UEFI (например, /dev/sdc1)
 ```bash
 sudo dd if=~/path/to/isofile.iso of=/dev/sdc1 oflag=direct bs=1048576
 ```
 
-##### Locate and remove a package
+##### Найдите и удалите пакет
 ```bash
-sudo dpkg -l | grep <package_name>
-sudo dpkg --purge <package_name>
+sudo dpkg -l | grep <имя_пакета>
+sudo dpkg --purge <имя_пакета>
 ```
 
-##### Create a ssh tunnel
+##### Создание ssh-туннеля
 ```bash
 ssh -f -L 9000:targetservername:8088 root@192.168.14.72 -N
-#-f: run in background; -L: Listen; -N: do nothing
-#the 9000 of your computer is now connected to the 8088 port of the targetservername through 192.168.14.72
-#so that you can see the content of targetservername:8088 by entering localhost:9000 from your browser.
+#-f: работать в фоновом режиме; -L: слушать; -N: ничего не делать
+#теперь 9000 вашего компьютера подключен к 8088 порту targetservername через 192.168.14.72
+#так что вы можете увидеть содержимое targetservername:8088, введя localhost:9000 из вашего браузера.
 ```
-##### Get process ID of a process (e.g. sublime_text)
+##### Получение идентификатора процесса (например, sublime_text)
 ```bash
 #pidof
 pidof sublime_text
 
-#pgrep, you don't have to type the whole program name
+#pgrep, вам не нужно набирать имя программы целиком
 pgrep sublim
 
-#pgrep, echo 1 if process found, echo 0 if no such process
+#pgrep, эхо 1, если процесс найден, эхо 0, если такого процесса нет
 pgrep -q sublime_text && echo 1 || echo 0
 
-#top, takes longer time
+#top, занимает больше времени
 top|grep sublime_text
 ```
 
-##### Some benchmarking tools for your server
-[aio-stress](https://openbenchmarking.org/test/pts/aio-stress) - AIO benchmark.  
-[bandwidth](https://zsmith.co/bandwidth.html) - memory bandwidth benchmark.  
-[bonnie++](https://www.coker.com.au/bonnie++/) - hard drive and file system performance benchmark.  
-[dbench](https://dbench.samba.org/) -  generate I/O workloads to either a filesystem or to a networked CIFS or NFS server.  
-[dnsperf](https://www.dnsperf.com/) - authorative and recursing DNS servers.  
-[filebench](https://github.com/filebench/filebench) - model based file system workload generator.  
-[fio](https://linux.die.net/man/1/fio) - I/O  benchmark.  
-[fs_mark](https://github.com/josefbacik/fs_mark) - synchronous/async file creation benchmark.  
-[httperf](https://github.com/httperf/httperf) - measure web server performance.  
-[interbench](https://github.com/ckolivas/interbench) - linux interactivity  benchmark.  
-[ioblazer](https://labs.vmware.com/flings/ioblazer) - multi-platform storage stack micro-benchmark.  
-[iozone](http://www.iozone.org/) - filesystem benchmark.  
-[iperf3](https://iperf.fr/iperf-download.php) - measure TCP/UDP/SCTP performance.  
-[kcbench](https://github.com/knurd/kcbench) - kernel compile benchmark, compiles a kernel and measures the time it takes.  
-[lmbench](http://www.bitmover.com/lmbench/) - Suite of simple, portable benchmarks.  
-[netperf](https://github.com/HewlettPackard/netperf) - measure network performance, test unidirectional throughput, and end-to-end latency.  
-[netpipe](https://linux.die.net/man/1/netpipe) - network protocol independent performance evaluator.  
-[nfsometer](http://wiki.linux-nfs.org/wiki/index.php/NFSometer) - NFS performance framework.  
-[nuttcp](https://www.nuttcp.net/Welcome%20Page.html) - measure network performance.  
-[phoronix-test-suite](https://www.phoronix-test-suite.com/) - comprehensive automated testing and benchmarking platform.  
-[seeker](https://github.com/fidlej/seeker) - portable disk seek benchmark.  
-[siege](https://github.com/JoeDog/siege) - http load tester and benchmark.  
-[sockperf](https://github.com/Mellanox/sockperf) - network benchmarking utility over socket API.  
-[spew](https://linux.die.net/man/1/spew) - measures I/O performance and/or generates I/O load.  
-[stress](https://people.seas.harvard.edu/~apw/stress/) - workload generator for POSIX systems.  
-[sysbench](https://github.com/akopytov/sysbench) - scriptable database and system performance benchmark.  
-[tiobench](https://github.com/mkuoppal/tiobench) - threaded IO benchmark.  
-[unixbench](https://github.com/kdlucas/byte-unixbench) - the original BYTE UNIX benchmark suite, provide a basic indicator of the performance of a Unix-like system.  
-[wrk](https://github.com/wg/wrk) - HTTP benchmark.  
+##### Некоторые инструменты бенчмаркинга для вашего сервера
+[aio-stress](https://openbenchmarking.org/test/pts/aio-stress) - бенчмарк AIO.  
+[bandwidth](https://zsmith.co/bandwidth.html) - бенчмарк пропускной способности памяти.  
+[bonnie++](https://www.coker.com.au/bonnie++/) - бенчмарк производительности жесткого диска и файловой системы.  
+[dbench](https://dbench.samba.org/) - генерирование рабочих нагрузок ввода-вывода либо на файловую систему, либо на сетевой сервер CIFS или NFS.  
+[dnsperf](https://www.dnsperf.com/) - авторизованные и рекурсивные DNS-серверы.  
+[filebench](https://github.com/filebench/filebench) - генератор рабочих нагрузок файловой системы на основе модели.  
+[fio](https://linux.die.net/man/1/fio) - бенчмарк ввода-вывода.  
+[fs_mark](https://github.com/josefbacik/fs_mark) - эталон синхронного/асинхронного создания файлов.  
+[httperf](https://github.com/httperf/httperf) - измерение производительности веб-сервера.  
+[interbench](https://github.com/ckolivas/interbench) - бенчмарк интерактивности linux.  
+[ioblazer](https://labs.vmware.com/flings/ioblazer) - мультиплатформенный микробенчмарк стека хранения данных.  
+[iozone](http://www.iozone.org/) - бенчмарк файловой системы.  
+[iperf3](https://iperf.fr/iperf-download.php) - измерение производительности TCP/UDP/SCTP.  
+[kcbench](https://github.com/knurd/kcbench) - бенчмарк компиляции ядра, компилирует ядро и измеряет время, затраченное на это.  
+[lmbench](http://www.bitmover.com/lmbench/) - набор простых, переносимых бенчмарков.  
+[netperf](https://github.com/HewlettPackard/netperf) - измерение производительности сети, тестирование однонаправленной пропускной способности и сквозной задержки.  
+[netpipe](https://linux.die.net/man/1/netpipe) - независимый оценщик производительности сетевых протоколов.  
+[nfsometer](http://wiki.linux-nfs.org/wiki/index.php/NFSometer) - система оценки производительности NFS.  
+[nuttcp](https://www.nuttcp.net/Welcome%20Page.html) - измерение производительности сети.  
+[phoronix-test-suite](https://www.phoronix-test-suite.com/) - комплексная платформа автоматизированного тестирования и бенчмаркинга.  
+[seeker](https://github.com/fidlej/seeker) - портативный бенчмарк поиска диска.  
+[siege](https://github.com/JoeDog/siege) - тестер нагрузки http и бенчмарк.  
+[sockperf](https://github.com/Mellanox/sockperf) - утилита сетевого бенчмаркинга через API сокетов.  
+[spew](https://linux.die.net/man/1/spew) - измеряет производительность ввода-вывода и/или генерирует нагрузку на ввод-вывод.  
+[stress](https://people.seas.harvard.edu/~apw/stress/) - генератор рабочей нагрузки для POSIX-систем.  
+[sysbench](https://github.com/akopytov/sysbench) - скриптовый эталон производительности баз данных и систем.  
+[tiobench](https://github.com/mkuoppal/tiobench) - эталон потокового ввода-вывода.  
+[unixbench](https://github.com/kdlucas/byte-unixbench) - оригинальный набор эталонов BYTE UNIX, обеспечивает базовый показатель производительности Unix-подобной системы.  
+[wrk](https://github.com/wg/wrk) - эталон HTTP.  
 
 
-##### Performance monitoring tool - sar
+##### Инструмент мониторинга производительности - sar
 ```bash
-# installation
-# It collects the data every 10 minutes and generate its report daily. crontab file (/etc/cron.d/sysstat) is responsible for collecting and generating reports.
+# установка
+# Он собирает данные каждые 10 минут и генерирует отчет ежедневно. За сбор и генерацию отчетов отвечает файл crontab (/etc/cron.d/sysstat).
 yum install sysstat
 systemctl start sysstat
 systemctl enable sysstat
 
-# show CPU utilization 5 times every 2 seconds.
+# показывает загрузку процессора 5 раз каждые 2 секунды.
 sar 2 5
 
-# show memory  utilization 5 times every 2 seconds.
+# показать использование памяти 5 раз каждые 2 секунды.
 sar -r 2 5
 
-# show paging statistics 5 times every 2 seconds.
+# показывать статистику подкачки 5 раз каждые 2 секунды.
 sar -B 2 5
 
-# To generate all network statistic:
+# Вывести всю сетевую статистику:
 sar -n ALL
 
-# reading SAR log file using -f
+# чтение файла журнала SAR с помощью команды -f
 sar -f /var/log/sa/sa31|tail
 ```
 
-##### Reading from journal file
+##### Чтение из файла журнала
 ```bash
-journalctl --file ./log/journal/a90c18f62af546ccba02fa3734f00a04/system.journal  --since "2020-02-11 00:00:00"
+journalctl --file ./log/journal/a90c18f62af546ccba02fa3734f00a04/system.journal --since "2020-02-11 00:00:00"
 ```
 
-##### Show a listing of last logged in users.
+##### Показать список последних вошедших в систему пользователей.
 ```bash
 lastb
 ```
 
-##### Show a listing of current logged in users, print information of them
+##### Показать список текущих вошедших пользователей, распечатать информацию о них
 ```bash
 who
 ```
-##### Show who is logged on and what they are doing
+##### Показать, кто вошел в систему и что он делает.
 ```bash
 w
 ```
 
-##### Print the user names of users currently logged in to the current host.
+##### Выведите имена пользователей, вошедших в систему на текущем хосте.
 ```bash
 users
 ```
 
-##### Stop tailing a file on program terminate
+##### Остановка хвоста файла при завершении программы
 ```bash
 tail -f --pid=<PID> filename.txt
-# replace <PID> with the process ID of the program.
+# замените <PID> на идентификатор процесса программы.
 ```
 
-##### List all enabled services
+##### Список всех включенных служб
 ```bash
 systemctl list-unit-files|grep enabled
 ```
 
 
 ## Hardware
-[[back to top](#handy-bash-one-liners)]
+[[назад к началу](#удобные-однострочники-bash)]
 
-##### Collect and summarize all hardware info of your machine
+##### Соберите и обобщите всю информацию об аппаратном обеспечении вашей машины.
 ```bash
 lshw -json >report.json
-# Other options are: [ -html ]  [ -short ]  [ -xml ]  [ -json ]  [ -businfo ]  [ -sanitize ] ,etc
+# Другие опции: [ -html ] [ -short ] [ -xml ] [ -json ] [ -businfo ] [ -sanitize ] и т.д.
 ```
 
-##### Finding Out memory device detail
+##### Выяснение деталей устройства памяти
 ```bash
 sudo dmidecode -t memory
 ```
 
-##### Print detail of CPU hardware
+##### Вывод подробной информации об аппаратном обеспечении процессора
 ```bash
 dmidecode -t 4
-#          Type   Information
-#          0   BIOS
-#          1   System
-#          2   Base Board
-#          3   Chassis
-#          4   Processor
-#          5   Memory Controller
-#          6   Memory Module
-#          7   Cache
-#          8   Port Connector
-#          9   System Slots
-#         11   OEM Strings
-#         13   BIOS Language
-#         15   System Event Log
-#         16   Physical Memory Array
-#         17   Memory Device
-#         18   32-bit Memory Error
-#         19   Memory Array Mapped Address
-#         20   Memory Device Mapped Address
-#         21   Built-in Pointing Device
-#         22   Portable Battery
-#         23   System Reset
-#         24   Hardware Security
-#         25   System Power Controls
-#         26   Voltage Probe
-#         27   Cooling Device
-#         28   Temperature Probe
-#         29   Electrical Current Probe
-#         30   Out-of-band Remote Access
-#         31   Boot Integrity Services
-#         32   System Boot
-#         34   Management Device
-#         35   Management Device Component
-#         36   Management Device Threshold Data
-#         37   Memory Channel
-#         38   IPMI Device
-#         39   Power Supply
+# Информация о типе
+# 0 BIOS
+# 1 Система
+# 2 Базовая плата
+# 3 Шасси
+# 4 Процессор
+# 5 Контроллер памяти
+# 6 Модуль памяти
+# 7 Кэш
+# 8 Разъем порта
+# 9 Системные слоты
+# 11 OEM-строки
+# 13 Язык BIOS
+# 15 Журнал системных событий
+# 16 Массив физической памяти
+# 17 Устройство памяти
+# 18 Ошибка 32-битной памяти
+# 19 Адрес сопоставления массива памяти
+# 20 Адрес сопоставления устройства памяти
+# 21 Встроенное указательное устройство
+# 22 Портативная батарея
+# 23 Сброс системы
+# 24 Аппаратная безопасность
+# 25 Управление питанием системы
+# 26 Щуп напряжения
+# 27 Устройство охлаждения
+# 28 Датчик температуры
+# 29 Щуп электрического тока
+# 30 Внеполосный удаленный доступ
+# 31 Службы целостности загрузки
+# 32 Загрузка системы
+# 34 Устройство управления
+# 35 Компонент устройства управления
+# 36 Пороговые данные устройства управления
+# 37 Канал памяти
+# 38 Устройство IPMI
+# 39 Источник питания
 ```
-##### Count the number of Segate hard disks
+##### Подсчитайте количество жестких дисков Segate.
 ```bash
 lsscsi|grep SEAGATE|wc -l
-# or
+# или
 sg_map -i -x|grep SEAGATE|wc -l
 ```
 
-##### Get UUID of a disk (e.g. sdb)
+##### Получение UUID диска (например, sdb)
 ```bash
 lsblk -f /dev/sdb
 
-# or
+# или
 sudo blkid /dev/sdb
 ```
 
-##### Generate an UUID
+##### Сгенерируйте UUID
 ```bash
 uuidgen
 ```
 
-##### Print detail of all hard disks
+##### Печать подробной информации обо всех жестких дисках
 ```bash
 lsblk -io KNAME,TYPE,MODEL,VENDOR,SIZE,ROTA
-#where ROTA means rotational device / spinning hard disks (1 if true, 0 if false)
+#где ROTA означает вращающееся устройство / вращающиеся жесткие диски (1 - если истинно, 0 - если ложно)
 ```
 
-##### List all PCI (Peripheral Component Interconnect) devices
+##### Список всех устройств PCI (Peripheral Component Interconnect)
 ```bash
 lspci
-# List information about NIC
+# Список информации о сетевой карте
 lspci | egrep -i --color 'network|ethernet'
 ```
 
-##### List all USB devices
+##### Список всех USB-устройств
 ```bash
 lsusb
 ```
 
-##### Linux modules
+##### Модули Linux
 ```bash
-# Show the status of modules in the Linux Kernel
+# Показать статус модулей в ядре Linux
 lsmod
 
-# Add and remove modules from the Linux Kernel
+# Добавление и удаление модулей из ядра Linux
 modprobe
 
-# or
-# Remove a module
+# или
+# Удалить модуль
 rmmod
 
-# Insert a module
+# Вставить модуль
 insmod
 ```
 
-##### Controlling IPMI-enabled devices (e.g. BMC)
+##### Управление устройствами с поддержкой IPMI (например, BMC)
 ```bash
-# Remotely finding out power status of the server
+# Удаленное выяснение состояния питания сервера
 ipmitool -U <bmc_username> -P <bmc_password> -I lanplus -H <bmc_ip_address> power status
 
-# Remotely switching on server
+# Удаленное включение сервера
 ipmitool -U <bmc_username> -P <bmc_password> -I lanplus -H <bmc_ip_address> power on
 
-# Turn on panel identify light (default 15s)
+# Включите индикатор идентификации панели (по умолчанию 15 с)
 ipmitool chassis identify 255
 
-# Found out server sensor temperature
+# Узнайте температуру датчиков сервера
 ipmitool sensors |grep -i Temp
 
-# Reset BMC
+# Сброс BMC
 ipmitool bmc reset cold
 
 # Prnt BMC network
 ipmitool lan print 1
 
-# Setting BMC network
+# Настройка сети BMC
 ipmitool -I bmc lan set 1 ipaddr 192.168.0.55
 ipmitool -I bmc lan set 1 netmask 255.255.255.0
 ipmitool -I bmc lan set 1 defgw ipaddr 192.168.0.1
@@ -2387,146 +2387,146 @@ ipmitool -I bmc lan set 1 defgw ipaddr 192.168.0.1
 
 
 ## Networking
-[[back to top](#handy-bash-one-liners)]
+[[назад к началу](#удобные-однострочники-bash)]
 
-##### Resolve a domain to IP address(es)
+##### Разрешить домен в IP-адрес(ы)
 ```bash
 dig +short www.example.com
 
-# or
-host www.example.com
+# или
+хост www.example.com
 ```
 
-##### Get DNS TXT record a of domain
+##### Получение DNS TXT записи a домена.
 ```bash
 dig -t txt www.example.com
 
-# or
+# или
 host -t txt www.example.com
 ```
 
-##### Send a ping with a limited TTL to 10 (TTL: Time-To-Live, which is the maximum number of hops that a packet can travel across the Internet before it gets discarded.)
+##### Отправьте ping с ограничением TTL до 10 (TTL: Time-To-Live, это максимальное количество переходов, которое пакет может пройти через Интернет, прежде чем будет отброшен).
 ```bash
 ping 8.8.8.8 -t 10
 ```
 
-##### Print the route packets trace to network host
+##### Печать трассировки маршрутных пакетов до узла сети
 ```bash
 traceroute google.com
 ```
 
-##### Check connection to host (e.g. check connection to port 80 and 22 of google.com)
+##### Проверка соединения с хостом (например, проверка соединения с 80 и 22 портом google.com)
 ```bash
 nc -vw5 google.com 80
-# Connection to google.com 80 port [tcp/http] succeeded!
+# Подключение к 80 порту [tcp/http] google.com успешно!
 
 nc -vw5 google.com 22
-# nc: connect to google.com port 22 (tcp) timed out: Operation now in progress
+# nc: соединение с google.com порт 22 (tcp) прервано: Операция продолжается
 # nc: connect to google.com port 22 (tcp) failed: Network is unreachable
 ```
 
-##### Nc as a chat tool!
+##### Nc как инструмент чата!
 ```bash
-# From server A:
+# С сервера A:
 $ sudo nc -l 80
-# then you can connect to the 80 port from another server (e.g. server B):
-# e.g. telnet <server A IP address> 80
-# then type something in server B
-# and you will see the result in server A!
+# затем вы можете подключиться к порту 80 с другого сервера (например, сервера B):
+# например, telnet <IP-адрес сервера A> 80
+# затем введите что-нибудь на сервере B.
+# и вы увидите результат на сервере A!
 ```
 
-##### Check which ports are listening for TCP connections from the network
+##### Проверьте, какие порты слушают TCP соединения из сети.
 ```bash
-#notice that some companies might not like you using nmap
+#заметьте, что некоторым компаниям может не понравиться, что вы используете nmap
 nmap -sT -O localhost
 
-# check port 0-65535
-nmap  -p0-65535 localhost
+# проверьте порт 0-65535
+nmap -p0-65535 localhost
 ```
-##### Check if a host is up and scan for open ports, also skip host discovery.
+##### Проверка работоспособности хоста и сканирование открытых портов, также пропуск обнаружения хоста.
 ```bash
-#skips checking if the host is alive which may sometimes cause a false positive and stop the scan.
+#пропускает проверку, жив ли хост, что иногда может вызвать ложное срабатывание и остановить сканирование.
 $ nmap google.com -Pn
 
-# Example output:
+# Пример вывода:
 # Starting Nmap 7.01 ( https://nmap.org ) at 2020-07-18 22:59 CST
-# Nmap scan report for google.com (172.217.24.14)
+# Отчет о сканировании Nmap для google.com (172.217.24.14)
 # Host is up (0.013s latency).
-# Other addresses for google.com (not scanned): 2404:6800:4008:802::200e
-# rDNS record for 172.217.24.14: tsa01s07-in-f14.1e100.net
-# Not shown: 998 filtered ports
-# PORT    STATE SERVICE
-# 80/tcp  open  http
-# 443/tcp open  https
+# Другие адреса для google.com (не сканировались): 2404:6800:4008:802::200e
+# Запись rDNS для 172.217.24.14: tsa01s07-in-f14.1e100.net
+# Не показано: 998 отфильтрованных портов
+# ОБСЛУЖИВАНИЕ СОСТОЯНИЯ ПОРТА
+# 80/tcp open http
+# 443/tcp open https
 #
-# Nmap done: 1 IP address (1 host up) scanned in 3.99 seconds
+# Nmap done: 1 IP-адрес (1 хост) отсканирован за 3,99 секунды
 ```
-##### Scan for open ports and OS and version detection (e.g. scan the domain "scanme.nmap.org")
+##### Сканирование на наличие открытых портов и определение ОС и версии (например, сканирование домена "scanme.nmap.org")
 ```bash
 $ nmap -A -T4 scanme.nmap.org
-# -A to enable OS and version detection, script scanning, and traceroute; -T4 for faster execution
+# -A для включения обнаружения ОС и версий, сканирования скриптов и traceroute; -T4 для более быстрого выполнения
 ```
 
-##### Look up website information (e.g. name server), searches for an object in a RFC 3912 database.
+##### Поиск информации о сайте (например, сервера имен), поиск объекта в базе данных RFC 3912.
 ```bash
 whois google.com
 ```
 
-##### Show the SSL certificate of a domain
+##### Показать SSL-сертификат домена
 ```bash
 openssl s_client -showcerts -connect www.example.com:443
 ```
 
-##### Display IP address
+##### Показать IP-адрес
 ```bash
 ip a
 ```
 
-##### Display route table
+##### Отображение таблицы маршрутов
 ```bash
 ip r
 ```
 
-##### Display ARP cache (ARP cache displays the MAC addresses of device in the same network that you have connected to)
+##### Отображение ARP-кэша (ARP-кэш отображает MAC-адреса устройств в той же сети, к которой вы подключились)
 ```bash
 ip n
 ```
 
-##### Add transient IP addres (reset after reboot) (e.g. add 192.168.140.3/24 to device eno16777736)
+##### Добавить переходные IP-адреса (сбрасываются после перезагрузки) (например, добавить 192.168.140.3/24 к устройству eno16777736)
 ```bash
 ip address add 192.168.140.3/24 dev eno16777736
 ```
 
-##### Persisting network configuration changes
+##### Сохранение изменений конфигурации сети
 ```bash
 sudo vi /etc/sysconfig/network-scripts/ifcfg-enoxxx
-# then edit the fields: BOOTPROT, DEVICE, IPADDR, NETMASK, GATEWAY, DNS1 etc
+# затем отредактируйте поля: BOOTPROT, DEVICE, IPADDR, NETMASK, GATEWAY, DNS1 и т.д.
 ```
 ##### Refresh NetworkManager
 ```bash
 sudo nmcli c reload
 ```
 
-##### Restart all interfaces
+##### Перезапустите все интерфейсы
 ```bash
 sudo systemctl restart network.service
 ```
 
-##### To view hostname, OS, kernal, architecture at the same time!
+##### Для одновременного просмотра имени хоста, ОС, ядра, архитектуры!
 ```bash
 hostnamectl
 ```
 
-##### Set hostname (set all transient, static, pretty hostname at once)
+##### Установить имя хоста (установить все переходные, статические, красивые имена хостов сразу)
 ```bash
 hostnamectl set-hostname "mynode"
 ```
 
-##### Find out the web server (e.g Nginx or Apache) of a website
+##### Выяснить веб-сервер (например, Nginx или Apache) веб-сайта.
 ```bash
 curl -I http://example.com/
 # HTTP/1.1 200 OK
-# Server: nginx
+# Сервер: nginx
 # Date: Thu, 02 Jan 2020 07:01:07 GMT
 # Content-Type: text/html
 # Content-Length: 1119
@@ -2538,39 +2538,39 @@ curl -I http://example.com/
 # Vary: Accept-Encoding
 ```
 
-##### Find out the http status code of a URL
+##### Узнайте http код состояния URL-адреса
 ```bash
 curl -s -o /dev/null -w "%{http_code}" https://www.google.com
 ```
 
-##### Unshorten a shortended URL
+##### Сокращение сокращенного URL-адреса
 ```bash
 curl -s -o /dev/null -w "%{redirect_url}" https://bit.ly/34EFwWC
 ```
 
-##### Perform network throughput tests
+##### Проведите тесты пропускной способности сети
 ```bash
-# server side:
+# серверная сторона:
 $ sudo iperf -s -p 80
 
-# client side:
-iperf -c <server IP address> --parallel 2 -i 1 -t 2 -p 80
+# клиентская сторона:
+iperf -c <IP-адрес сервера> --parallel 2 -i 1 -t 2 -p 80
 ```
 
-##### To block port 80 (HTTP server) using iptables.
+##### Чтобы заблокировать порт 80 (HTTP-сервер) с помощью iptables.
 ```bash
 sudo iptables -A INPUT -p tcp --dport 80 -j DROP
 
-# only block connection from an IP address
-sudo iptables –A INPUT –s <IP> -p tcp –dport 80 –j DROP
+# блокировать соединение только с IP-адреса
+sudo iptables -A INPUT -s <IP> -p tcp -dport 80 -j DROP
 ```
 
-## Data wrangling
-[[back to top](#handy-bash-one-liners)]
+## Обработка данных
+[[назад к началу](#удобные-однострочники-bash)]
 
-##### Print some words that start with a particular string (e.g. words start with 'phy')
+##### Выведите некоторые слова, которые начинаются с определенной строки (например, слова, начинающиеся с 'phy')
 ```bash
-# If file is not specified, the file /usr/share/dict/words is used.
+# Если файл не указан, используется файл /usr/share/dict/words.
 look phy|head -n 10
 # phycic
 # Phyciodes
@@ -2581,130 +2581,130 @@ look phy|head -n 10
 # phycochrom
 # phycochromaceae
 # phycochromaceous
-# phycochrome
+# фикохром
 ```
 
-##### Repeat printing string n times (e.g. print 'hello world' five times)
+##### Повторите печать строки n раз (например, напечатайте "hello world" пять раз)
 ```bash
 printf 'hello world\n%.0s' {1..5}
 ```
-##### Do not echo the trailing newline
+##### Не выводить эхом завершающую новую строку.
 ```bash
 username=`echo -n "bashoneliner"`
 ```
 
-##### Copy a file to multiple files (e.g copy fileA to file(B-D))
+##### Копирование файла в несколько файлов (например, копирование файлаА в файл(B-D))
 ```bash
 tee <fileA fileB fileC fileD >/dev/null
 ```
 
-##### Delete all non-printing characters
+##### Удалить все непечатные символы
 ```bash
-tr -dc '[:print:]' < filename
+tr -dc '[:print:]' < имя файла
 ```
 
-##### Remove newline / nextline
+##### Удалить новую строку / следующую строку
 ```bash
 tr --delete '\n' <input.txt >output.txt
 ```
-##### Replace newline
+##### Заменить новую строку
 ```bash
 tr '\n' ' ' <filename
 ```
 
-##### To uppercase/lowercase
+##### В прописные/строчные буквы
 ```bash
 tr /a-z/ /A-Z/
 
 ```
-##### Translate a range of characters (e.g. substitute a-z into a)
+##### Перевести диапазон символов (например, заменить a-z на a)
 ```bash
 echo 'something' |tr a-z a
-# aaaaaaaaa
+# aaaaaaaaaaa
 ```
 
-##### Compare two files (e.g. fileA, fileB)
+##### Сравнить два файла (например, файлА, файлВ)
 
 ```bash
 diff fileA fileB
-# a: added; d:delete; c:changed
+# a: добавлено; d:удалено; c:изменено
 
-# or
+# или
 sdiff fileA fileB
-# side-to-side merge of file differences
+# слияние различий файлов по бокам
 ```
 
-##### Compare two files, strip trailing carriage return/ nextline (e.g. fileA, fileB)
+##### Сравните два файла, удалите возврат каретки/следующую строку (например, fileA, fileB)
 ```bash
 diff fileA fileB --strip-trailing-cr
 ```
 
-##### Find common/differing lines
+##### Найти общие/различающиеся строки
 ```bash
-# having two sorted and uniqed files (for example after running `$ sort -uo fileA fileA` and same for fileB):
-# ------
+# имея два отсортированных и унифицированных файла (например, после выполнения команды `$ sort -uo fileA fileA` и то же самое для файлаB):
+# ---
 # fileA:
-# ------
+# ---
 # joey
-# kitten
-# piglet
-# puppy
-# ------
+# котенок
+# поросёнок
+# щенок
+# ---
 # fileB:
-# ------
-# calf
-# chick
-# joey
-# puppy
+# ---
+# теленок
+# птенец
+# мальчик
+# щенок
 #
-# Find lines in both files
+# Найдите строки в обоих файлах
 comm -12 fileA fileB
 # joey
-# puppy
+# щенок
 #
-# Find lines in fileB that are NOT in fileA
+# Найдите строки в файлеB, которые НЕ находятся в файлеA
 comm -13 fileA fileB
-# calf
-# chick
+# теленок
+# птенец
 #
-# Find lines in fileA that are NOT in fileB
+# Найдите строки в файлеА, которые НЕ находятся в файлеВ
 comm -23 fileA fileB
-# kitten
-# piglet
+# котенок
+# поросёнок
 ```
 
-##### Number a file (e.g. fileA)
+##### Номер файла (например, fileA)
 
 ```bash
 nl fileA
 
 #or
 nl -nrz fileA
-# add leading zeros
+# добавить ведущие нули
 
 #or
 nl -w1 -s ' '
-# making it simple, blank separate
+# упростить, отделить пустые строки
 ```
 
-##### Join two files field by field with tab (default join by the first column of both file, and default separator is space)
+##### Объедините два файла по полям с помощью табуляции (по умолчанию объединение происходит по первому столбцу обоих файлов, а разделителем по умолчанию является пробел)
 ```bash
-# fileA and fileB should have the same ordering of lines.
+# файлА и файлВ должны иметь одинаковый порядок строк.
 join -t '\t' fileA fileB
 
-# Join using specified field (e.g. column 3 of fileA and column 5 of fileB)
+# Объединить, используя указанное поле (например, столбец 3 файлаА и столбец 5 файлаВ)
 join -1 3 -2 5 fileA fileB
 ```
 
-##### Combine/ paste two or more files into columns (e.g. fileA, fileB, fileC)
+##### Объединить/вставить два или более файлов в колонки (например, fileA, fileB, fileC)
 ```bash
 paste fileA fileB fileC
 # default tab separate
 ```
 
-##### Group/combine rows into one row
+##### Группировка/объединение строк в одну строку
 ```bash
-# e.g.
+# например.
 # AAAA
 # BBBB
 # CCCC
@@ -2712,158 +2712,158 @@ paste fileA fileB fileC
 cat filename|paste - -
 # AAAABBBB
 # CCCCDDDD
-cat filename|paste - - - -
-# AAAABBBBCCCCDDDD
+cat filename|paste - - - - - -
+# AAAABBBBBCCCCDDDDDD
 ```
 
-##### Fastq to fasta (fastq and fasta are common file formats for bioinformatics sequence data)
+##### Fastq в fasta (fastq и fasta - распространенные форматы файлов для данных последовательности в биоинформатике)
 ```bash
-cat file.fastq | paste - - - - | sed 's/^@/>/g'| cut -f1-2 | tr '\t' '\n' >file.fa
+cat file.fastq | paste - - - - - | sed 's/^@/>/g'| cut -f1-2 | tr '\t' '\n' >file.fa
 ```
 
-##### Reverse string
+##### Обратная строка
 ```bash
 echo 12345| rev
 ```
 
-##### Generate sequence 1-10
+##### Генерирование последовательности 1-10
 ```bash
 seq 10
 ```
 
-##### Find average of input list/file of integers
+##### Найдите среднее значение входного списка/файла целых чисел
 ```bash
 i=`wc -l filename|cut -d ' ' -f1`; cat filename| echo "scale=2;(`paste -sd+`)/"$i|bc
 ```
 
-##### Generate all combination (e.g. 1,2)
+##### Сгенерируйте все комбинации (например, 1,2)
 ```bash
 echo {1,2}{1,2}
 # 1 1, 1 2, 2 1, 2 2
 ```
 
-##### Generate all combination (e.g. A,T,C,G)
+##### Сгенерируйте все комбинации (например, A,T,C,G)
 ```bash
 set = {A,T,C,G}
-group= 5
+группа = 5
 for ((i=0; i<$group; i++));do
     repetition=$set$repetition;done
     bash -c "echo "$repetition""
 ```
 
-##### Read file content to variable
+##### Чтение содержимого файла в переменную
 ```bash
 foo=$(<test1)
 ```
 
-##### Echo size of variable
+##### Вывод размера переменной
 ```bash
 echo ${#foo}
 ```
 
-##### Echo a tab
+##### Эхо табуляции
 ```bash
 echo -e ' \t '
 ```
 
-##### Split file into smaller file
+##### Разделить файл на меньший файл
 ```bash
-# Split by line (e.g. 1000 lines/smallfile)
-split -d -l 1000 largefile.txt
+# Разделение по строкам (например, 1000 строк/большой файл)
+split -d -l 1000 bigfile.txt
 
-# Split by byte without breaking lines across files
-split -C 10 largefile.txt
+# Разделение по байтам без разрыва строк между файлами
+split -C 10 bigfile.txt
 ```
 
-##### Create a large amount of dummy files (e.g 100000 files, 10 bytes each):
+##### Создайте большое количество фиктивных файлов (например, 100000 файлов, по 10 байт каждый):
 ```bash
-#1. Create a big file
+#1. Создайте большой файл
 dd if=/dev/zero of=bigfile bs=1 count=1000000
 
-#2. Split the big file to 100000 10-bytes files
+#2. Разделите большой файл на 100000 10-байтовых файлов
  split -b 10 -a 10 bigfile
 ```
 
-##### Rename all files (e.g. remove ABC from all .gz files)
+##### Переименуйте все файлы (например, удалите ABC из всех .gz файлов)
 ```bash
 rename 's/ABC//' *.gz
 ```
 
-##### Remove file extension (e.g remove .gz from filename.gz)
+##### Удалить расширение файла (например, удалить .gz из файла filename.gz)
 ```bash
 basename filename.gz .gz
 
 zcat filename.gz> $(basename filename.gz .gz).unpacked
 ```
 
-##### Add file extension to all file(e.g add .txt)
+##### Добавьте расширение файла ко всем файлам (например, добавьте .txt)
 ```bash
 rename s/$/.txt/ *
-# You can use rename -n s/$/.txt/ * to check the result first, it will only print sth like this:
+# Вы можете использовать команду rename -n s/$/.txt/ * для проверки результата, она выведет только что-то вроде этого:
 # rename(a, a.txt)
 # rename(b, b.txt)
 # rename(c, c.txt)
 ```
 
-##### Squeeze repeat patterns (e.g. /t/t --> /t)
+##### Выдавливание повторяющихся паттернов (например, /t/t --> /t)
 ```bash
-tr -s "/t" < filename
+tr -s "/t" < имя файла
 ```
 
-##### Do not print nextline with echo
+##### Не печатать следующую строку с помощью echo
 ```bash
-echo -e 'text here \c'
+echo -e 'текст здесь \c'
 ```
 
-##### View first 50 characters of file
+##### Просмотр первых 50 символов файла
 ```bash
 head -c 50 file
 ```
 
-##### Cut and get last column of a file
+##### Вырезать и получить последний столбец файла
 ```bash
 cat file|rev | cut -d/ -f1 | rev
 ```
 
-##### Add one to variable/increment/ i++ a numeric variable (e.g. $var)
+##### Добавление единицы к переменной/увеличение/ i++ числовой переменной (например, $var)
 ```bash
 ((var++))
-# or
+# или
 var=$((var+1))
 
 ```
-##### Cut the last column
+##### Вырежьте последний столбец
 ```bash
 cat filename|rev|cut -f1|rev
 ```
 
-##### Cat to a file
+##### Кошка в файл
 ```bash
 cat >myfile
-let me add sth here
-exit by control + c
+позвольте мне добавить кое-что
+выход по control + c
 ^C
 ```
 
-##### Clear the contents of a file (e.g. filename)
+##### Очистить содержимое файла (например, имя файла)
 ```bash
 >filename
 ```
 
-##### Append to file (e.g. hihi)
+##### Добавить в файл (например, hihi)
 ```bash
 echo 'hihi' >>filename
 ```
 
-##### Working with json data
+##### Работа с json данными
 ```bash
-#install the useful jq package
+#установите полезный пакет jq
 #sudo apt-get install jq
-#e.g. to get all the values of the 'url' key, simply pipe the json to the following jq command(you can use .[]. to select inner json, i.e jq '.[].url')
+#Например, чтобы получить все значения ключа 'url', просто передайте json в следующую команду jq (вы можете использовать .[]. для выбора внутреннего json, т.е. jq '.[].url')
 cat file.json | jq '.url'
 ```
 
-##### Decimal to Binary (e.g get binary of 5)
+##### Десятичная система счисления в двоичную (например, получить двоичное число 5)
 ```bash
 D2B=({0..1}{0..1}{0..1}{0..1}{0..1}{0..1}{0..1}{0..1})
 echo -e ${D2B[5]}
@@ -2872,7 +2872,7 @@ echo -e ${D2B[255]}
 #11111111
 ```
 
-##### Wrap each input line to fit in specified width (e.g 4 integers per line)
+##### Оберните каждую строку ввода, чтобы она поместилась в указанную ширину (например, 4 целых числа на строку)
 ```bash
 echo "00110010101110001101" | fold -w4
 # 0011
@@ -2882,219 +2882,219 @@ echo "00110010101110001101" | fold -w4
 # 1101
 ```
 
-##### Sort a file by column and keep the original order
+##### Сортировка файла по столбцам с сохранением исходного порядка
 ```bash
 sort -k3,3 -s
 ```
 
-##### Right align a column (right align the 2nd column)
+##### Выравнивание столбца по правому краю (выравнивание по правому краю 2-го столбца)
 ```bash
 cat file.txt|rev|column -t|rev
 ```
 
-##### To both view and store the output
+##### Для просмотра и сохранения вывода
 ```bash
 echo 'hihihihi' | tee outputfile.txt
-# use '-a' with tee to append to file.
+# используйте '-a' с tee для добавления в файл.
 ```
 
-##### Show non-printing (Ctrl) characters with cat
+##### Показать непечатные символы (Ctrl) с помощью cat
 ```bash
-cat -v filename
+cat -v имя файла
 ```
 
-##### Convert tab to space
+##### Преобразование табуляции в пробел
 ```bash
-expand filename
+расширить имя файла
 ```
 
-##### Convert space to tab
+##### Преобразование пробела в табуляцию
 ```bash
-unexpand filename
+раскрыть имя файла
 ```
 
-##### Display file in octal ( you can also use od to display hexadecimal, decimal, etc)
+##### Отображение файла в восьмеричной системе счисления (вы также можете использовать od для отображения шестнадцатеричной, десятичной и т.д.)
 ```bash
-od filename
+od имя файла
 ```
 
-##### Reverse cat a file
+##### Перевернуть файл в формате cat
 ```bash
-tac filename
+tac имя файла
 ```
 
-##### Reverse the result from `uniq -c`
+##### Обратный результат от `uniq -c`
 ```bash
 while read a b; do yes $b |head -n $a ;done <test.txt
 ```
 
 
-## Others
-[[back to top](#handy-bash-one-liners)]
+## Другие
+[[назад к началу](#удобные-однострочники-bash)]
 
-##### Describe the format and characteristics of image files.
+##### Опишите формат и характеристики файлов изображений.
 ```bash
-identify myimage.png
+определить myimage.png
 #myimage.png PNG 1049x747 1049x747+0+0 8-bit sRGB 1.006MB 0.000u 0:00.000
 ```
 
-##### Bash auto-complete (e.g. show options "now tomorrow never" when you press'tab' after typing "dothis")
-[More examples](https://iridakos.com/tutorials/2018/03/01/bash-programmable-completion-tutorial.html)
+##### Bash auto-complete (например, показывать варианты "now tomorrow never", когда вы нажимаете 'tab' после ввода "dothis")
+[Больше примеров](https://iridakos.com/tutorials/2018/03/01/bash-programmable-completion-tutorial.html)
 ```bash
 complete -W "now tomorrow never" dothis
 # ~$ dothis  
-# never     now       tomorrow
-# press 'tab' again to auto-complete after typing 'n' or 't'
+# никогда сейчас завтра
+# нажмите 'tab' снова для автозаполнения после ввода 'n' или 't'
 ```
-##### Displays a calendar
+##### Отображает календарь
 ```bash
-# print the current month, today will be highlighted.
+# выведите текущий месяц, сегодняшний будет выделен.
 cal
 # October 2019      
 # Su Mo Tu We Th Fr Sa  
-#    1  2  3  4  5  
-# 6  7  8  9 10 11 12  
+# 1 2 3 4 5  
+# 6 7 8 9 10 11 12  
 # 13 14 15 16 17 18 19  
 # 20 21 22 23 24 25 26  
 # 27 28 29 30 31  
 
-# only display November
+# отображать только ноябрь
 cal -m 11
 ```
 
-##### Convert the hexadecimal MD5 checksum value into its base64-encoded format.
+##### Преобразуйте шестнадцатеричное значение контрольной суммы MD5 в его base64-кодированный формат.
 ```bash
 openssl md5 -binary /path/to/file| base64
 # NWbeOpeQbtuY0ATWuUeumw==
 ```
 
-##### Forces applications to use the default language for output
+##### Заставляет приложения использовать язык по умолчанию для вывода.
 ```bash
 export LC_ALL=C
 
-# to revert:
+# для возврата:
 unset LC_ALL
 ```
-##### Encode strings as Base64 strings
+##### Кодирование строк как строк Base64
 ```bash
 echo test|base64
 #dGVzdAo=
 ```
 
-##### Get parent directory of current directory
+##### Получение родительского каталога текущего каталога
 ```bash
 dirname `pwd`
 ```
 
-##### Read .gz file without extracting
+##### Чтение .gz файла без извлечения
 
 ```bash
-zmore filename
+zmore имя файла
 
-# or
+# или
 zless filename
 ```
 
-##### Run command in background, output error file
+##### Выполнение команды в фоновом режиме, вывод файла ошибок
 ```bash
-some_commands  &>log &
+some_commands &>log &
 
-# or
+# или
 some_commands 2>log &
 
-# or
+# или
 some_commands 2>&1| tee logfile
 
-# or
+# или
 some_commands |& tee logfile
 
-# or
+# или
 some_commands 2>&1 >>outfile
-#0: standard input; 1: standard output; 2: standard error
+#0: стандартный ввод; 1: стандартный вывод; 2: стандартная ошибка
 ```
 
-##### Run multiple commands in background
+##### Выполнение нескольких команд в фоновом режиме
 ```bash
-# run sequentially
+# запускать последовательно
 (sleep 2; sleep 3) &
 
-# run parallelly
+# выполнять параллельно
 sleep 2 & sleep 3 &
 ```
 
-##### Run process even when logout (immune to hangups, with output to a non-tty)
+##### Запуск процесса даже при выходе из системы (невосприимчивость к зависаниям, с выводом на не-tty)
 ```bash
-# e.g. Run myscript.sh even when log out.
+# Например, запустите myscript.sh даже при выходе из системы.
 nohup bash myscript.sh
 ```
 
-##### Send mail
+##### Отправка почты
 ```bash
-echo 'heres the content'| mail -a /path/to/attach_file.txt -s 'mail.subject' me@gmail.com
-# use -a flag to set send from (-a "From: some@mail.tld")
+echo 'вот содержимое'| mail -a /path/to/attach_file.txt -s 'mail.subject' me@gmail.com
+# используйте флаг -a для установки отправки от (-a "From: some@mail.tld")
 ```
 
-##### Convert .xls to csv
+##### Преобразование .xls в csv
 ```bash
-xls2csv filename
+xls2csv имя файла
 ```
 
-##### Make BEEP sound
+##### Сделать звук BEEP
 ```bash
 speaker-test -t sine -f 1000 -l1
 ```
 
-##### Set beep duration
+##### Установите длительность звукового сигнала
 ```bash
 (speaker-test -t sine -f 1000) & pid=$!;sleep 0.1s;kill -9 $pid
 ```
 
-##### Editing your history
+##### Редактирование своей истории
 ```bash
-history -w
+история -w
 vi ~/.bash_history
 history -r
 
 #or
-history -d [line_number]
+history -d [номер_строки]
 ```
 
-##### Interacting with history
+##### Взаимодействие с историей
 ```bash
-# list 5 previous command (similar to `history |tail -n 5` but wont print the history command itself)
+# список 5 предыдущих команд (аналогично `history |tail -n 5`, но не выводит саму команду history)
 fc -l -5
 ```
 
-##### Delete current bash command
+##### Удаление текущей команды bash
 ```bash
 Ctrl+U
 
-# or
+# или
 Ctrl+C
 
-# or
+# или
 Alt+Shift+#
-# to make it to history
+# чтобы перейти к истории
 ```
 
-##### Add something to history (e.g. "addmetohistory")
+##### Добавить что-то в историю (например, "addmetohistory")
 ```bash
 # addmetodistory
-# just add a "#" before~~
+# просто добавьте "#" перед~~.
 ```
 
-##### Get last history/record filename
+##### Получить имя файла последней истории/записи.
 ```bash
 head !$
 ```
 
-##### Clean screen
+##### Очистить экран
 ```bash
 clear
-# or simply Ctrl+l
+# или просто Ctrl+l
 ```
 
-##### Backup with rsync
+##### Резервное копирование с помощью rsync
 ```bash
 rsync -av filename filename.bak
 rsync -av directory directory.bak
@@ -3102,353 +3102,349 @@ rsync -av --ignore_existing directory/ directory.bak
 rsync -av --update directory directory.bak
 
 rsync -av directory user@ip_address:/path/to/directory.bak
-# skip files that are newer on receiver (i prefer this one!)
+# пропускать файлы, которые новее на приемнике (я предпочитаю этот вариант!)
 ```
 
-##### Make all directories at one time!
+##### Сделайте все каталоги за один раз!
 ```bash
 mkdir -p project/{lib/ext,bin,src,doc/{html,info,pdf},demo/stat}
-# -p: make parent directory
-# this will create project/doc/html/; project/doc/info; project/lib/ext ,etc
+# -p: сделать родительский каталог
+# это создаст project/doc/html/; project/doc/info; project/lib/ext и т.д.
 ```
 
-##### Run command only if another command returns zero exit status (well done)
+##### Выполняйте команду, только если другая команда возвращает нулевой статус выхода (хорошо сделано)
 ```bash
 cd tmp/ && tar xvf ~/a.tar
 ```
 
-##### Run command only if another command returns non-zero exit status (not finish)
+##### Выполнение команды только в том случае, если другая команда возвращает ненулевой статус выхода (не закончено)
 ```bash
 cd tmp/a/b/c ||mkdir -p tmp/a/b/c
 ```
 
-##### Use backslash "\" to break long command
+##### Используйте обратную косую черту "\", чтобы прервать длинную команду
 ```bash
 cd tmp/a/b/c \
 > || \
 >mkdir -p tmp/a/b/c
 ```
 
-##### List file type of file (e.g. /tmp/)
+##### Перечислите тип файла (например, /tmp/)
 ```bash
 file /tmp/
-# tmp/: directory
+# tmp/: каталог
 ```
 
-##### Writing Bash script ('#!'' is called shebang )
+##### Написание сценария Bash ('#!' называется shebang )
 ```bash
 #!/bin/bash
 file=${1#*.}
-# remove string before a "."
+# удалить строку перед "."
 ```
 
-##### Python simple HTTP Server
+##### Python простой HTTP сервер
 ```bash
 python -m SimpleHTTPServer
-# or when using python3:
+# или при использовании python3:
 python3 -m http.server
 ```
 
-##### Read user input
+##### Чтение пользовательского ввода
 ```bash
-read input
+чтение ввода
 echo $input
 ```
 
-##### Array
+##### Массив
 ```bash
 declare -a array=()
 
-# or
+# или
 declare array=()
 
-# or associative array
+# или ассоциативный массив
 declare -A array=()
 ```
 
-##### Send a directory
+##### Отправить каталог
 ```bash
 scp -r directoryname user@ip:/path/to/send
 ```
 
 ##### Fork bomb
 ```bash
-# Don't try this at home!
-# It is a function that calls itself twice every call until you run out of system resources.
-# A '# ' is added in front for safety reason, remove it when seriously you are testing it.
+# Не пытайтесь сделать это дома!
+# Это функция, которая вызывает себя дважды при каждом вызове, пока не закончатся системные ресурсы.
+# '# ' добавляется спереди для безопасности, удалите его, когда будете серьезно тестировать.
 # :(){:|:&};:
 ```
 
-##### Use the last argument
+##### Используйте последний аргумент
 ```bash
 !$
 ```
 
-##### Check last exit code
+##### Проверка последнего кода выхода
 ```bash
 echo $?
 ```
 
-##### Extract .xz
+##### Извлечение .xz
 ```
 unxz filename.tar.xz
-# then
+# тогда
 tar -xf filename.tar
 ```
 
-##### Unzip tar.bz2 file (e.g. file.tar.bz2)
+##### Разархивируйте файл tar.bz2 (например, file.tar.bz2)
 ```bash
 tar xvfj file.tar.bz2
 ```
 
-##### Unzip tar.xz file (e.g. file.tar.xz)
+##### Разархивировать файл tar.xz (например, file.tar.xz)
 ```bash
 unxz file.tar.xz
 tar xopf file.tar
 ```
-##### Extract to a path
+##### Извлечь по пути
 ```bash
 tar xvf -C /path/to/directory filename.gz
 ```
 
-##### Zip the content of a directory without including the directory itself
+##### Запилить содержимое каталога, не включая сам каталог
 ```bash
-# First cd to the directory, they run:
+# Сначала перейдите в каталог, затем запустите:
 zip -r -D ../myzipfile .
-# you will see the myzipfile.zip in the parent directory (cd ..)
+# Вы увидите myzipfile.zip в родительском каталоге (cd ...)
 ```
 
-##### Output a y/n repeatedly until killed
+##### Выводим y/n несколько раз, пока не будет убит.
 ```bash
 # 'y':
 yes
 
-# or 'n':
+# или 'n':
 yes n
 
-# or 'anything':
-yes anything
+# или 'anything':
+да что угодно
 
-# pipe yes to other command
-yes | rm -r large_directory
+# передайте yes в другую команду
+yes | rm -r big_directory
 ```
 
-##### Create large dummy file of certain size instantly (e.g. 10GiB)
+##### Мгновенно создайте большой фиктивный файл определенного размера (например, 10GiB).
 ```bash
 fallocate -l 10G 10Gigfile
 ```
 
-##### Create dummy file of certain size (e.g. 200mb)
+##### Создать фиктивный файл определенного размера (например, 200мб)
 ```bash
 dd if=/dev/zero of=//dev/shm/200m bs=1024k count=200
-# or
+# или
 dd if=/dev/zero of=//dev/shm/200m bs=1M count=200
 
-# Standard output:
-# 200+0 records in
-# 200+0 records out
-# 209715200 bytes (210 MB) copied, 0.0955679 s, 2.2 GB/s
+# Стандартный вывод:
+# 200+0 записей in
+# 200+0 записей на выходе
+# 209715200 байт (210 МБ) скопировано, 0.0955679 с, 2.2 ГБ/с
 ```
 
-##### Keep /repeatedly executing the same command (e.g Repeat 'wc -l filename' every 1 second)
+##### Продолжайте /повторяйте выполнение одной и той же команды (например, повторяйте 'wc -l filename' каждые 1 секунду)
 ```bash
 watch -n 1 wc -l filename
 ```
 
-##### Print commands and their arguments when execute (e.g. echo `expr 10 + 20 `)
+##### Выводить команды и их аргументы при выполнении (например, echo `expr 10 + 20`)
 ```bash
-set -x; echo `expr 10 + 20 `
+set -x; echo `expr 10 + 20`
 ```
 
-##### Print some meaningful sentences to you (install fortune first)
+##### Выведите несколько осмысленных предложений (сначала установите fortune)
 ```bash
 fortune
 ```
 
-##### Colorful (and useful) version of top (install htop first)
+##### Красочная (и полезная) версия top (сначала установите htop)
 ```bash
 htop
 ```
 
-##### Press any key to continue
+##### Нажмите любую клавишу, чтобы продолжить
 ```bash
-read -rsp $'Press any key to continue...\n' -n1 key
+read -rsp $'Нажмите любую клавишу для продолжения...\n' -n1 key
 ```
 
-##### Run sql-like command on files from terminal
+##### Выполните sql-подобную команду над файлами из терминала
 ```bash
 # download:
 # https://github.com/harelba/q
-# example:
+# пример:
 q -d "," "select c3,c4,c5 from /path/to/file.txt where c3='foo' and c5='boo'"
 ```
 
-##### Using Screen for multiple terminal sessions
+##### Использование Screen для нескольких терминальных сессий
 ```bash
-# Create session and attach:
+# Создайте сессию и подключите ее:
 screen
 
-# Create a screen and name it 'test'
+# Создайте экран и назовите его 'test'
 screen -S test
 
-# Create detached session foo:
+# Создать отделенную сессию foo:
 screen -S foo -d -m
 
-# Detached session foo:
+# Отсоединенная сессия foo:
 screen: ^a^d
 
-# List sessions:
+# Список сессий:
 screen -ls
 
-# Attach last session:
+# Присоединить последнюю сессию:
 screen -r
 
-# Attach to session foo:
+# Прикрепить к сеансу foo:
 screen -r foo
 
-# Kill session foo:
+# Убить сессию foo:
 screen -r foo -X quit
 
 
-# Scroll:
-# Hit your screen prefix combination (C-a / control+A), then hit Escape.
-# Move up/down with the arrow keys (↑ and ↓).  
+# Прокрутка:
+# Нажмите комбинацию префиксов экрана (C-a / control+A), затем нажмите Escape.
+# Перемещение вверх/вниз с помощью клавиш со стрелками (↑ и ↓).  
 
-# Redirect output of an already running process in Screen:
-# (C-a / control+A), then hit 'H'  
+# Перенаправить вывод уже запущенного процесса в Screen:
+# (C-a / control+A), затем нажмите 'H'.  
 
-# Store screen output for Screen:
+# Сохранить вывод экрана для Screen:
 # Ctrl+A, Shift+H  
-# You will then find a screen.log file under current directory.  
+# Вы найдете файл screen.log в текущем каталоге.  
 ```
 
-##### Using Tmux for multiple terminal sessions
+##### Использование Tmux для нескольких терминальных сессий
 ```bash
-# Create session and attach:
+# Создайте сессию и подключите ее:
 tmux
 
-# Attach to session foo:
+# Присоединить к сессии foo:
 tmux attach -t foo
 
-# Detached session foo:
+# Отсоединить сессию foo:
 ^bd
 
-# List sessions:
+# Список сессий:
 tmux ls
 
-# Attach last session:
+# Присоединить последнюю сессию:
 tmux attach
 
-# Kill session foo:
+# Убить сессию foo:
 tmux kill-session -t foo
 
-# Create detached session foo:
+# Создать отделенную сессию foo:
 tmux new -s foo -d
 
-# Send command to all panes in tmux:
+# Отправьте команду всем панелям в tmux:
 Ctrl-B
 :setw synchronize-panes
 
-# Some tmux pane control commands:
+# Некоторые команды управления панелями tmux:
 Ctrl-B
-#   Panes (splits), Press Ctrl+B, then input the following symbol:
-#   %  horizontal split
-#   "  vertical split
-#   o  swap panes
-#   q  show pane numbers
-#   x  kill pane
-#   space - toggle between layouts
+# Панели (сплиты), Нажмите Ctrl+B, затем введите следующий символ:
+# % горизонтальное разделение
+# вертикальное разделение
+# o поменять панели местами
+# q показать номера панелей
+# x - закрыть панель
+# пробел - переключение между макетами
 
-#   Distribute Vertically (rows):
+# Распределить по вертикали (ряды):
 select-layout even-vertical
-#   or
+# или
 Ctrl+b, Alt+2
 
-# Distribute horizontally (columns):
+# Распределить по горизонтали (столбцы):
 select-layout even-horizontal
-#   or
+# или
 Ctrl+b, Alt+1
 
-# Scroll
-Ctrl-b then \[ then you can use your normal navigation keys to scroll around.
-Press q to quit scroll mode.
+# Прокрутка
+Ctrl-b, затем \[ затем вы можете использовать обычные навигационные клавиши для прокрутки.
+Нажмите q, чтобы выйти из режима прокрутки.
 ```
 
-##### Pass password to ssh
+##### Передайте пароль для ssh
 ```bash
 sshpass -p mypassword ssh root@10.102.14.88 "df -h"
 ```
 
-##### Wait for a pid (job) to complete
+##### Ожидание завершения pid (задания)
 ```bash
 wait %1
-# or
-wait $PID
+# или
+ждать $PID
 wait ${!}
-#wait ${!} to wait till the last background process ($! is the PID of the last background process)
+#wait ${!} для ожидания последнего фонового процесса ($! - PID последнего фонового процесса)
 ```
 
-##### Convert pdf to txt
+##### Преобразование pdf в txt
 ```bash
 sudo apt-get install poppler-utils
 pdftotext example.pdf example.txt
 ```
 
-##### List only directory
+##### Список только директорий
 ```bash
 ls -d */
 ```
 
-##### List one file per line.
+##### Перечислять по одному файлу в строке.
 ```bash
 ls -1
-# or list all, do not ignore entries starting with .
+# или перечислить все, не игнорируйте записи, начинающиеся с .
 ls -1a
 ```
 
-##### Capture/record/save terminal output (capture everything you type and output)
+##### Захват/запись/сохранение вывода терминала (захват всего, что вы вводите и выводите)
 ```bash
 script output.txt
-# start using terminal
-# to logout the screen session (stop saving the contents), type exit.
+# начните использовать терминал
+# чтобы выйти из экранной сессии (прекратить сохранение содержимого), введите exit.
 ```
 
-##### List contents of directories in a tree-like format.
+##### Перечислите содержимое каталогов в древовидном формате.
 ```bash
 tree
-# go to the directory you want to list, and type tree (sudo apt-get install tree)
+# перейдите в каталог, который вы хотите перечислить, и введите tree (sudo apt-get install tree)
 # output:
 # home/
 # └── project
-#     ├── 1
-#     ├── 2
-#     ├── 3
-#     ├── 4
-#     └── 5
+# ├── 1
+# ├── 2
+# ├── 3
+# ├── 4
+# └── 5
 #
 
-# set level directories deep (e.g. level 1)
+# установите каталоги уровней вглубь (например, уровень 1)
 tree -L 1
 # home/
-# └── project
+# └── проект
 ```
 
-##### Set up virtualenv(sandbox) for python
+##### Установите virtualenv(sandbox) для python.
 ```bash
-# 1. install virtualenv.
+# 1. установите virtualenv.
 sudo apt-get install virtualenv
-# 2. Create a directory (name it .venv or whatever name your want) for your new shiny isolated environment.
+# 2. Создайте каталог (назовите его .venv или любым другим именем) для вашей новой блестящей изолированной среды.
 virtualenv .venv
-# 3. source virtual bin
+# 3. источник virtual bin
 source .venv/bin/activate
-# 4. you can check check if you are now inside a sandbox.
+# 4. Вы можете проверить, находитесь ли вы теперь внутри песочницы.
 type pip
-# 5. Now you can install your pip package, here requirements.txt is simply a txt file containing all the packages you want. (e.g tornado==4.5.3).
+# 5. Теперь вы можете установить ваш пакет pip, здесь requirements.txt - это просто txt-файл, содержащий все пакеты, которые вам нужны. (например, tornado==4.5.3).
 pip install -r requirements.txt
-# 6. Exit virtual environment
-deactivate
+# 6. Выйдите из виртуальной среды
+деактивировать
 ```
-
-
-
-> More coming!!
